@@ -336,6 +336,7 @@ public class FieldUtils {
 		         clazz.equals(Date.class) ||  
 		         clazz.equals(java.util.Date.class) ||
 		         clazz.equals(java.sql.Date.class) ||
+		         clazz.equals(byte[].class) ||
 		         clazz.isPrimitive();
 	}
 	

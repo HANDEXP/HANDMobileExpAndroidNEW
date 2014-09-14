@@ -387,7 +387,7 @@ public class ResideMenu extends FrameLayout{
 
         scaleDown.setInterpolator(AnimationUtils.loadInterpolator(activity,
                 android.R.anim.decelerate_interpolator));
-        scaleDown.setDuration(250);
+        scaleDown.setDuration(150);
         return scaleDown;
     }
 
@@ -407,7 +407,7 @@ public class ResideMenu extends FrameLayout{
                 ObjectAnimator.ofFloat(target, "scaleY", targetScaleY)
         );
 
-        scaleUp.setDuration(250);
+        scaleUp.setDuration(150);
         return scaleUp;
     }
 
@@ -418,7 +418,7 @@ public class ResideMenu extends FrameLayout{
                 ObjectAnimator.ofFloat(target, "alpha", alpha)
         );
 
-        alphaAnimation.setDuration(250);
+        alphaAnimation.setDuration(150);
         return alphaAnimation;
     }
 

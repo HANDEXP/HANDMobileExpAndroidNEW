@@ -6,8 +6,10 @@ package com.hand.hrmexp.activity;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import com.hand.R;
+import com.hand.hrmexp.model.ExpenseTypeModel;
 import com.hand.hrmexp.model.LoadingModel;
 import com.actionbarsherlock.ActionBarSherlock;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -27,6 +29,7 @@ import com.handexp.utl.ConstantsUtl;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.SyncStateContract.Constants;
@@ -48,7 +51,7 @@ public class LoadingActivity extends SherlockActivity implements LMModelDelegate
 	private String  baseUrl;
 	private ActionBarSherlock mActionBarHelper; 
 	
-	private LoadingModel model;
+	private ExpenseTypeModel model;
 	
 	private Button reloadButton;
 	private TextView informationTextView;
@@ -65,7 +68,7 @@ public class LoadingActivity extends SherlockActivity implements LMModelDelegate
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		baseUrl = mPreferences.getString("sys_basic_url", "");
 		
-		model = new LoadingModel(this);
+		model = new ExpenseTypeModel(this);
 		
 		
 		if(!checkBaseUrl(baseUrl)){
@@ -82,10 +85,12 @@ public class LoadingActivity extends SherlockActivity implements LMModelDelegate
 		// TODO Auto-generated method stub
 		super.onResume();
 //		setViewAsNew();
+//		startLoginActivity();
 		
 		baseUrl = mPreferences.getString("sys_basic_url", "");
+		System.out.println("base is " + baseUrl);
 		if (checkBaseUrl(baseUrl)) {
-			AsHttpRequestModel.utl = new AsNetWorkUtl(baseUrl);
+			AsHttpRequestModel.utl =  AsNetWorkUtl.getAsNetWorkUtl(baseUrl);
 			
 			doReload();
 		}
@@ -149,12 +154,13 @@ public class LoadingActivity extends SherlockActivity implements LMModelDelegate
 	private void startSettingsActivity() {
 		Intent i = new Intent(this, SettingsActivity.class);
 		startActivity(i);
+		
 	}
 	
 	private void startLoginActivity(){
 		Intent i = new Intent(this,MenuActivity.class);
 		startActivity(i);
-		
+		finish();
 	}
 
 /*
@@ -163,40 +169,53 @@ public class LoadingActivity extends SherlockActivity implements LMModelDelegate
 	@Override
 	public void modelDidFinshLoad(LMModel model ) {
 		// TODO Auto-generated method stub
+		
+		
 		AsHttpRequestModel model1 = (AsHttpRequestModel)model;
 		
-		
-		File dir = HrmexpApplication.getApplication().getDir(ConstantsUtl.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
-		        Context.MODE_PRIVATE);
-		File configFile = new File(dir, ConstantsUtl.requestUrl);
-		System.out.println(" file url is " + configFile.getAbsolutePath());
-		FileOutputStream fileOutputStream = null;
-		
-		try {
-			fileOutputStream = new FileOutputStream(configFile);
-			fileOutputStream.write(model1.mresponseBody);
-		} catch (Exception ex) {
-	
-			
-			return;
-		}finally{
-			try {
-                fileOutputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Editor editor = preferences.edit();
+        try {
+			editor.putString(ConstantsUtl.tmp ,new String(model1.mresponseBody,"UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+        
+        editor.commit();
 		
-
-		try {
-			ConfigReader reader = XmlConfigReader.getInstance();
-			reader.getAttr(new Expression("/backend-config", ""));
-		} catch (Exception e) {
-			
-			return;
-		}
-		
-		startLoginActivity();
+        startLoginActivity();
+//		File dir = HrmexpApplication.getApplication().getDir(ConstantsUtl.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
+//		        Context.MODE_PRIVATE);
+//		File configFile = new File(dir, ConstantsUtl.requestUrl);
+//		System.out.println(" file url is " + configFile.getAbsolutePath());
+//		FileOutputStream fileOutputStream = null;
+//		
+//		try {
+//			fileOutputStream = new FileOutputStream(configFile);
+//			fileOutputStream.write(model1.mresponseBody);
+//		} catch (Exception ex) {
+//	
+//			
+//			return;
+//		}finally{
+//			try {
+//                fileOutputStream.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//		}
+//		
+//
+//		try {
+//			ConfigReader reader = XmlConfigReader.getInstance();
+//			reader.getAttr(new Expression("/backend-config", ""));
+//		} catch (Exception e) {
+//			
+//			return;
+//		}
+//		
+//		startLoginActivity();
 		
 	}
 

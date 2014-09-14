@@ -42,6 +42,12 @@ public class CursorUtils {
 						
 						Property property = table.propertyMap.get(column);
 						if(property!=null){
+							//处理blob问题
+							if(property.getDataType().equals(byte[].class)){
+								property.setValue(entity, cursor.getBlob(i));
+								continue;
+							}
+							
 							property.setValue(entity, cursor.getString(i));
 						}else{
 							if(table.getId().getColumn().equals(column)){

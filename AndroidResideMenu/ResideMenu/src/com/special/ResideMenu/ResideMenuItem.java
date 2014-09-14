@@ -18,8 +18,11 @@ public class ResideMenuItem extends LinearLayout{
     /** menu item  icon  */
     private ImageView iv_icon;
     /** menu item  title */
-    private TextView tv_title;
+    public TextView tv_title;
 
+    /** tag to distinguish different item **/
+    public Object tag;
+    
     public ResideMenuItem(Context context) {
         super(context);
         initViews(context);

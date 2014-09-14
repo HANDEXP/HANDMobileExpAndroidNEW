@@ -315,13 +315,15 @@ public class SqlBuilder {
 			strSQL.append(id.getColumn()).append(" INTEGER PRIMARY KEY AUTOINCREMENT,");
 		}else{
 			strSQL.append(id.getColumn()).append(" TEXT PRIMARY KEY,");
-		}
+		} 
 			
 		
 		
 		Collection<Property> propertys = table.propertyMap.values();
 		for(Property property : propertys){
 			strSQL.append(property.getColumn());
+			System.out.println(property.getColumn());
+			
 			Class<?> dataType =  property.getDataType();
 			if( dataType== int.class || dataType == Integer.class 
 			   || dataType == long.class || dataType == Long.class){
@@ -331,6 +333,9 @@ public class SqlBuilder {
 				strSQL.append(" REAL");
 			}else if (dataType == boolean.class || dataType == Boolean.class) {
 				strSQL.append(" NUMERIC");
+			}else if( dataType ==  byte[].class){
+				strSQL.append(" BLOB");
+				
 			}
 			strSQL.append(",");
 		}
@@ -343,6 +348,7 @@ public class SqlBuilder {
 		}
 		strSQL.deleteCharAt(strSQL.length() - 1);
 		strSQL.append(" )");
+		System.out.println( strSQL.toString());
 		return strSQL.toString();
 	}
 	

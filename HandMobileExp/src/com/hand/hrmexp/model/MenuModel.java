@@ -4,13 +4,17 @@ import com.hand.hrms4android.parser.ConfigReader;
 import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.littlemvc.model.LMModelDelegate;
+import com.littlemvc.model.request.AsHttpRequestModel;
 import com.littlemvc.model.request.LMRequestModel;
 
-public class MenuModel extends LMRequestModel{
+public class MenuModel extends AsHttpRequestModel{
+		private  XmlConfigReader configReader;
+	
 	
 	public MenuModel(LMModelDelegate delegate){
 		
-	  
+		this.modelDelegate = delegate;
+		configReader = XmlConfigReader.getInstance();
 	}
 	
 	public void load()
@@ -20,12 +24,15 @@ public class MenuModel extends LMRequestModel{
 			
 			String queryUrl = configReader
 			        .getAttr(new Expression(
-			                "/config/application/activity[@name='function_list_activity']/request/url[@name='function_query_url']",
+			                "/backend-config/url[@name='function_query_url']",
 			                "value"));
 			
 			
-		} catch (Exception e) {
+			this.post(queryUrl, null);
 			
+		} catch (Exception e) {
+	
+			this.modelDelegate.modelDidFaildLoadWithError(this);
 			return;
 		}
 		

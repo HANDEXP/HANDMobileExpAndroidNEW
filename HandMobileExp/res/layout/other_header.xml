@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+     android:layout_height="40dip"
+    android:background="#3C719F" 
+	>
+    <ImageButton 
+        android:layout_alignParentLeft="true"
+        android:id="@+id/return_btn"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+      />
+
+    <TextView
+        style="@style/main_head_title"
+
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:text="记一笔" />
+ 
+</RelativeLayout>
