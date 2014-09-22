@@ -36,8 +36,6 @@
     <string name="pref_default_display_name">http://</string>
     <string name="pref_default_dialog_message">Warning, modify the address will cause the program to empty all cache information and exit the account!</string>
     <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    
-
     <string name="action_settings">Settings</string>
     <string name="app_head">汉得移动商务</string>
     <string name="app_subhead">Hand Mobile Business</string>
@@ -49,6 +47,7 @@
 	<string name="homePageTitle">首页</string>
 	<string name="buttonName">记一单</string>
 	<string name="EdisonChen">拍一张</string>
+	<string name="price">0</string>
 	<string name="amountLabel">总金额</string>
 	<string name="quantityLabel">数量</string>
 	<string name="detailTypeLabel">费用</string>

@@ -44,6 +44,12 @@
             android:label="记一笔" >
         </activity>
         
+         <activity
+             android:name="com.hand.hrmexp.activity.LoginActivity"
+             android:theme="@android:style/Theme.Light.NoTitleBar"
+             android:label="登录">
+             
+         </activity>
     </application>
 
 </manifest>

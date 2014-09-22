@@ -158,7 +158,7 @@ public class LoadingActivity extends SherlockActivity implements LMModelDelegate
 	}
 	
 	private void startLoginActivity(){
-		Intent i = new Intent(this,MenuActivity.class);
+		Intent i = new Intent(this,LoginActivity.class);
 		startActivity(i);
 		finish();
 	}
