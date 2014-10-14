@@ -8,6 +8,8 @@ public class ExpenseTypeModel extends AsHttpRequestModel {
 	
 	
 	public ExpenseTypeModel(LMModelDelegate delegate){
+		super(delegate);
+		
 		this.modelDelegate = delegate;
 	}
 	

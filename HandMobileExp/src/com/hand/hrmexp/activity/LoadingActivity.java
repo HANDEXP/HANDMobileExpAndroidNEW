@@ -11,7 +11,6 @@ import java.io.UnsupportedEncodingException;
 import com.hand.R;
 import com.hand.hrmexp.model.ExpenseTypeModel;
 import com.hand.hrmexp.model.LoadingModel;
-import com.actionbarsherlock.ActionBarSherlock;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.littlemvc.model.LMModel;
 import com.littlemvc.model.LMModelDelegate;
@@ -38,21 +37,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 
 /**
  * @author jiang titeng
- *
- * All right reserve
+ * 
+ *         All right reserve
  */
-public class LoadingActivity extends SherlockActivity implements LMModelDelegate{
-	
+public class LoadingActivity extends SherlockActivity implements
+		LMModelDelegate {
+
 	private SharedPreferences mPreferences;
-	private String  baseUrl;
-	private ActionBarSherlock mActionBarHelper; 
-	
-	private ExpenseTypeModel model;
-	
+	private String baseUrl;
+
+	private LoadingModel model;
+
 	private Button reloadButton;
 	private TextView informationTextView;
 	private ImageView alertImage;
@@ -62,64 +61,76 @@ public class LoadingActivity extends SherlockActivity implements LMModelDelegate
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_loading);
-		 
+
 		buildAllviews();
-		
+
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		baseUrl = mPreferences.getString("sys_basic_url", "");
-		
-		model = new ExpenseTypeModel(this);
-		
-		
-		if(!checkBaseUrl(baseUrl)){
-			
+
+		model = new LoadingModel(this);
+
+		if (!checkBaseUrl(baseUrl)) {
+
 			startSettingsActivity();
 		}
 
-		
 	}
-	
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-//		setViewAsNew();
-//		startLoginActivity();
-		
+
 		baseUrl = mPreferences.getString("sys_basic_url", "");
-		System.out.println("base is " + baseUrl);
+
 		if (checkBaseUrl(baseUrl)) {
-			AsHttpRequestModel.utl =  AsNetWorkUtl.getAsNetWorkUtl(baseUrl);
-			
+
+			// 初始化网络工具，设置基础url
+			AsHttpRequestModel.utl = AsNetWorkUtl.getAsNetWorkUtl(baseUrl);
+
 			doReload();
 		}
 	}
-	
-	public void doReload() {
-		
-		setViewAsNew();
-		this.model.load();
-		
 
-
-	}
-	
 	@Override
-	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+	public boolean onOptionsItemSelected(
+			com.actionbarsherlock.view.MenuItem item) {
+
 		if (item.getItemId() == R.id.menu_settings) {
 			startSettingsActivity();
 		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		getSherlock().getMenuInflater().inflate(R.menu.activity_loading, menu);
 		return true;
 	}
-	
-	
+
+// ////////////////////////private///////////////////////
+
+	private void buildAllviews() {
+		informationTextView = (TextView) findViewById(R.id.activity_loading_infomation);
+		reloadButton = (Button) findViewById(R.id.activity_loading_reload_button);
+		alertImage = (ImageView) findViewById(R.id.activity_loading_alert);
+
+	}
+
+	/**
+	 * 重新读取配置文件
+	 */
+	public void doReload() {
+
+		setViewAsNew();
+		this.model.load();
+
+	}
+
+	/**
+	 * 
+	 * 检查url是否正确
+	 */
 	private boolean checkBaseUrl(String url) {
 		if (url == null) {
 			return false;
@@ -135,105 +146,98 @@ public class LoadingActivity extends SherlockActivity implements LMModelDelegate
 
 		return true;
 	}
-	
 
-	private void  buildAllviews(){
-		informationTextView = (TextView) findViewById(R.id.activity_loading_infomation);
-		reloadButton = (Button) findViewById(R.id.activity_loading_reload_button);
-		alertImage = (ImageView) findViewById(R.id.activity_loading_alert);
+	/**
+	 * 设置刷新按钮，提示框不可见
+	 */
 
-
-	}
-	
 	private void setViewAsNew() {
 		informationTextView.setText(R.string.activity_loading_text);
 		reloadButton.setVisibility(View.INVISIBLE);
 		alertImage.setVisibility(View.INVISIBLE);
 	}
-	
+
 	private void startSettingsActivity() {
 		Intent i = new Intent(this, SettingsActivity.class);
 		startActivity(i);
-		
+
 	}
-	
-	private void startLoginActivity(){
-		Intent i = new Intent(this,LoginActivity.class);
+
+	private void startLoginActivity() {
+		Intent i = new Intent(this, LoginActivity.class);
 		startActivity(i);
 		finish();
 	}
+//////////////////////////// model delegate //////////////////////
 
-/*
- * model delegate
- */
 	@Override
-	public void modelDidFinshLoad(LMModel model ) {
+	public void modelDidFinshLoad(LMModel model) {
 		// TODO Auto-generated method stub
-		
-		
-		AsHttpRequestModel model1 = (AsHttpRequestModel)model;
-		
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        Editor editor = preferences.edit();
-        try {
-			editor.putString(ConstantsUtl.tmp ,new String(model1.mresponseBody,"UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        editor.commit();
-		
-        startLoginActivity();
-//		File dir = HrmexpApplication.getApplication().getDir(ConstantsUtl.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
-//		        Context.MODE_PRIVATE);
-//		File configFile = new File(dir, ConstantsUtl.requestUrl);
-//		System.out.println(" file url is " + configFile.getAbsolutePath());
-//		FileOutputStream fileOutputStream = null;
-//		
-//		try {
-//			fileOutputStream = new FileOutputStream(configFile);
-//			fileOutputStream.write(model1.mresponseBody);
-//		} catch (Exception ex) {
-//	
-//			
-//			return;
-//		}finally{
-//			try {
-//                fileOutputStream.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//		}
-//		
-//
-//		try {
-//			ConfigReader reader = XmlConfigReader.getInstance();
-//			reader.getAttr(new Expression("/backend-config", ""));
-//		} catch (Exception e) {
-//			
-//			return;
-//		}
-//		
-//		startLoginActivity();
-		
-	}
 
+		// AsHttpRequestModel model1 = (AsHttpRequestModel)model;
+		//
+		// SharedPreferences preferences =
+		// PreferenceManager.getDefaultSharedPreferences(this);
+		// Editor editor = preferences.edit();
+		// try {
+		// editor.putString(ConstantsUtl.tmp ,new
+		// String(model1.mresponseBody,"UTF-8"));
+		// } catch (UnsupportedEncodingException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		//
+		// editor.commit();
+		//
+		// startLoginActivity();
+
+		AsHttpRequestModel model1 = (AsHttpRequestModel) model;
+
+		File dir = HrmexpApplication.getApplication().getDir(
+				ConstantsUtl.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
+				Context.MODE_PRIVATE);
+		
+		File configFile = new File(dir, ConstantsUtl.configFile);
+
+		FileOutputStream fileOutputStream = null;
+
+		try {
+			fileOutputStream = new FileOutputStream(configFile);
+			
+			fileOutputStream.write(model1.mresponseBody);
+
+			ConfigReader reader = XmlConfigReader.getInstance();
+			reader.getAttr(new Expression("/backend-config", ""));
+			
+			
+			fileOutputStream.close();
+			
+			startLoginActivity();
+		
+		} catch (Exception ex) {
+
+			Toast.makeText(this, "读写配置文件出现错误", Toast.LENGTH_SHORT).show();
+			
+			return;
+			
+		} finally {
+			
+			
+
+		}
+
+	}
 
 	@Override
 	public void modelDidStartLoad(LMModel model) {
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
 
 	@Override
 	public void modelDidFaildLoadWithError(LMModel model) {
 		// TODO Auto-generated method stub
-		
+		Toast.makeText(this, "请求配置文件出现错误", Toast.LENGTH_SHORT).show();
 	}
-
-
-
 
 }

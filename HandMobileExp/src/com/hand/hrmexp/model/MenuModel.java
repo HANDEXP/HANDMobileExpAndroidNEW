@@ -12,8 +12,7 @@ public class MenuModel extends AsHttpRequestModel{
 	
 	
 	public MenuModel(LMModelDelegate delegate){
-		
-		this.modelDelegate = delegate;
+		super(delegate);
 		configReader = XmlConfigReader.getInstance();
 	}
 	

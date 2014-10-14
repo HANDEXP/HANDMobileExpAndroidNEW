@@ -16,6 +16,7 @@ import com.handexp.utl.ConstantsUtl;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,8 +83,14 @@ public class ExpenseTypePicker extends PopupWindow{
 		});
 		
 	    province = (WheelView) Picker_city_province.findViewById(R.id.province);
+	    province.setWheelBackground(R.drawable.wheelview_shape);
+//	    province.setDrawShadows(false);
+	    province.setWheelForeground(R.drawable.wheelview_val);
+	    
 		city = (WheelView) Picker_city_province.findViewById(R.id.city);
-		
+		city.setWheelBackground(R.drawable.wheelview_shape);
+		city.setDrawShadows(false);
+		city.setWheelForeground(R.drawable.wheelview_val);
 		
 		SharedPreferences  mPreferences = PreferenceManager.getDefaultSharedPreferences ( context);
 		

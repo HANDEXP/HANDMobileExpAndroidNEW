@@ -11,7 +11,7 @@ import com.littlemvc.model.request.*;
 public class LoginModel extends AsHttpRequestModel{
 		
 	public LoginModel(LMModelDelegate delegate){
-		this.modelDelegate = delegate;
+		super(delegate);
 		AsHttpRequestModel.utl = new AsNetWorkUtl("http://m.hand-china.com/dev/");
 	}
 	public void load(HashMap parm)

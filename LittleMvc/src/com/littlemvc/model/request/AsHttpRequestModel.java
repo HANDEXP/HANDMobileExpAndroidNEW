@@ -11,6 +11,7 @@ import org.apache.http.Header;
 
 import android.R.string;
 
+import com.littlemvc.model.LMModelDelegate;
 import com.littlemvc.utl.ILMAsNetworkUtl;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -30,9 +31,9 @@ public class AsHttpRequestModel extends LMRequestModel{
 	
 	public static ILMAsNetworkUtl utl;//上下共用一个工具
 	
-	public AsHttpRequestModel()  {
+	public AsHttpRequestModel(LMModelDelegate delegate)  {
 		super();
-		
+		this.modelDelegate = delegate;
 		
 	}
 	

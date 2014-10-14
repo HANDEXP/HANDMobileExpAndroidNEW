@@ -9,12 +9,12 @@ public class LoadingModel extends AsHttpRequestModel {
 
 	
 	public LoadingModel(LMModelDelegate delegate){
-		this.modelDelegate = delegate;
+		super(delegate);
 	}
 	
 	public void load()
 	{
-		this.post(ConstantsUtl.requestUrl, null);
+		this.post(ConstantsUtl.configFile, null);
 		
 	}
 

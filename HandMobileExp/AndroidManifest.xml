@@ -18,7 +18,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name="com.hand.hrmexp.activity.LoadingActivity"
+            android:name="com.hand.hrmexp.activity.DetailLineActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Sherlock.Light" >

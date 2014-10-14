@@ -22,11 +22,9 @@ public class SettingsActivity extends PreferenceActivity{
 	}
 	
 	private void bindPreferenceSummaryToValue(Preference preference) {
-		// Set the listener to watch for value changes.
+
 		preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
-		// Trigger the listener immediately with the preference's
-		// current value.
 		sBindPreferenceSummaryToValueListener.onPreferenceChange(preference, PreferenceManager
 		        .getDefaultSharedPreferences(preference.getContext()).getString(preference.getKey(), ""));
 	}
@@ -43,7 +41,7 @@ public class SettingsActivity extends PreferenceActivity{
 			else {
 
 				if (preference.getKey().equals("sys_basic_url")) {
-					// 获取原先存储的值
+		
 					String originalValue = PreferenceManager.getDefaultSharedPreferences(preference.getContext())
 					        .getString(preference.getKey(), "");
 

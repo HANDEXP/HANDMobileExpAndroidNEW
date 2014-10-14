@@ -32,7 +32,7 @@ public class XmlConfigReader implements ConfigReader {
 	private static XmlConfigReader configReader;
 
 	/**
-	 * xpath瑙ｆ瀽鍣�
+	 * 
 	 */
 
 	public XmlConfigReader(File xmlFile) throws FileNotFoundException {
@@ -49,7 +49,7 @@ public class XmlConfigReader implements ConfigReader {
 			File dir = HrmexpApplication.getApplication().getDir(ConstantsUtl.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
 			        Context.MODE_PRIVATE);
 			try {
-				configReader = new XmlConfigReader(new File(dir, ConstantsUtl.requestUrl));
+				configReader = new XmlConfigReader(new File(dir, ConstantsUtl.configFile));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -70,7 +70,7 @@ public class XmlConfigReader implements ConfigReader {
 
 			File dir = HrmexpApplication.getApplication().getDir(ConstantsUtl.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
 			        Context.MODE_PRIVATE);
-			File configFile = new File(dir, ConstantsUtl.requestUrl);
+			File configFile = new File(dir, ConstantsUtl.configFile);
 			FileInputStream inputStream = new FileInputStream(configFile);
 			xmlInputSource = new InputSource(inputStream);
 			Object result = xpath.evaluate(expression, xmlInputSource, XPathConstants.NODE);
