@@ -1,16 +1,25 @@
 package com.hand.hrmexp.activity;
 
-
 import java.io.ByteArrayOutputStream;
+
 import java.io.InputStream;
 import java.util.List;
+
+import ui.custom.component.NumberText;
 
 import com.hand.R;
 import com.hand.hrmexp.application.HrmexpApplication;
 import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_LINE;
-import com.hand.hrmexp.popwindows.CalendarPicker;
-import com.hand.hrmexp.popwindows.ExpenseTypePicker;
+import com.hand.hrmexp.dialogs.DatePickerWrapDialog;
+import com.hand.hrmexp.popwindows.CalendarPopwindow;
+import com.hand.hrmexp.popwindows.ExpenseTypePopwindow;
+import com.handexp.utl.DialogUtl;
+import com.handexp.utl.ViewUtl;
 import com.littlemvc.db.sqlite.FinalDb;
+import com.littlemvc.model.LMModel;
+import com.littlemvc.model.LMModelDelegate;
+import com.littlemvc.model.request.db.DbRequestModel;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,6 +32,8 @@ import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View.OnClickListener;
 import android.support.v4.app.Fragment;
@@ -31,6 +42,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -44,354 +56,375 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class DetailLineActivity extends Activity implements View.OnClickListener {
-	private LinearLayout llexpense_type;
-	private LinearLayout llplace;
-	private LinearLayout llcalendar;
-	private ImageButton returnbtn;
-	private ImageView mimageView;
-	private EditText edExpenseDesc;
-	//数据源 
+public class DetailLineActivity extends Activity implements
+		View.OnClickListener, LMModelDelegate {
+
+	// 费用类型
+	private LinearLayout expenseTypell;
+
+	private TextView expenseTypeTextView;
+
+	private ExpenseTypePopwindow expenseTypePicker;
+
+	// 地点
+	private LinearLayout placell;
+
+	private EditText placeEditText;
+	// 日期
+	private LinearLayout datell;
+
+	private TextView dateToTextView;
+
+	private TextView dateFromTextView;
+
+	private DatePickerWrapDialog dateToDateDialog;
+
+	private DatePickerWrapDialog dateFromDateDialog;
+	// 返回
+	private ImageButton returnImgBtn;
+	// 拍照
+	private ImageView photoImgView;
+	// 照片实际的数据
 	private byte[] mContent;
+
+	// 备注
+	private EditText commentEditText;
+
+	// 数量
+	private EditText quantityEditText;
+	// 单价
+	private ui.custom.component.NumberText priceNumerText;
+	// 总金额
+	private TextView amountTextView;
+
+	// 保存按钮
+	private Button saveBtn;
+
+	// 根view
+	private View rootView;
+
+	// 数据库
+
+	private Boolean flag;
+
+	// 拍照
+	public static final int IMAGE_CAPTURE = 0;
+
+	// 相册
+	public static final int ACTION_GET_CONTENT = 1;
+
+	public DbRequestModel dbmodel;
+
+	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
 	
-	private ui.custom.component.NumberText amount;
-	private EditText quantity;
 	
-	//保存按钮
-	private Button   save;
-	
-	private  FinalDb finalDb;
-	private ExpenseTypePicker expensetypepicker;
-	private CalendarPicker calendarpicker;
-	
-	private Boolean readonlyFlag;
-	
-	private View  rootview;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_detail_line);
-		finalDb   = HrmexpApplication.getApplication().finalDb;
 		
-		buildViews();
-	}
-	
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.activity_detail_line);
 
-	
+		buildAllviews();
+
+		dbmodel = new DbRequestModel(this);
+	}
+
 	@Override
 	public void onResume() {
-		// TODO Auto-generated method stub
-		if(true)
-		{
-			initViews();
-			
-		}
-		
-		
 		super.onResume();
-		
-		
-	}
-	
-	private void initViews()
-	{
-		
-		List<MOBILE_EXP_REPORT_LINE> resultList = finalDb.findAllByWhere(MOBILE_EXP_REPORT_LINE.class, " id=\"" + 1 + "\"");
-		for(int i =0;i<resultList.size();i++){
-			MOBILE_EXP_REPORT_LINE data= 	resultList.get(i);
-//			mimageView.set
-			
-			mContent =  data.item1;
-			Bitmap myBitmap = getPicFromBytes(data.item1, null);
-			// //把得到的图片绑定在控件上显示
-			mimageView.setImageBitmap(myBitmap);
-		}
-	
-	}
-	
-	
-	private void buildViews()
-	{
-		
-		
-		
-		rootview = findViewById(R.id.detail_line_id);
 
-		
-		returnbtn =   (ImageButton)findViewById(R.id.return_btn);	 
-		returnbtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent intent = 	new Intent(DetailLineActivity.this,MenuActivity.class);
-				startActivity(intent);
-				finish();
-				
-			}
-		});
-	 
-
-		//数据源
-		//金额
-		amount = (ui.custom.component.NumberText)findViewById(R.id.amount);
-		
-		//数量
-		quantity = (EditText) findViewById(R.id.quantity);
-		
-		//照相 
-		mimageView  =(ImageView)findViewById(R.id.camera);
-		bind(mimageView);
-		
-		//费用类型
-		llexpense_type = (LinearLayout)findViewById(R.id.expense_type);
-		llexpense_type.setOnClickListener(this);
-		TextView typelable  = (TextView)findViewById(R.id.detailTypeLabel);
-		expensetypepicker = new ExpenseTypePicker(this,typelable);
-		//日期
-		llcalendar = (LinearLayout)findViewById(R.id.llcalendar_id);
-		calendarpicker  = new CalendarPicker(this, (TextView)findViewById(R.id.tvcalendar_id));
-		llcalendar.setOnClickListener(this);
-		
-		//地点
-		llplace = (LinearLayout)findViewById(R.id.place);
-	  
-		
-		//描述
-		edExpenseDesc = (EditText) findViewById(R.id.expense_desc_id);
-	  
-	  //保存
-		save = (Button)findViewById(R.id.save_button);
-		  
-		save.setOnClickListener(this);
-
-		
-		
 	}
-	
-	//处理弹出框的干扰
-	@Override  
-	public boolean dispatchTouchEvent(MotionEvent ev) {  
-	    if (ev.getAction() == MotionEvent.ACTION_DOWN) {  
-	        View v = getCurrentFocus();  
-	        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
-            if (imm != null) {  
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);  
-            } 
-	        expensetypepicker.dismiss();
-	        return super.dispatchTouchEvent(ev);  
-	    }  
-	
-	    // 必不可少，否则所有的组件都不会有TouchEvent了  
-	    if (getWindow().superDispatchTouchEvent(ev)) 
-	    {  
-	        return true;  
-	    }  
-	    return onTouchEvent(ev);  
-	}  
-	
-	private void bind(ImageView img)
-	{
-		
-		OnClickListener  imgViewListener = new OnClickListener()
-		{
-			public void onClick ( View v )
-			{
-				final CharSequence[] items =
-				{ "相册", "拍照" };
-				AlertDialog dlg = new AlertDialog.Builder(DetailLineActivity.this).setTitle("选择图片").setItems(items,
-						new DialogInterface.OnClickListener()
-						{
-							public void onClick ( DialogInterface dialog , int item )
-							{
-								// 这里item是根据选择的方式，
-								// 在items数组里面定义了两种方式，拍照的下标为1所以就调用拍照方法
-								if (item == 1)
-								{
-									Intent getImageByCamera = new Intent("android.media.action.IMAGE_CAPTURE");
-									startActivityForResult(getImageByCamera, 1);
-								} else
-								{
-									Intent getImage = new Intent(Intent.ACTION_GET_CONTENT);
-									getImage.addCategory(Intent.CATEGORY_OPENABLE);
-									getImage.setType("image/jpeg");
-									startActivityForResult(getImage, 0);
-								}
-							}
-						}).create();
-				dlg.show();
-			}
-		};
-		// 给imageView控件绑定点点击监听器
-		img.setOnClickListener(imgViewListener);
-		
-	}
-	public void addButton()
-	{
-		Animation mScaleAnimation = new ScaleAnimation(1f, 0.5f, 1f,
-        1f,// 整个屏幕就0.0到1.0的大小//缩放
-        Animation.INFINITE,1,
-        Animation.INFINITE, 1);
-
-		Animation mAnimation = new ScaleAnimation(1f, 0.5f, 1f,1f);
-
-		mScaleAnimation.setDuration(1000);
-		mAnimation.setFillAfter(true);
-		save.startAnimation(mAnimation);
-		
-	}
-	
 
 	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		if(v.equals(llexpense_type)){
-			expensetypepicker.showAtLocation(findViewById(R.id.detail_line_id),Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
-		}else if(v.equals(save)){
-			//保存按钮逻辑 
-			
-			
-			
-			MOBILE_EXP_REPORT_LINE  line = 	 new MOBILE_EXP_REPORT_LINE();
-			
-			line.expense_amount =   Integer.parseInt(amount.getText().toString());
-			
-			//默认添加数量为一 
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-			if(!quantity.getText().toString().equalsIgnoreCase("")){
-				line.expense_number  =  Integer.parseInt(quantity.getText().toString());
-			}else{
-				line.expense_number = 1;
-				
-			}	
-			//日期
-			line.expense_date = calendarpicker.datefrom;
-			line.expense_date_to = calendarpicker.dateto;
-			//费用类型
-			line.expense_class_desc = expensetypepicker.expense_class_desc;
-			line.expense_type_desc = expensetypepicker.expense_type_desc;
-			line.expense_class_id = expensetypepicker.expense_class_id;
-			line.expense_type_id = expensetypepicker.expense_type_id;
-			
-			line.expense_place = "上海市>上海市";
-			
-			line.local_status = "NEW";
-			//图片
-			line.item1  = mContent;
-			//描述
-			line.description = edExpenseDesc.getText().toString();
-			
-			finalDb.save(line);
-			
-			addButton();
-			
+		super.onActivityResult(requestCode, resultCode, data);
 
-			
-			
-			
-		}else if(v.equals(llcalendar)){
+		switch (requestCode) {
+		case IMAGE_CAPTURE:
+			Bundle extras = data.getExtras();
+			Bitmap bitmap = (Bitmap) extras.get("data");
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
-			calendarpicker.showAtLocation(findViewById(R.id.detail_line_id),Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+			photoImgView.setImageBitmap(bitmap);
+			mContent = baos.toByteArray();
+			break;
+		case ACTION_GET_CONTENT:
+			break;
+
 		}
+
+	}
+
+	
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			View v = getCurrentFocus();
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			if (imm != null) {
+				imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+			}
+			expenseTypePicker.dismiss();
+			return super.dispatchTouchEvent(event); 
+
+		}
+		
+		return super.dispatchTouchEvent(event);
+	}
+
+	// ///////////////private //////////////////////////////////
+	
+	
+	
+	//对保存按钮进行动画操作
+	private void btnAnimation()
+	{
+		Animation mAnimation = new ScaleAnimation(1f, 0.5f, 1f,1f);
+
+		mAnimation.setDuration(1000);
+		mAnimation.setFillAfter(true);
+		save.startAnimation(mAnimation);
+//		 ObjectAnimator.ofInt(new ViewWrapper(saveBtn), "width", 100).setDuration(5000).start();
 	}
 	
 	
 	
+	private void buildAllviews() {
 
-	protected void onActivityResult ( int requestCode , int resultCode , Intent data )
-	{
-		// TODO Auto-generated method stub
-		super.onActivityResult(requestCode, resultCode, data);
+		rootView = findViewById(R.id.detail_line_id);
 
-		ContentResolver resolver = getContentResolver();
-		/**
-		 * 因为两种方式都用到了startActivityForResult方法，
-		 * 这个方法执行完后都会执行onActivityResult方法， 所以为了区别到底选择了那个方式获取图片要进行判断，
-		 * 这里的requestCode跟startActivityForResult里面第二个参数对应
-		 */
-		//处理返回按钮
-		if(data == null){
+		// 费用类型
+		expenseTypell = (LinearLayout) findViewById(R.id.expense_type);
+		expenseTypell.setOnClickListener(this);
+		expenseTypeTextView = (TextView) findViewById(R.id.detailTypeLabel);
+		expenseTypePicker = new ExpenseTypePopwindow(this, expenseTypeTextView);
+
+		// 日期
+		datell = (LinearLayout) findViewById(R.id.llcalendar_id);
+
+		dateToTextView = (TextView) findViewById(R.id.dateToTextView);
+		dateToTextView.setOnClickListener(this);
+		dateFromTextView = (TextView) findViewById(R.id.dateFromTextView);
+		dateFromTextView.setOnClickListener(this);
+
+		dateToDateDialog = new DatePickerWrapDialog(this, dateToTextView);
+
+		dateFromDateDialog = new DatePickerWrapDialog(this, dateFromTextView);
+		// 照相
+
+		photoImgView = (ImageView) findViewById(R.id.cameraImageView);
+		photoImgView.setOnClickListener(this);
+
+		new ExpenseTypePopwindow(this, expenseTypeTextView);
+
+		// 数量单价总金额
+		quantityEditText = (EditText) findViewById(R.id.quantityEditText);
+		quantityEditText.addTextChangedListener(amountTextWatcher);
+
+		priceNumerText = (NumberText) findViewById(R.id.priceNumberText);
+		priceNumerText.addTextChangedListener(amountTextWatcher);
+
+		amountTextView = (TextView) findViewById(R.id.amountTextView);
+
+		// 地点
+		placeEditText = (EditText) findViewById(R.id.placeEditText);
+
+		// 备注
+		commentEditText = (EditText) findViewById(R.id.expense_desc_id);
+
+		// 保存
+		saveBtn = (Button) findViewById(R.id.save_button);
+		saveBtn.setOnClickListener(this);
+
+	}
+
+	// 保存逻辑
+	private void save() {
+		String priceNumber = priceNumerText.getText().toString();
+
+		if (priceNumber.equalsIgnoreCase("")
+				|| priceNumber.equalsIgnoreCase("0")) {
 			
 			return;
 		}
-		
-		if (requestCode == 0)
-		{
-			try
-			{
-				// 获得图片的uri
-				Uri originalUri = data.getData();
-				// 将图片内容解析成字节数组
-			  mContent = readStream(resolver.openInputStream(Uri.parse(originalUri.toString())));
-				// 将字节数组转换为ImageView可调用的Bitmap对象
-				Bitmap myBitmap = getPicFromBytes(mContent, null);
-				// //把得到的图片绑定在控件上显示
-				mimageView.setImageBitmap(myBitmap);
-			} catch ( Exception e )
-			{
-				System.out.println(e.getMessage());
-			}
 
-		} else if (requestCode == 1)
-		{
-			Bitmap myBitmap = null;
-			try
-			{
-				super.onActivityResult(requestCode, resultCode, data);
-				Bundle extras = data.getExtras();
-				myBitmap = (Bitmap) extras.get("data");
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-				mContent = baos.toByteArray();
-				mimageView.setImageBitmap(myBitmap);
-			} catch ( Exception e )
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			// 把得到的图片绑定在控件上显示
+		MOBILE_EXP_REPORT_LINE line = new MOBILE_EXP_REPORT_LINE();
+
+		line.expense_amount = Integer.parseInt(priceNumerText.getText()
+				.toString());
+
+		if (!quantityEditText.getText().toString().equalsIgnoreCase("")) {
+			line.expense_number = Integer.parseInt(quantityEditText.getText()
+					.toString());
+		} else {
+			line.expense_number = 1;
 
 		}
-	}
-	
-	
-	
-	public static byte[] readStream ( InputStream inStream ) throws Exception
-	{
-		byte[] buffer = new byte[1024];
-		int len = -1;
-		ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-		while ((len = inStream.read(buffer)) != -1)
-		{
-			outStream.write(buffer, 0, len);
-		}
-		byte[] data = outStream.toByteArray();
-		outStream.close();
-		inStream.close();
-		return data;
+		// 日期
+		line.expense_date = dateToTextView.getText().toString();
+		line.expense_date_to = dateFromTextView.getText().toString();
 
-	}
-	
-	
-	public static Bitmap getPicFromBytes ( byte[] bytes , BitmapFactory.Options opts )
-	{
-		if (bytes != null)
-			if (opts != null)
-				return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-			else
-				return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-		return null;
+		// 费用类型
+		line.expense_class_desc = expenseTypePicker.expense_class_desc;
+		line.expense_type_desc = expenseTypePicker.expense_type_desc;
+		line.expense_class_id = expenseTypePicker.expense_class_id;
+		line.expense_type_id = expenseTypePicker.expense_type_id;
+
+		// 地点
+		line.expense_place = placeEditText.getText().toString();
+
+		line.local_status = "NEW";
+		// 图片
+
+		line.item1 = mContent;
+		// 描述
+
+		line.description = commentEditText.getText().toString();
+
+		dbmodel.insert(line);
+		btnAnimation();
 	}
 
-	
-	
+	// ////////////////////click////////////////////////////
 	@Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if( calendarpicker.getHeight()  > 0 || calendarpicker.getHeight() >0 ){
-			expensetypepicker.dismiss();
-			calendarpicker.dismiss();
-			return true;	
+	public void onClick(View v) {
+
+		// 点击费用类型，弹出picker选择
+		if (v.equals(expenseTypell)) {
+			expenseTypePicker.showAtLocation(rootView, Gravity.BOTTOM
+					| Gravity.CENTER, 0, 0);
+
+		} else if (v.equals(photoImgView)) {
+			// 拍照逻辑
+			final CharSequence[] items = { "相册", "拍照" };
+			AlertDialog dlg = new AlertDialog.Builder(DetailLineActivity.this)
+					.setTitle("选择图片")
+					.setItems(items, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int item) {
+							// 这里item是根据选择的方式，
+							// 在items数组里面定义了两种方式，拍照的下标为1所以就调用拍照方法
+							if (item == 1) {
+								Intent getImageByCamera = new Intent(
+										"android.media.action.IMAGE_CAPTURE");
+								startActivityForResult(getImageByCamera,
+										IMAGE_CAPTURE);
+							} else {
+								Intent getImage = new Intent(
+										Intent.ACTION_GET_CONTENT);
+								getImage.addCategory(Intent.CATEGORY_OPENABLE);
+								getImage.setType("image/jpeg");
+								startActivityForResult(getImage,
+										ACTION_GET_CONTENT);
+							}
+						}
+					}).create();
+			dlg.show();
+		} else if (v.equals(saveBtn)) {
+			// 保存按钮
+			save();
+
+		} else if (v.equals(dateToTextView)) {
+			dateToDateDialog.showDateDialog();
+
+		} else if (v.equals(dateFromTextView)) {
+
+			dateFromDateDialog.showDateDialog();
+
 		}
-        return super.onKeyDown(keyCode, event);
-    }
+
+	}
+
+	// ///////////////////////////text watch/////////////////////////
+	// 当数量金额变化后动态改变总金额
+	TextWatcher amountTextWatcher = new TextWatcher() {
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+
+			// TODO 当两个输入框体没有任何值的时候，这些值为"",而不是Null
+			float priceNumber, amount;
+			int quantity;
+
+			// 当还没输入值的时候 ，使用默认值
+			if (priceNumerText.getText().toString().equalsIgnoreCase("")) {
+
+				priceNumber = 0;
+			} else {
+				priceNumber = Float.parseFloat(priceNumerText.getText()
+						.toString());
+
+			}
+
+			if (quantityEditText.getText().toString().equalsIgnoreCase("")) {
+
+				quantity = 1;
+
+			} else {
+				quantity = Integer.parseInt(quantityEditText.getText()
+						.toString());
+			}
+
+			amount = priceNumber * quantity;
+
+			amountTextView.setText(String.format("%.2f", amount));
+
+		}
+
+	};
+
+	// ////////////////////////lmdelegate/////////////////////////////////////////////////
+
+	@Override
+	public void modelDidFinshLoad(LMModel model) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void modelDidStartLoad(LMModel model) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void modelDidFaildLoadWithError(LMModel model) {
+		// TODO Auto-generated method stub
+
+	}
+	
+	private static class ViewWrapper {
+	    private View mTarget;
+	 
+	    public ViewWrapper(View target) {
+	        mTarget = target;
+	    }
+	 
+	    public int getWidth() {
+	        return mTarget.getLayoutParams().width;
+	    }
+	 
+	    public void setWidth(int width) {
+	        mTarget.getLayoutParams().width = width;
+	        mTarget.requestLayout();
+	    }
+
+	}
 }

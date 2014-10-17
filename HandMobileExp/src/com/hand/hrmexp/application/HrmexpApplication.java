@@ -2,6 +2,7 @@ package com.hand.hrmexp.application;
 
 import com.handexp.utl.AsNetWorkUtl;
 import com.littlemvc.db.sqlite.FinalDb;
+import com.littlemvc.model.request.db.DbRequestModel;
 
 import android.app.Application;
 
@@ -23,6 +24,7 @@ public class HrmexpApplication extends Application{
 		super.onCreate();
 		instance = this;
 		finalDb = FinalDb.create(this);
+		DbRequestModel.finalDb = finalDb;
 		System.out.println(getFilesDir().getAbsolutePath());
 	}
 	

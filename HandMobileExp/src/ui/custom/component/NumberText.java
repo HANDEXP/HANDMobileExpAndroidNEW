@@ -37,12 +37,12 @@ public class NumberText extends EditText implements TextWatcher {
 				        	//TODO 防止bug每次获得焦点清空
 
 				        	
-				        	System.out.println("get focus");
+			
 				        	
 				        	
 				        } else {
 				        	
-				        	System.out.println("release focus ");
+				        	
 				
 				        }
 				    
@@ -64,7 +64,6 @@ public class NumberText extends EditText implements TextWatcher {
 	public void afterTextChanged(Editable s) {
 		
 		String temp = s.toString();
-		System.out.println(" is " + temp);
 
 		
 		int posDot = temp.indexOf(".");

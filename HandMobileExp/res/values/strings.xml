@@ -52,7 +52,8 @@
 	<string name="quantityLabel">数量</string>
 	<string name="detailTypeLabel">费用</string>
 	<string name="placeLabel">地点</string>
-	<string name="dateLabel">日期</string>
+	<string name="dateLabel">日期从</string>
+	<string name="dateLabel1">至</string>
 	<string name="savelabel">保存</string>
 	<string name="pin">pin</string>
 	<string name="sumLabel">累计：</string>
