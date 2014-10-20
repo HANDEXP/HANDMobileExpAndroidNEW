@@ -38,6 +38,13 @@ public class MenuActivity extends FragmentActivity implements LMModelDelegate, V
 		changeFragment(new HomeFragment()); 
 	}
 	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+	}
+	
+//////////////////private///////////////////
 	
     private void setUpMenu() {
     	
@@ -47,9 +54,9 @@ public class MenuActivity extends FragmentActivity implements LMModelDelegate, V
         resideMenu = new ResideMenu(this);
         resideMenu.setBackground(R.drawable.homebg);
         resideMenu.attachToActivity(this);
-
+        resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
         //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip. 
-        resideMenu.setScaleValue(0.6f);
+        resideMenu.setScaleValue(0.7f);
 
 
         // You can disable a direction by setting ->
@@ -67,6 +74,25 @@ public class MenuActivity extends FragmentActivity implements LMModelDelegate, V
 
     }
     
+    private void addHomeItem()
+    {
+    	
+		//添加主页
+		ResideMenuItem homeItem     = new ResideMenuItem(this, R.drawable.home,     "主页");
+		homeItem.tag = "homeItem";
+		homeItem.setOnClickListener(this);
+		resideMenu.addMenuItem(homeItem, ResideMenu.DIRECTION_LEFT);
+    }
+    
+    private void addSettingItem()
+    {
+    	//添加设置
+    	ResideMenuItem settingItem = new ResideMenuItem(this, R.drawable.settings,     "设置");
+    	settingItem.tag = "settingItem";
+    	settingItem.setOnClickListener(this);
+    	resideMenu.addMenuItem(settingItem, ResideMenu.DIRECTION_LEFT);
+    }
+    
     @Override
     public void onClick(View view) {
          
@@ -80,6 +106,12 @@ public class MenuActivity extends FragmentActivity implements LMModelDelegate, V
     		
 			resideMenu.closeMenu();
 			return;
+    	}else if(tag.equalsIgnoreCase("homeItem")){
+    		
+    		changeFragment(new HomeFragment()); 
+    		resideMenu.closeMenu();
+    	}else if(tag.equalsIgnoreCase("settingItem")){
+    		
     	}
     	
     	
@@ -108,6 +140,9 @@ public class MenuActivity extends FragmentActivity implements LMModelDelegate, V
 			JSONObject jsonobj = new  JSONObject(json);
 			JSONArray arr = 	jsonobj.getJSONObject("body").getJSONArray("list");
 
+			
+			addHomeItem();
+			
 			for(int i=0;i< arr.length();i++){
 				
 				JSONArray arrobj = arr.getJSONObject(i).getJSONArray("items");
@@ -127,7 +162,7 @@ public class MenuActivity extends FragmentActivity implements LMModelDelegate, V
 				
 			}
 		
-			
+			addSettingItem();
 			
 //			System.out.println(((JSONObject)jsonobj.get("body")).get("list").toString());
 			

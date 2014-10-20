@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import com.hand.R;
 import com.hand.hrmexp.application.HrmexpApplication;
+import com.mas.customview.ImageViewPager;
 
 public class HomeFragment extends Fragment{
 	 private View rootview;
@@ -19,24 +20,33 @@ public class HomeFragment extends Fragment{
 	 
 	 private android.support.v4.app.FragmentTransaction transaction;
 	 
+	 private ImageViewPager imageViewPager;
+	 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		rootview  = inflater.inflate(R.layout.activity_home, container, false);
-		init();
+		buildAllViews();
 		
 		
 		return   rootview;
 		
 		
 	}
-	private void init()
+	
+///////////////////private//////////////////////	
+	private void buildAllViews()
 	{
 		transaction = 	HrmexpApplication.getApplication().transaction;
+		
+		imageViewPager = (ImageViewPager) rootview.findViewById(R.id.imageViewPager);
+		
+		imageViewPager.setDrawables(new int[]{R.drawable.display1,R.drawable.display2,R.drawable.display3});
+		
 		btn = (Button) rootview.findViewById(R.id.writeBtn);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+			 
 			@Override
 			public void onClick(View v) {
 				

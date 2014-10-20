@@ -382,7 +382,9 @@ public class ResideMenu extends FrameLayout{
         AnimatorSet scaleDown = new AnimatorSet();
         scaleDown.playTogether(
                 ObjectAnimator.ofFloat(target, "scaleX", targetScaleX),
-                ObjectAnimator.ofFloat(target, "scaleY", targetScaleY)
+                ObjectAnimator.ofFloat(target, "scaleY", targetScaleY),
+                ObjectAnimator.ofFloat(target, "TranslationX", (1-targetScaleY)*target.getWidth())
+                
         );
 
         scaleDown.setInterpolator(AnimationUtils.loadInterpolator(activity,
@@ -404,7 +406,8 @@ public class ResideMenu extends FrameLayout{
         AnimatorSet scaleUp = new AnimatorSet();
         scaleUp.playTogether(
                 ObjectAnimator.ofFloat(target, "scaleX", targetScaleX),
-                ObjectAnimator.ofFloat(target, "scaleY", targetScaleY)
+                ObjectAnimator.ofFloat(target, "scaleY", targetScaleY),
+                 ObjectAnimator.ofFloat(target, "TranslationX", (1-targetScaleY)*target.getWidth())
         );
 
         scaleUp.setDuration(150);
@@ -528,7 +531,9 @@ public class ResideMenu extends FrameLayout{
                     ViewHelper.setScaleX(imageViewShadow, targetScale + shadowAdjustScaleX);
                     ViewHelper.setScaleY(imageViewShadow, targetScale + shadowAdjustScaleY);
                     ViewHelper.setAlpha(scrollViewMenu, (1 - targetScale) * 2.0f);
-
+                    ViewHelper.setTranslationX(viewActivity, viewActivity.getWidth() * (1 - targetScale));
+                    System.out.println("targetScale is " + targetScale);
+//                    ViewHelper.setTranslationX(viewActivity, 50);
                     lastRawX = ev.getRawX();
                     return true;
                 }

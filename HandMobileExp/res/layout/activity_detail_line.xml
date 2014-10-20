@@ -272,7 +272,7 @@
         android:id="@+id/save_button"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center"
+        android:layout_gravity="left"
         android:layout_margin="20dp"
         android:layout_weight="0.1"
         android:background="@drawable/detail_line_button_selector"

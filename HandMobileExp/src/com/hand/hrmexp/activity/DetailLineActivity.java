@@ -183,12 +183,8 @@ public class DetailLineActivity extends Activity implements
 	//对保存按钮进行动画操作
 	private void btnAnimation()
 	{
-		Animation mAnimation = new ScaleAnimation(1f, 0.5f, 1f,1f);
 
-		mAnimation.setDuration(1000);
-		mAnimation.setFillAfter(true);
-		save.startAnimation(mAnimation);
-//		 ObjectAnimator.ofInt(new ViewWrapper(saveBtn), "width", 100).setDuration(5000).start();
+//		 ObjectAnimator.ofInt(new ViewWrapper(saveBtn), "width", saveBtn.getWidth(),saveBtn.getWidth()/2).setDuration(1000).start();
 	}
 	
 	
