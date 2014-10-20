@@ -4,19 +4,37 @@ import java.util.HashMap;
 
 import android.util.Log;
 
+import com.hand.hrms4android.exception.ParseExpressionException;
+import com.hand.hrms4android.parser.Expression;
+import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.handexp.utl.AsNetWorkUtl;
 import com.littlemvc.model.LMModelDelegate;
 import com.littlemvc.model.request.*;
 
 public class LoginModel extends AsHttpRequestModel{
-		
+	private  XmlConfigReader configReader;	
+	
 	public LoginModel(LMModelDelegate delegate){
 		super(delegate);
-		AsHttpRequestModel.utl = new AsNetWorkUtl("http://m.hand-china.com/dev/");
+		configReader = XmlConfigReader.getInstance();
+
 	}
 	public void load(HashMap parm)
 	{
-		this.post("modules/mobile_um/client/commons/login/mbs_login.svc", parm);
+		try {
+			String queryUrl = configReader
+			        .getAttr(new Expression(
+			                "/backend-config/url[@name='login_submit_url']",
+			                "value"));
+			
+			this.post(queryUrl, parm);
+			
+		} catch (ParseExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		
 	}
 

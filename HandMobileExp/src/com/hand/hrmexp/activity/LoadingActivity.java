@@ -91,6 +91,12 @@ public class LoadingActivity extends SherlockActivity implements
 			doReload();
 		}
 	}
+	
+	@Override
+	protected void onDestroy() {
+		System.out.println("destroy");
+		super.onDestroy();
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(

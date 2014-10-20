@@ -52,7 +52,6 @@ public class HomeFragment extends Fragment{
 				
 				Intent intent = 	new Intent(getActivity(),DetailLineActivity.class);
 				startActivity(intent);
-				getActivity().finish();
 				
 //				transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
 //				transaction.replace(R.id.main_fragment, new DetailLineFragment()).commit();
