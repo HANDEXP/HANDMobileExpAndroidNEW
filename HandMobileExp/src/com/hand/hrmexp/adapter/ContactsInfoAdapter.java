@@ -153,15 +153,15 @@ public class ContactsInfoAdapter extends BaseExpandableListAdapter {
 	 * @para groupPosition 头索引
 	 * 
 	 */
-	public Integer checkSum(Integer groupPosition){
+	public Float checkSum(Integer groupPosition){
 		Integer childLen = child.get(groupPosition).size();
 		if(childLen == 0){
 //			group.remove(groupPosition);
-			return 0;
+			return (float) 0;
 		}
-		Integer sum = 0;
+		Float sum = (float) 0;
 		for(int i = 0;i < childLen; i += 1){
-			sum += Integer.parseInt(child.get(groupPosition).get(i)[2].substring(1));
+			sum += Float.parseFloat(child.get(groupPosition).get(i)[2].substring(1));
 		}
 		group.get(groupPosition).set(1, "累计：¥"+sum.toString());
 //		if(groupPosition + 1 == group.size()){
@@ -175,12 +175,12 @@ public class ContactsInfoAdapter extends BaseExpandableListAdapter {
 	 * 检查总累计金额
 	 * 
 	 */
-	public Integer checkSum(){
+	public Float checkSum(){
 		Integer groupLen = group.size();
-		Integer sum = 0;
+		Float sum = (float) 0;
 		for(int i = 0; i < groupLen; i += 1){
 			for(int j = 0; j < child.get(i).size(); j += 1){
-				int temp = Integer.parseInt(child.get(i).get(j)[2].substring(1));
+				float temp = Float.parseFloat(child.get(i).get(j)[2].substring(1));
 				sum += temp;
 			}
 		}
