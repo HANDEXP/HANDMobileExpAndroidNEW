@@ -160,7 +160,7 @@ public class ImageViewPager extends LinearLayout{
     	
 		@Override
 		public Object instantiateItem(View arg0, int arg1) {
-			System.out.println("arg1 is " + arg1);
+
 			try{
 				((ViewPager) arg0).addView(imageViews.get(arg1 % imageViews.size()));
 			}catch (Exception e){

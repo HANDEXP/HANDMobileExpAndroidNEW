@@ -48,7 +48,7 @@ public class FinalDb {
 
 	private static HashMap<String, FinalDb> daoMap = new HashMap<String, FinalDb>();
 
-	private SQLiteDatabase db;
+	public SQLiteDatabase db;
 	private DaoConfig config;
 
 	private FinalDb(DaoConfig config) {
@@ -739,7 +739,7 @@ public class FinalDb {
 		return dbModelList;
 	}
 
-	private void checkTableExist(Class<?> clazz) {
+	public void checkTableExist(Class<?> clazz) {
 		if (!tableIsExist(TableInfo.get(clazz))) {
 			String sql = SqlBuilder.getCreatTableSQL(clazz);
 			debugSql(sql);

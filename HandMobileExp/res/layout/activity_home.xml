@@ -56,6 +56,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/todayTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -98,6 +99,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/weekTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -139,6 +141,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/monthTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"

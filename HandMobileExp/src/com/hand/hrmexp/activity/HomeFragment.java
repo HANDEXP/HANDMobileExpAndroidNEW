@@ -12,19 +12,34 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.hand.R;
 import com.hand.hrmexp.application.HrmexpApplication;
+import com.hand.hrmexp.model.HomeModel;
+import com.littlemvc.model.LMModel;
+import com.littlemvc.model.LMModelDelegate;
 import com.mas.customview.ImageViewPager;
 
-public class HomeFragment extends Fragment{
+public class HomeFragment extends Fragment implements LMModelDelegate{
 	 private View rootview;
 	 private Button btn; 
+
 	 private LinearLayout expDetailLinell;
 	 private LinearLayout uploadListll;
+
+	 
+	 
+	 /////三个汇总金额
+	 private TextView todayTextView;
+	 private TextView  weekTextView;
+	 private TextView  monthTextView;
+	 
 	 private android.support.v4.app.FragmentTransaction transaction;
 	 
 	 private ImageViewPager imageViewPager;   
+	 
+	 private HomeModel model;
 	 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -33,15 +48,35 @@ public class HomeFragment extends Fragment{
 		rootview  = inflater.inflate(R.layout.activity_home, container, false);
 		buildAllViews();
 		
-		
+		model = new HomeModel(this);
+		model.load();
 		return   rootview;
 		
 		
 	}
 	
+	@Override
+	public void onResume() {
+		
+		this.model.load();
+		
+		super.onResume();
+	}
+	
+	@Override
+	public void onStop() {
+		imageViewPager.imageDisplayShutdown();
+		super.onStop();
+	}
+	
 ///////////////////private//////////////////////	
 	private void buildAllViews()
 	{
+		todayTextView = (TextView) rootview.findViewById(R.id.todayTextView);
+		weekTextView = (TextView) rootview.findViewById(R.id.weekTextView);
+		monthTextView = (TextView) rootview.findViewById(R.id.monthTextView);
+		
+		
 		transaction = 	HrmexpApplication.getApplication().transaction;
 		
 		imageViewPager = (ImageViewPager) rootview.findViewById(R.id.imageViewPager);
@@ -84,6 +119,38 @@ public class HomeFragment extends Fragment{
 				startActivity(intent);				
 			}
 		});
+		
+	}
+
+	@Override
+	public void modelDidFinshLoad(LMModel _model) {
+		
+		if(model.todayAmount !=null){
+			todayTextView.setText(model.todayAmount);
+		}
+		if(model.weekAmount !=null){
+			weekTextView.setText(model.weekAmount);
+		}
+		
+		if(model.monthAmount !=null){
+			monthTextView.setText(model.monthAmount);		
+			}
+
+
+		
+		
+		
+	}
+
+	@Override
+	public void modelDidStartLoad(LMModel model) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void modelDidFaildLoadWithError(LMModel model) {
+		// TODO Auto-generated method stub
 		
 	}
 	

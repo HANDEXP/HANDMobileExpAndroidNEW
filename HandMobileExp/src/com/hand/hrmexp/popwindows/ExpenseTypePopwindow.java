@@ -14,6 +14,7 @@ import kankan.wheel.widget.adapters.AbstractWheelTextAdapter;
 import com.hand.R;
 import com.handexp.utl.ConstantsUtl;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -53,7 +54,7 @@ public class ExpenseTypePopwindow extends PopupWindow{
 
 		this.context = context;
 		this.typelable = typelable;
-
+		Activity activity = (Activity) context;
 		
 		 LayoutInflater inflater = (LayoutInflater) context  
 	                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -63,7 +64,7 @@ public class ExpenseTypePopwindow extends PopupWindow{
 
 		 setContentView(Picker_city_province);
 		 setWidth(LayoutParams.MATCH_PARENT);
-		 setHeight( 300);
+		 setHeight(LayoutParams.WRAP_CONTENT);
 		
 		init();
 		

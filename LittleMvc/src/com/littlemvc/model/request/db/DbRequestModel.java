@@ -1,5 +1,7 @@
 package com.littlemvc.model.request.db;
 
+import java.util.List;
+
 import com.littlemvc.db.sqlite.FinalDb;
 import com.littlemvc.model.LMModelDelegate;
 import com.littlemvc.model.request.LMRequestModel;
@@ -8,6 +10,15 @@ public class DbRequestModel extends LMRequestModel{
 	
 	//上下文共用一个工具
 	public static FinalDb finalDb;
+	
+	
+	//通过访问result，获取刚才查询出来的参数
+	public List result;
+	
+	//最近一次插入操作的主键
+	public int id;
+	
+	public String currentMethod;
 	
 	public DbRequestModel(LMModelDelegate delegate)
 	{
@@ -18,7 +29,20 @@ public class DbRequestModel extends LMRequestModel{
 	
 	public void insert(Object obj)
 	{
+		currentMethod = "insert";
 		finalDb.save(obj);
+		
+	}
+	
+	public void query(Object obj,String strWhere,
+			String orderBy)
+	{
+		
+		currentMethod = "query";
+		
+		 result = finalDb.findAllByWhere(obj.getClass(),strWhere,orderBy);
+		
+		requestDidFinishLoad(this);
 		
 	}
 	

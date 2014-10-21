@@ -7,6 +7,8 @@ import java.util.List;
 
 import ui.custom.component.NumberText;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
 import com.hand.R;
 import com.hand.hrmexp.application.HrmexpApplication;
 import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_LINE;
@@ -33,6 +35,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Selection;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View.OnClickListener;
@@ -42,11 +45,13 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.view.Window;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView.FindListener;
 import android.widget.Button;
@@ -55,6 +60,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DetailLineActivity extends Activity implements
 		View.OnClickListener, LMModelDelegate {
@@ -117,6 +123,21 @@ public class DetailLineActivity extends Activity implements
 
 	ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
+	//百度定位
+	public LocationClient mLocationClient;
+	
+	public BDLocation location;
+	
+	//解决光标位置问题
+	OnKeyListener  keylistener = 	new OnKeyListener() {
+		
+		@Override
+		public boolean onKey(View v, int keyCode, KeyEvent event) {
+			 EditText editText   =  (EditText)v;
+			 editText.setSelection(editText.getText().length());
+			return false;
+		}
+	};
 	
 	
 	@Override
@@ -130,12 +151,16 @@ public class DetailLineActivity extends Activity implements
 		buildAllviews();
 
 		dbmodel = new DbRequestModel(this);
+		mLocationClient = HrmexpApplication.getApplication().mLocationClient;
+		
 	}
 
 	@Override
-	public void onResume() {
+	public void onResume() {		
 		super.onResume();
-
+		
+		mLocationClient.requestLocation();
+		location = mLocationClient.getLastKnownLocation();
 	}
 
 	@Override
@@ -162,11 +187,15 @@ public class DetailLineActivity extends Activity implements
 	
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
+		
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			View v = getCurrentFocus();
+
 			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			
 			if (imm != null) {
 				imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+				
 			}
 			expenseTypePicker.dismiss();
 			return super.dispatchTouchEvent(event); 
@@ -175,6 +204,11 @@ public class DetailLineActivity extends Activity implements
 		
 		return super.dispatchTouchEvent(event);
 	}
+	
+
+	 
+
+
 
 	// ///////////////private //////////////////////////////////
 	
@@ -184,11 +218,8 @@ public class DetailLineActivity extends Activity implements
 	private void btnAnimation()
 	{
 
+		 ObjectAnimator.ofInt(new ViewWrapper(saveBtn), "width", saveBtn.getWidth(),saveBtn.getWidth()/2).setDuration(1000).start();
 
-//		 ObjectAnimator.ofInt(new ViewWrapper(saveBtn), "width", saveBtn.getWidth(),saveBtn.getWidth()/2).setDuration(1000).start();
-
-
-		
 	}
 	
 	
@@ -228,14 +259,21 @@ public class DetailLineActivity extends Activity implements
 		// 数量单价总金额
 		quantityEditText = (EditText) findViewById(R.id.quantityEditText);
 		quantityEditText.addTextChangedListener(amountTextWatcher);
+		quantityEditText.setOnKeyListener(keylistener);
 
 		priceNumerText = (NumberText) findViewById(R.id.priceNumberText);
 		priceNumerText.addTextChangedListener(amountTextWatcher);
-
+		priceNumerText.setOnKeyListener(keylistener);
+		
+		
 		amountTextView = (TextView) findViewById(R.id.amountTextView);
 
 		// 地点
 		placeEditText = (EditText) findViewById(R.id.placeEditText);
+		//增加doneEditorInfo.IME_ACTION_DONE只有对android:singleLine="true"的EditText有效。至少对HTC_A9191是这样的。
+		//有些输入法不支持
+		placeEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+		placeEditText.setOnKeyListener(keylistener);
 
 		// 备注
 		commentEditText = (EditText) findViewById(R.id.expense_desc_id);
@@ -249,16 +287,26 @@ public class DetailLineActivity extends Activity implements
 	// 保存逻辑
 	private void save() {
 		String priceNumber = priceNumerText.getText().toString();
-
+		String place = placeEditText.getText().toString();
+		
+		
 		if (priceNumber.equalsIgnoreCase("")
-				|| priceNumber.equalsIgnoreCase("0")) {
+				|| priceNumber.equalsIgnoreCase("0") || place.equalsIgnoreCase("")) {
+			Toast.makeText(DetailLineActivity.this, "请输入完整信息", Toast.LENGTH_LONG).show();
+			return;
+		}
+		
+		
+		if(dateToTextView.getText().toString().compareTo(dateFromTextView.getText().toString()) < 0){
 			
+			Toast.makeText(DetailLineActivity.this, "开始日期不能小于结束日期", Toast.LENGTH_LONG).show();
+
 			return;
 		}
 
 		MOBILE_EXP_REPORT_LINE line = new MOBILE_EXP_REPORT_LINE();
 
-		line.expense_amount = Integer.parseInt(priceNumerText.getText()
+		line.expense_amount = Float.parseFloat(priceNumerText.getText()
 				.toString());
 
 		if (!quantityEditText.getText().toString().equalsIgnoreCase("")) {
@@ -268,9 +316,11 @@ public class DetailLineActivity extends Activity implements
 			line.expense_number = 1;
 
 		}
+		line.total_amount = line.expense_number * line.expense_amount;
+		
 		// 日期
-		line.expense_date = dateToTextView.getText().toString();
-		line.expense_date_to = dateFromTextView.getText().toString();
+		line.expense_date = dateFromTextView.getText().toString();
+		line.expense_date_to = dateToTextView.getText().toString();
 
 		// 费用类型
 		line.expense_class_desc = expenseTypePicker.expense_class_desc;

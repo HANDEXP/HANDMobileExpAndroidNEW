@@ -19,8 +19,11 @@ public class MOBILE_EXP_REPORT_LINE  {
 	public String  expense_class_desc;
 	public int expense_type_id;
 	public String expense_type_desc; 
-	public  int  expense_amount;
+	public  float  expense_amount;
 	public  int  expense_number;
+	
+	public float total_amount;
+	
 	public  String   expense_date;
 	public  String     expense_date_to;
 	
@@ -91,15 +94,26 @@ public class MOBILE_EXP_REPORT_LINE  {
 	}
 
 
-	public int getExpense_amount() {
+	public float getExpense_amount() {
 		return expense_amount;
 	}
 
 
-	public void setExpense_amount(int expense_amount) {
+	public void setExpense_amount(float expense_amount) {
 		this.expense_amount = expense_amount;
 	}
 
+	public float getTotal_amount(){
+		
+		return total_amount;
+	}
+
+	
+	public void setTotal_amount(float total_amount){
+		
+		this.total_amount = total_amount;
+	}
+	
 
 	public int getExpense_number() {
 		return expense_number;
