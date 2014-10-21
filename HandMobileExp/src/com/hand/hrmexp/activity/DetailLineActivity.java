@@ -195,6 +195,10 @@ public class DetailLineActivity extends Activity implements
 	
 	private void buildAllviews() {
 
+		//绑定返回按钮
+		returnImgBtn =	(ImageButton) findViewById(R.id.return_btn);
+		returnImgBtn.setOnClickListener(this);
+		
 		rootView = findViewById(R.id.detail_line_id);
 
 		// 费用类型
@@ -334,6 +338,9 @@ public class DetailLineActivity extends Activity implements
 
 			dateFromDateDialog.showDateDialog();
 
+		}else if(v.equals(returnImgBtn)){
+			this.finish();
+			
 		}
 
 	}
