@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.List;
 
+import org.json.JSONException;
+
 import ui.custom.component.NumberText;
 
 import com.baidu.location.BDLocation;
@@ -21,6 +23,8 @@ import com.littlemvc.db.sqlite.FinalDb;
 import com.littlemvc.model.LMModel;
 import com.littlemvc.model.LMModelDelegate;
 import com.littlemvc.model.request.db.DbRequestModel;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 import android.app.Activity;
@@ -33,6 +37,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
@@ -56,6 +61,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView.FindListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -105,9 +111,11 @@ public class DetailLineActivity extends Activity implements
 
 	// 保存按钮
 	private Button saveBtn;
+	private Button  add_button;
+	private  LinearLayout buttonll;
 
 	// 根view
-	private View rootView;
+	private FrameLayout rootView;
 
 	// 数据库
 
@@ -123,6 +131,12 @@ public class DetailLineActivity extends Activity implements
 
 	ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
+	
+	//////////////id 如有有id者查询数据
+	public int detailId;
+	
+	public String status;
+	
 	//百度定位
 	public LocationClient mLocationClient;
 	
@@ -153,14 +167,33 @@ public class DetailLineActivity extends Activity implements
 		dbmodel = new DbRequestModel(this);
 		mLocationClient = HrmexpApplication.getApplication().mLocationClient;
 		
+		detailId = getIntent().getIntExtra("detailId", -1);
 	}
 
 	@Override
 	public void onResume() {		
 		super.onResume();
 		
-		mLocationClient.requestLocation();
-		location = mLocationClient.getLastKnownLocation();
+		//默认情况
+		if(detailId == -1){
+		
+			mLocationClient.requestLocation();
+			location = mLocationClient.getLastKnownLocation();
+			if(location !=null){
+				String  province = location.getProvince();
+				String  city =  location.getCity();
+				placeEditText.setText(province + ">"  + city);
+				
+			}
+			
+			
+			
+		}else {
+			
+			
+			dbmodel.query(MOBILE_EXP_REPORT_LINE.class, " id = " + detailId, null);
+			
+		}
 	}
 
 	@Override
@@ -187,6 +220,12 @@ public class DetailLineActivity extends Activity implements
 	
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
+		
+		if(status != null && status.equalsIgnoreCase("upload")){
+			if(!ViewUtl.inRangeOfView(returnImgBtn, event))
+			//拦截所有事件
+			return true;
+		}
 		
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			View v = getCurrentFocus();
@@ -217,9 +256,39 @@ public class DetailLineActivity extends Activity implements
 	//对保存按钮进行动画操作
 	private void btnAnimation()
 	{
+		ObjectAnimator anima =  ObjectAnimator.ofInt(new ViewWrapper(saveBtn), "width", saveBtn.getWidth(),saveBtn.getWidth()/2);
+		anima.addListener(new AnimatorListener() {
+			
+			@Override
+			public void onAnimationStart(Animator arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animator arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAnimationEnd(Animator arg0) {
+				// TODO Auto-generated method stub
+				add_button.setVisibility(View.VISIBLE);
+			}
+			
+			@Override
+			public void onAnimationCancel(Animator arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		anima.setDuration(500).start();
+		
 
-		 ObjectAnimator.ofInt(new ViewWrapper(saveBtn), "width", saveBtn.getWidth(),saveBtn.getWidth()/2).setDuration(1000).start();
-
+		
+		 
 	}
 	
 	
@@ -230,7 +299,7 @@ public class DetailLineActivity extends Activity implements
 		returnImgBtn =	(ImageButton) findViewById(R.id.return_btn);
 		returnImgBtn.setOnClickListener(this);
 		
-		rootView = findViewById(R.id.detail_line_id);
+		rootView = (FrameLayout)findViewById(R.id.framelayout);
 
 		// 费用类型
 		expenseTypell = (LinearLayout) findViewById(R.id.expense_type);
@@ -279,10 +348,62 @@ public class DetailLineActivity extends Activity implements
 		commentEditText = (EditText) findViewById(R.id.expense_desc_id);
 
 		// 保存
+		add_button = (Button)findViewById(R.id.add_button);
+		buttonll = (LinearLayout) findViewById(R.id.buttonll);
 		saveBtn = (Button) findViewById(R.id.save_button);
 		saveBtn.setOnClickListener(this);
 
 	}
+	
+	////////////初始化界面
+	private void initView(MOBILE_EXP_REPORT_LINE _record){
+		//单价
+
+		priceNumerText.setText(String.format("%f", _record.expense_amount));
+		quantityEditText.setText(String.format("%d", _record.expense_number));
+		
+	
+		
+		placeEditText.setText(_record.expense_place);
+		commentEditText.setText(_record.description);
+		
+		//初始化picker
+		try {
+			expenseTypePicker.initTypePicker(_record.expense_class_id,_record.expense_type_id);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		status = _record.local_status;
+		
+		if(status.equalsIgnoreCase("upload")){						
+		
+			ImageView view = new ImageView(this);
+			view.setBackgroundResource(R.drawable.submitted);
+			FrameLayout.LayoutParams  layoutparams = new FrameLayout.LayoutParams(200,80);
+			layoutparams.gravity = Gravity.BOTTOM |Gravity.CENTER;
+			layoutparams.bottomMargin = 30;
+			rootView.addView(view,layoutparams);
+		
+			saveBtn.setVisibility(View.INVISIBLE);
+		}else if(status.equalsIgnoreCase("new")) {
+			
+			btnAnimation();
+
+			
+			
+		}
+		
+	}
+	
+	//修改逻辑
+	private void update(){
+		System.out.println("update");
+	}
+	
 
 	// 保存逻辑
 	private void save() {
@@ -452,6 +573,13 @@ public class DetailLineActivity extends Activity implements
 	@Override
 	public void modelDidFinshLoad(LMModel model) {
 		// TODO Auto-generated method stub
+		
+		if(dbmodel.currentMethod.equalsIgnoreCase("query")){
+			
+			MOBILE_EXP_REPORT_LINE record =   (MOBILE_EXP_REPORT_LINE)dbmodel.result.get(0);
+			initView(record);
+			
+		}
 
 	}
 
@@ -478,8 +606,8 @@ public class DetailLineActivity extends Activity implements
 	        return mTarget.getLayoutParams().width;
 	    }
 	 
-	    public void setWidth(int width) {
-	        mTarget.getLayoutParams().width = width;
+	    public void setWidth(int  width) {
+	    	mTarget.getLayoutParams().width = width;
 	        mTarget.requestLayout();
 	    }
 

@@ -165,6 +165,35 @@ public class ExpenseTypePopwindow extends PopupWindow{
 
 	}
 	
+	
+	
+/**
+ * 初始化picker时候调用，传入费用类别id和费用类型id	
+ * @throws JSONException 
+ */
+	
+	public void initTypePicker(int expense_class_id ,int expense_type_id) throws JSONException{
+		
+		for(int i =0;i<expense_class.length();i++){
+			int value = expense_class.getJSONObject(i).getInt("expense_class_id");
+			if(expense_class_id == value){
+				province.setCurrentItem(i);
+			}
+			
+		}
+		
+		for(int i =0;i<expense_type.length();i++){
+			int value = expense_type.getJSONObject(i).getInt("expense_type_id");
+			if(expense_type_id == value){
+				city.setCurrentItem(i);
+				
+			}
+			
+		}
+		
+	}
+	
+	
 	private void updatecity(int index)
 	{
 		

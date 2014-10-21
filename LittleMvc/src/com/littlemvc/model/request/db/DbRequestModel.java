@@ -34,13 +34,13 @@ public class DbRequestModel extends LMRequestModel{
 		
 	}
 	
-	public void query(Object obj,String strWhere,
+	public void query(Class clazz,String strWhere,
 			String orderBy)
 	{
 		
 		currentMethod = "query";
 		
-		 result = finalDb.findAllByWhere(obj.getClass(),strWhere,orderBy);
+		 result = finalDb.findAllByWhere(clazz,strWhere,orderBy);
 		
 		requestDidFinishLoad(this);
 		

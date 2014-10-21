@@ -57,10 +57,11 @@ public class HomeFragment extends Fragment implements LMModelDelegate{
 	
 	@Override
 	public void onResume() {
-		
+		super.onResume();
+		//imageViewPager.imageDisplayStart();
 		this.model.load();
 		
-		super.onResume();
+
 	}
 	
 	@Override
@@ -127,13 +128,22 @@ public class HomeFragment extends Fragment implements LMModelDelegate{
 		
 		if(model.todayAmount !=null){
 			todayTextView.setText(model.todayAmount);
+		}else {
+			
+			todayTextView.setText("0.00");
 		}
 		if(model.weekAmount !=null){
 			weekTextView.setText(model.weekAmount);
+		}else {
+			
+			weekTextView.setText("0.00");
 		}
 		
 		if(model.monthAmount !=null){
 			monthTextView.setText(model.monthAmount);		
+			}else {
+				
+				monthTextView.setText("0.00");
 			}
 
 
