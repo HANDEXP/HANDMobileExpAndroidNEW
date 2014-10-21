@@ -140,6 +140,7 @@ public class ActionBarActivity extends Activity implements OnCreatePanelMenuList
 		return getSherlock().getMenuInflater();
 	}
 
+	@Override
 	public void invalidateOptionsMenu() {
 		getSherlock().dispatchInvalidateOptionsMenu();
 	}

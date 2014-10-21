@@ -184,7 +184,11 @@ public class DetailLineActivity extends Activity implements
 	private void btnAnimation()
 	{
 
+
 //		 ObjectAnimator.ofInt(new ViewWrapper(saveBtn), "width", saveBtn.getWidth(),saveBtn.getWidth()/2).setDuration(1000).start();
+
+
+		
 	}
 	
 	
@@ -273,7 +277,7 @@ public class DetailLineActivity extends Activity implements
 		// 地点
 		line.expense_place = placeEditText.getText().toString();
 
-		line.local_status = "NEW";
+		line.local_status = "new";
 		// 图片
 
 		line.item1 = mContent;

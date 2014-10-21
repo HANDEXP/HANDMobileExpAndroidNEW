@@ -1,44 +1,234 @@
 package com.hand.hrmexp.activity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.hand.R;
+import com.hand.hrmexp.adapter.ContactsInfoAdapter;
+import com.hand.hrmexp.application.HrmexpApplication;
+import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_LINE;
 
-import android.app.ExpandableListActivity;
-import android.graphics.Color;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.AbsListView;
-import android.widget.BaseExpandableListAdapter;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.littlemvc.db.sqlite.FinalDb;
 
-public class DetailListActivity extends ExpandableListActivity {
+public class DetailListActivity extends SherlockActivity {
 
-	List<List<String>> group;
-	List<List<String[]>> child;
-	ContactsInfoAdapter adapter;
+	private List<List<String>> group;
+	private List<List<String[]>> child;
+	private ContactsInfoAdapter adapter;
+	private ExpandableListView detailListView;
+	private TextView amountView;
+	private  FinalDb finalDb;
 
-	private void initializeData() {
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Log.d("TAG",getBaseContext().toString());
+		setContentView(R.layout.activity_detaillist);
+		
+		//加载ActionBar设置标题
+		getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_titlebar));
+		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		getSupportActionBar().setCustomView(R.layout.abs_layout);
+		TextView titleView = (TextView) findViewById(R.id.contextTitle);
+		titleView.setText("报销明细");
+		//绑定ActionBar按钮事件
+		ImageView returnView = (ImageView) findViewById(R.id.returnImage);
+		returnView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO 自动生成的方法存根
+				finish();
+			}
+		});
+		ImageView addView = (ImageView) findViewById(R.id.addImage);
+		addView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO 自动生成的方法存根
+				Intent intent = new Intent(DetailListActivity.this, DetailLineActivity.class);
+				startActivity(intent);
+			}
+		});
+		//获取总金额View
+		amountView = (TextView) findViewById(R.id.Amount);
+		//创建数据库链接
+		finalDb   = HrmexpApplication.getApplication().finalDb;
+		try {
+//			loadTestingDate();
+			initializeData();
+		} catch (ParseException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+		detailListView = (ExpandableListView) findViewById(R.id.list);
+		adapter = new ContactsInfoAdapter(group,child,this,R.layout.activity_detail_child,amountView);
+		detailListView.setAdapter(adapter);
+
+		//打开每一个Group
+		int groupCount = detailListView.getCount();
+		for(int i =0; i<groupCount;i++){
+			detailListView.expandGroup(i);
+		}
+		detailListView.setOnGroupClickListener(new OnGroupClickListener() {	
+			@Override
+			public boolean onGroupClick(ExpandableListView arg0, View arg1, int arg2,
+					long arg3) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
+		detailListView.setOnItemLongClickListener(new OnItemLongClickListener(){
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				// TODO Auto-generated method stub
+				Integer[] itemPosition = getItemIndex(position);
+				//console
+				Log.d("X",itemPosition[0].toString());
+				Log.d("Y",itemPosition[1].toString());
+				//判断是否汇总行
+				if(itemPosition[1] == -1){
+					return false;
+				}
+				getAlertDialog(getItemIndex(position));					
+				return false;
+			}
+			
+		});
+
+		detailListView.setOnChildClickListener(new OnChildClickListener() {
+			
+			@Override
+			public boolean onChildClick(ExpandableListView parent, View v,
+					int groupPosition, int childPosition, long id) {
+				// TODO 自动生成的方法存根
+//				Toast.makeText(getApplicationContext(), child.get(groupPosition).get(childPosition)[3], Toast.LENGTH_SHORT).show();
+				Integer detailId = Integer.parseInt(child.get(groupPosition).get(childPosition)[3]);
+				Intent intent = new Intent(DetailListActivity.this, DetailLineActivity.class);
+				intent.putExtra("detailId", detailId);
+				startActivity(intent);
+				return false;
+			}
+		});
+		
+	}	
+	
+	/**
+	 * 
+	 * Activity加载完毕后检查汇总金额
+	 * 
+	 */
+	
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus){
+		super.onWindowFocusChanged(hasFocus);
+		adapter.checkSum();
+		
+	}
+	
+	
+	@Override
+	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+//		getSherlock().getMenuInflater().inflate(R.menu.activity_loading, menu);
+		return true;
+	}
+	
+	/**
+	 * 
+	 * 插入测试数据
+	 * 
+	 * 
+	 */
+	private void loadTestingDate() {
+		MOBILE_EXP_REPORT_LINE  line = 	 new MOBILE_EXP_REPORT_LINE();
+		line.expense_amount = 100;
+		line.expense_number = 1;
+		line.expense_date ="2014-03-01";
+		line.expense_date_to ="2014-03-01";
+		line.expense_class_desc = "交通费";
+		line.expense_type_desc = "地铁";
+		line.expense_class_id = 1;
+		line.expense_type_id = 1;
+		line.expense_place = "上海市>上海市";
+		
+		line.local_status = "new";
+		//描述
+		line.description = "无备注";
+		
+		finalDb.save(line);
+	}
+	
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+	};
+	
+	/**
+	 * 
+	 * 初始化数据
+	 * @throws ParseException 
+	 * 
+	 * 
+	 */
+	
+	private void initializeData() throws ParseException {
 		group = new ArrayList<List<String>>();
 		child = new ArrayList<List<String[]>>();
-
-		addInfo(new String[] {"2014-09-13","累计：¥600"}, new String[][] { {"行车交通>公交地铁","无备注啊","¥50"},{"行车交通>公交地铁","无备注啊","¥500"},{"行车交通>公交地铁","无备注啊","¥50"} });
-		addInfo(new String[] {"2014-09-10","累计：¥200"}, new String[][] { {"行车交通>公交地铁","无备注啊","¥150"},{"行车交通>公交地铁","无备注啊","¥20"},{"行车交通>公交地铁","无备注啊","¥30"} });
-
+		String[] groupInfo = new String[2];
+		List<String[]> childInfo = new ArrayList<String[]>();
+		
+		List<MOBILE_EXP_REPORT_LINE> resultList = finalDb.findAll(MOBILE_EXP_REPORT_LINE.class, "expense_date desc");
+		String topDate = null; 
+		Boolean flag = false;
+		for(int i =0;i<resultList.size();i++){
+			MOBILE_EXP_REPORT_LINE data = 	resultList.get(i);
+			if(topDate == null){
+				topDate = data.expense_date;
+				groupInfo = new String[]{topDate,"累计：¥"};
+			}
+			flag = dateCompare(data.expense_date,topDate);
+			if(flag){
+					
+					addInfo(groupInfo, childInfo);
+					childInfo.clear();
+					topDate = data.expense_date;
+					groupInfo = new String[]{topDate,"累计：¥"};
+			}
+			
+			
+			childInfo.add(new String[]{data.expense_class_desc+'>'+data.expense_type_desc,data.description,"¥"+data.expense_amount,String.valueOf(data.id),data.local_status});
+		}
+		if(childInfo.size() != 0){
+			addInfo(groupInfo, childInfo);
+		}
+		
+//		addInfo(new String[] {"2014-09-13","累计：¥600"},childInfo);
 	}
 
-	private void addInfo(String[] g, String[][] c) {
+	private void addInfo(String[] g, List<String[]> c) {
 		// TODO Auto-generated method stub
 		List<String> groupitem = new ArrayList<String>();
 		List<String[]> childitem = new ArrayList<String[]>();
@@ -46,182 +236,93 @@ public class DetailListActivity extends ExpandableListActivity {
 			groupitem.add(g[i]);
 		}
 		group.add(groupitem);
-		for (int j = 0; j < c.length; j += 1) {
-			childitem.add(c[j]);
+		for (int j = 0; j < c.size(); j += 1) {
+			childitem.add(c.get(j));
 		}
 		child.add(childitem);
 	}
 
-	class ContactsInfoAdapter extends BaseExpandableListAdapter {
 
-		@Override
-		public Object getChild(int groupPosition, int childPosition) {
-			// TODO Auto-generated method stub
-			return child.get(groupPosition).get(childPosition);
-		}
-
-		@Override
-		public long getChildId(int groupPosition, int childPosition) {
-			// TODO Auto-generated method stub
-			return childPosition;
-		}
-
-		@Override
-		public View getChildView(int groupPosition, int childPosition,
-				boolean isLastChild, View convertView, ViewGroup parents) {
-			// TODO Auto-generated method stub
-			
-			String[] childInfo = child.get(groupPosition).get(childPosition);
-			String typeString = childInfo[0];
-			String descString = childInfo[1];
-			String amountString = childInfo[2];
-			convertView = (View) LayoutInflater.from(DetailListActivity.this).inflate(R.layout.activity_list1,null);
-			TextView type = (TextView) convertView.findViewById(R.id.typeText);
-			type.setText(typeString);
-			TextView desc = (TextView) convertView.findViewById(R.id.descText);
-			desc.setText(descString);
-			TextView amount = (TextView) convertView.findViewById(R.id.detailAmount);
-			amount.setText(amountString);
-			ImageView upload = (ImageView) convertView.findViewById(R.id.upload);
-			upload.setVisibility(View.GONE);
-			return convertView;
-//			return getGenericView(string);
-		}
-
-		@Override
-		public int getChildrenCount(int groupPosition) {
-			// TODO Auto-generated method stub
-			return child.get(groupPosition).size();
-		}
-
-		@Override
-		public Object getGroup(int groupPosition) {
-			// TODO Auto-generated method stub
-			return group.get(groupPosition);
-		}
-
-		@Override
-		public int getGroupCount() {
-			// TODO Auto-generated method stub
-			return group.size();
-		}
-
-		@Override
-		public long getGroupId(int groupPosition) {
-			// TODO Auto-generated method stub
-			return groupPosition;
-		}
-
-		@Override
-		public View getGroupView(int groupPosition, boolean isExpanded,
-				View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
-			List<String> string = group.get(groupPosition);
-			return getGenericView(string);
-		}
-
-		@Override
-		public boolean hasStableIds() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean isChildSelectable(int groupPosition, int childPosition) {
-			// TODO Auto-generated method stub
-			return true;
-		}
-
-//		public View getGenericView(String s) {
-//
-//			RelativeLayout view = new RelativeLayout(DetailListActivity.this);
-//			view.setBackgroundColor(Color.rgb(255, 255, 255));
-//			TextView textView = getTextView(s);
-//			view.addView(textView);
-//			
-//			return view;
-//			
-//			
-//		}
-
-		//重载以构建expandList
-		
-		public View getGenericView(List<String> s) {
-
-			RelativeLayout view = new RelativeLayout(DetailListActivity.this);
-//			view.setOrientation(0);
-			TextView dateTextView = getTextView(s.get(0));
-			RelativeLayout.LayoutParams lpLeft = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 50);  
-			lpLeft.leftMargin = 20;
-			lpLeft.addRule(RelativeLayout.CENTER_VERTICAL);
-			dateTextView.setLayoutParams(lpLeft);
-			dateTextView.setTextSize(12);
-			view.addView(dateTextView);
-//			//累计
-			TextView sumTextView = getTextView(s.get(1));
-			RelativeLayout.LayoutParams lpRight = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 50);  
-			lpRight.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-			lpRight.addRule(RelativeLayout.CENTER_VERTICAL);
-			lpRight.rightMargin = 20;
-			sumTextView.setLayoutParams(lpRight);
-			sumTextView.setTextSize(12);
-			sumTextView.setTextColor(Color.rgb(102, 102, 102));
-			view.addView(sumTextView);			
-			return view;
-		}
-		
-		// 自己定义一个获得文字信息的方法
-		TextView getTextView(String s) {
-			AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
-					ViewGroup.LayoutParams.MATCH_PARENT, 40);
-			TextView text = new TextView(DetailListActivity.this);
-			text.setLayoutParams(lp);
-
-			text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-			text.setPadding(36, 0, 0, 0);
-			text.setText(s);
-			return text;
-		}
-	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		Log.d("TAG",getBaseContext().toString());
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_detaillist);
-		initializeData();
-		ExpandableListView detailListView = getExpandableListView();
-		detailListView.setAdapter(new ContactsInfoAdapter());
-		//打开每一个Group
-		int groupCount = detailListView.getCount();
-		for(int i =0; i<groupCount;i++){
-			detailListView.expandGroup(i);
-		}
-		detailListView.setOnGroupClickListener(new OnGroupClickListener() {
+	
+	//创建弹出框
+	private void getAlertDialog(final Integer[] position){
+		AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+		dialog.setTitle("你确定要删除这条数据");
+		dialog.setMessage("删除后不可撤销");
+		dialog.setCancelable(true);
+		dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			
 			@Override
-			public boolean onGroupClick(ExpandableListView arg0, View arg1, int arg2,
-					long arg3) {
+			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
-				return true;
+				int groupIndex = position[0];
+				int childIndex = position[1];
+				/**
+				 *  待完善
+				 */
+				Integer detailId = Integer.parseInt(child.get(groupIndex).get(childIndex)[3]);
+				MOBILE_EXP_REPORT_LINE  line = 	 new MOBILE_EXP_REPORT_LINE();
+				line.id = detailId;
+				finalDb.deleteById(MOBILE_EXP_REPORT_LINE.class, line.id);
+				child.get(groupIndex).remove(childIndex);
+				//检查汇总
+				if(adapter.checkSum(groupIndex) == 0){
+					group.remove(groupIndex);
+				};
+				dialog.dismiss();
+				
+				adapter.notifyDataSetChanged();
+				
 			}
 		});
-//		detailListView.setGroupIndicator(this.getResources().getDrawable(R.layout.expandablelistviewselector));
-		TextView amount = (TextView) findViewById(R.id.Amount);
-		amount.setText("¥800");
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-
+		dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+			}
+		});
+		dialog.show();
 	}
+	
+	//获得索引
+	private Integer[] getItemIndex(int position){
+		Integer groupLen = group.size();
+		Integer total = 0;
+		Integer temp = 0;
+		for(int i = 0;i < groupLen;i += 1){
+			temp = total;
+			if(temp == position){
+				return new Integer[]{i,-1};
+			}
+			total += 1 + child.get(i).size();
+			if(total > position)
+				return new Integer[]{i,position-1-temp};
+		}
+		
+		return new Integer[]{-1,-1};
+	}
+	
+	/**
+	 * 比较日期,
+	 * @throws ParseException 
+	 * b < e return true
+	 * 
+	 */
+	public static boolean dateCompare(String bDateString, String eDateString) throws ParseException {
+		boolean flag = false;
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");   
+		Date bDate = format.parse(bDateString);
+		Date eDate = format.parse(eDateString);
+		try {
+			if (bDate.before(eDate)) {
+				flag = true;
+			}
+		} catch (Exception e) {
+			flag = false;
+		}
+		return flag;
+	}
+
 }

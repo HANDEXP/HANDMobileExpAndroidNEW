@@ -2,7 +2,6 @@ package com.hand.hrmexp.activity;
 
 import com.hand.R;
 
-
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -41,7 +40,6 @@ public class SettingsActivity extends PreferenceActivity{
 			else {
 
 				if (preference.getKey().equals("sys_basic_url")) {
-		
 					String originalValue = PreferenceManager.getDefaultSharedPreferences(preference.getContext())
 					        .getString(preference.getKey(), "");
 

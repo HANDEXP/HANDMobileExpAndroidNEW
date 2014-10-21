@@ -43,7 +43,6 @@ public class CalendarPicker extends PopupWindow{
 		 setContentView(popwindow_calendar);
 		 setWidth(LayoutParams.WRAP_CONTENT);
 		 setHeight(LayoutParams.WRAP_CONTENT);
-		 pager =  (CalendarCardPager) popwindow_calendar.findViewById(R.id.calendarCard1);  
 		 pager.setOnCellItemClick(new OnCellItemClick() {
 				@Override
 				public void onCellClick(View v, CardGridItem item) {

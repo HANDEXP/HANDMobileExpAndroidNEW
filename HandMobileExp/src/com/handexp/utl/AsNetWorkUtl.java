@@ -3,8 +3,6 @@
  */
 package com.handexp.utl;
 
-import android.R.string;
-
 import com.littlemvc.utl.ILMAsNetworkUtl;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -45,6 +43,7 @@ public class AsNetWorkUtl   extends ILMAsNetworkUtl{
 	}
 
 
+	@Override
 	public void get(String url, RequestParams param,
 			AsyncHttpResponseHandler handler) {
 		AsyncHttpClient client = new AsyncHttpClient();
@@ -54,6 +53,7 @@ public class AsNetWorkUtl   extends ILMAsNetworkUtl{
 
 
 
+	@Override
 	public void post(String url, RequestParams param,
 			AsyncHttpResponseHandler handler) {
 		// TODO Auto-generated method stub

@@ -2,8 +2,6 @@ package com.hand.hrmexp.model;
 
 import java.util.HashMap;
 
-import android.util.Log;
-
 import com.handexp.utl.AsNetWorkUtl;
 import com.littlemvc.model.LMModelDelegate;
 import com.littlemvc.model.request.*;

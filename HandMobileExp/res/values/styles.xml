@@ -16,8 +16,17 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-
     
+<style name="Theme.MyTheme" parent="Theme.Sherlock.Light">
+	<item name="actionBarStyle">@style/Theme.MyTheme.ActionBarStyle</item>
+</style>
+<style name="Theme.MyTheme.ActionBarStyle" parent="@style/Widget.Sherlock.ActionBar">
+    <item name="android:titleTextStyle">@style/Theme.MyTheme.TitleTextStyle</item>
+</style>
+<style name="Theme.MyTheme.TitleTextStyle" parent="@style/TextAppearance.Sherlock.Widget.ActionBar.Title">
+    <item name="android:textColor">#cccccc</item>
+    
+</style>    
     <style name="main_head_title">
         <item name="android:layout_width">wrap_content</item>
 		<item name="android:layout_height">wrap_content</item>

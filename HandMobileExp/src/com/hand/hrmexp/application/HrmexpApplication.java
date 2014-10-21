@@ -1,6 +1,5 @@
 package com.hand.hrmexp.application;
 
-import com.handexp.utl.AsNetWorkUtl;
 import com.littlemvc.db.sqlite.FinalDb;
 import com.littlemvc.model.request.db.DbRequestModel;
 

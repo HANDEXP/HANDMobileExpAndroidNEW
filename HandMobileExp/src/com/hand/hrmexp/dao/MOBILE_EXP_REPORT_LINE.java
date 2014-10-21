@@ -4,7 +4,6 @@
 package com.hand.hrmexp.dao;
 
 import com.littlemvc.db.annotation.Id;
-import com.littlemvc.db.annotation.Table;
 
 /**
  * @author jiang titeng
