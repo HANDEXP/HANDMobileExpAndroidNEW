@@ -93,7 +93,7 @@ public class DetailListActivity extends SherlockActivity {
 				Integer[] itemPosition = getItemIndex(position);
 				//console
 				Log.d("X",itemPosition[0].toString());
-				Log.d("Y",itemPosition[1].toString());
+				Log.d("Y",itemPosition[1].toString());	
 				//判断是否汇总行
 				if(itemPosition[1] == -1){
 					return false;
@@ -115,6 +115,8 @@ public class DetailListActivity extends SherlockActivity {
 				Intent intent = new Intent(DetailListActivity.this, DetailLineActivity.class);
 				intent.putExtra("detailId", detailId);
 				startActivity(intent);
+		        overridePendingTransition(R.anim.move_right_in_activity, R.anim.move_left_out_activity);
+
 				return false;
 			}
 		});

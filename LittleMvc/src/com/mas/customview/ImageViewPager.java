@@ -73,7 +73,7 @@ public class ImageViewPager extends LinearLayout{
     	imageViews = new ArrayList<ImageView>();
     	
     	//默认滚动时间为2秒
-    	scrollSecond = 2;
+    	scrollSecond = 1;
     }
 
 /**

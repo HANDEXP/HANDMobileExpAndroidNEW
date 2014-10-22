@@ -51,6 +51,10 @@ public class ContactsInfoAdapter extends BaseExpandableListAdapter {
 			boolean isLastChild, View convertView, ViewGroup parents) {
 		// TODO Auto-generated method stub
 		
+		if(convertView == null){
+			
+			convertView = LayoutInflater.from(context).inflate(childResourceId,null);
+		}
 		String[] childInfo = child.get(groupPosition).get(childPosition);
 		String typeString = childInfo[0];
 		String descString = childInfo[1];
@@ -62,7 +66,7 @@ public class ContactsInfoAdapter extends BaseExpandableListAdapter {
 		}
 		String amountString = childInfo[2];
 		String status = childInfo[4];
-		convertView = LayoutInflater.from(context).inflate(childResourceId,null);
+
 		TextView type = (TextView) convertView.findViewById(R.id.typeText);
 		type.setText(typeString);
 

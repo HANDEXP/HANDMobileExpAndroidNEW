@@ -58,7 +58,7 @@ public class HomeModel extends DbRequestModel{
 			
 		}
 		
-		Cursor weekDay  =  this.finalDb.db.rawQuery("select sum(total_amount) from  com_hand_hrmexp_dao_MOBILE_EXP_REPORT_LINE where expense_date >= ? and expense_date_to <= ?", new String[]{firstDateOfWeek,lastDateOfWeek} );
+		Cursor weekDay  =  this.finalDb.db.rawQuery("select sum(total_amount) from  com_hand_hrmexp_dao_MOBILE_EXP_REPORT_LINE where expense_date >= ? and expense_date <= ?", new String[]{firstDateOfWeek,lastDateOfWeek} );
 		
 		while(weekDay.moveToNext()){
 			
@@ -68,7 +68,7 @@ public class HomeModel extends DbRequestModel{
 		}
 		
 		
-		Cursor monthDay = this.finalDb.db.rawQuery("select sum(total_amount) from  com_hand_hrmexp_dao_MOBILE_EXP_REPORT_LINE where expense_date >= ? and expense_date_to <= ?",  new String[]{firstDateOfMonth,LastDateOfMonth});
+		Cursor monthDay = this.finalDb.db.rawQuery("select sum(total_amount) from  com_hand_hrmexp_dao_MOBILE_EXP_REPORT_LINE where expense_date >= ? and expense_date <= ?",  new String[]{firstDateOfMonth,LastDateOfMonth});
 		
 		while(monthDay.moveToNext()){
 			

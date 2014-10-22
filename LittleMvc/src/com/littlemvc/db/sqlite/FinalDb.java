@@ -34,6 +34,8 @@ import com.littlemvc.db.table.ManyToOne;
 import com.littlemvc.db.table.OneToMany;
 import com.littlemvc.db.table.TableInfo;
 import com.littlemvc.db.sqlite.DbException;
+
+import android.R.integer;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -621,6 +623,24 @@ public class FinalDb {
 			}
 		}
 		return entity;
+	}
+	
+	/**
+	 * 查询主键，获得最后一个返回的主键
+	 * 
+	 */
+	public int getLastKey(Class clazz){
+		String id = "0";
+		
+		TableInfo table=TableInfo.get(clazz);
+		String sql = "SELECT max(id) id FROM  " + table.getTableName();
+		Cursor cur =  db.rawQuery(sql, null);
+		while(cur.moveToNext()){
+			id = 	cur.getString(0);
+			
+		}
+		
+		return Integer.parseInt(id);
 	}
 
 	/**

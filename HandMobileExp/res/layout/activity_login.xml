@@ -25,10 +25,12 @@
 
     <EditText
         android:id="@+id/username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="55dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:ems="10"
         android:hint="@string/app_username"
 		android:inputType="textVisiblePassword"
@@ -42,8 +44,10 @@
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
         android:ems="10"
@@ -54,7 +58,9 @@
 
     <Button
         android:id="@+id/loginButton"
-        android:layout_width="210dp"
+        android:layout_width="fill_parent"
+                android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"

@@ -1,6 +1,7 @@
 package com.hand.hrmexp.activity;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 
 import java.io.InputStream;
 import java.util.List;
@@ -17,6 +18,7 @@ import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_LINE;
 import com.hand.hrmexp.dialogs.DatePickerWrapDialog;
 import com.hand.hrmexp.popwindows.CalendarPopwindow;
 import com.hand.hrmexp.popwindows.ExpenseTypePopwindow;
+import com.handexp.utl.BitmapUtl;
 import com.handexp.utl.DialogUtl;
 import com.handexp.utl.ViewUtl;
 import com.littlemvc.db.sqlite.FinalDb;
@@ -45,6 +47,7 @@ import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View.OnClickListener;
 import android.support.v4.app.Fragment;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -54,6 +57,7 @@ import android.view.View.OnKeyListener;
 import android.view.Window;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.EditorInfo;
@@ -133,9 +137,12 @@ public class DetailLineActivity extends Activity implements
 
 	
 	//////////////id 如有有id者查询数据
-	public int detailId;
+	public int detailId =0;
 	
 	public String status;
+	
+	//0 为从记一笔出来的,或从列表的+进来  1为老数据
+	public int fromFlag;
 	
 	//百度定位
 	public LocationClient mLocationClient;
@@ -153,6 +160,9 @@ public class DetailLineActivity extends Activity implements
 		}
 	};
 	
+	//图片压缩配置
+	BitmapFactory.Options opts;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -163,19 +173,31 @@ public class DetailLineActivity extends Activity implements
 		setContentView(R.layout.activity_detail_line);
 
 		buildAllviews();
+		
+		
 
 		dbmodel = new DbRequestModel(this);
 		mLocationClient = HrmexpApplication.getApplication().mLocationClient;
 		
-		detailId = getIntent().getIntExtra("detailId", -1);
-	}
-
-	@Override
-	public void onResume() {		
-		super.onResume();
+		detailId = getIntent().getIntExtra("detailId", 0);
+		
+		if(detailId == 0 ){
+			//新数据
+			fromFlag = 0;
+		}else {
+			//老数据
+			fromFlag =1 ;
+		}
+		
+		//默认压缩4倍
+		opts = new BitmapFactory.Options(); 
+		opts.inSampleSize = 4;
+		opts.inJustDecodeBounds = false;
+		opts.inInputShareable = true;
+		opts.inPurgeable = true;
 		
 		//默认情况
-		if(detailId == -1){
+		if(detailId == 0){
 		
 			mLocationClient.requestLocation();
 			location = mLocationClient.getLastKnownLocation();
@@ -197,20 +219,50 @@ public class DetailLineActivity extends Activity implements
 	}
 
 	@Override
+	public void onResume() {		
+		super.onResume();
+		
+
+	}
+	
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		super.onActivityResult(requestCode, resultCode, data);
 
+		if(data == null){
+			return;
+		}
+		
 		switch (requestCode) {
 		case IMAGE_CAPTURE:
 			Bundle extras = data.getExtras();
 			Bitmap bitmap = (Bitmap) extras.get("data");
-			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 25, baos);
 
 			photoImgView.setImageBitmap(bitmap);
 			mContent = baos.toByteArray();
 			break;
 		case ACTION_GET_CONTENT:
+			// 获得图片的uri
+			Uri originalUri = data.getData();
+
+			try {
+				mContent = BitmapUtl.readStream(getContentResolver().openInputStream(Uri.parse(originalUri.toString())));
+			}  catch (Exception e) {
+				Toast.makeText(DetailLineActivity.this, "获取相册图片失败", Toast.LENGTH_LONG).show();
+
+				e.printStackTrace();
+				
+				return;
+			}
+			
+			Bitmap myBitmap = BitmapUtl.bytesToBitmap(mContent, opts);
+			
+			//已经压缩过的所以速率是100
+			mContent = BitmapUtl.BitmapTobytes(myBitmap, 100);
+			photoImgView.setImageBitmap(myBitmap);
 			break;
 
 		}
@@ -244,7 +296,13 @@ public class DetailLineActivity extends Activity implements
 		return super.dispatchTouchEvent(event);
 	}
 	
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(fromFlag == 1){
+        	overridePendingTransition(R.anim.move_left_in_activity, R.anim.move_right_out_activity);
+        }
+    }
 	 
 
 
@@ -349,6 +407,7 @@ public class DetailLineActivity extends Activity implements
 
 		// 保存
 		add_button = (Button)findViewById(R.id.add_button);
+		add_button.setOnClickListener(this);
 		buttonll = (LinearLayout) findViewById(R.id.buttonll);
 		saveBtn = (Button) findViewById(R.id.save_button);
 		saveBtn.setOnClickListener(this);
@@ -357,6 +416,10 @@ public class DetailLineActivity extends Activity implements
 	
 	////////////初始化界面
 	private void initView(MOBILE_EXP_REPORT_LINE _record){
+		//初始化时间
+		dateFromDateDialog.setDate(_record.expense_date);
+		dateToDateDialog.setDate(_record.expense_date_to);
+		
 		//单价
 
 		priceNumerText.setText(String.format("%f", _record.expense_amount));
@@ -375,12 +438,17 @@ public class DetailLineActivity extends Activity implements
 			e.printStackTrace();
 		}
 		
-		
+	
 		
 		status = _record.local_status;
 		
+		if(_record.item1 !=null){
+			mContent = _record.item1;
+			photoImgView.setImageBitmap(BitmapUtl.bytesToBitmap(_record.item1, null));
+		}
 		if(status.equalsIgnoreCase("upload")){						
 		
+			//添加以提交的图片
 			ImageView view = new ImageView(this);
 			view.setBackgroundResource(R.drawable.submitted);
 			FrameLayout.LayoutParams  layoutparams = new FrameLayout.LayoutParams(200,80);
@@ -391,18 +459,21 @@ public class DetailLineActivity extends Activity implements
 			saveBtn.setVisibility(View.INVISIBLE);
 		}else if(status.equalsIgnoreCase("new")) {
 			
-			btnAnimation();
-
+			//执行按钮动画
+//			btnAnimation();
+			//不能使用动画，因为在没出现之前获取view的宽度都为0
+		    WindowManager manager = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+		    Display display = manager.getDefaultDisplay();
+		    int width =display.getWidth();
+			saveBtn.getLayoutParams().width=(width-30)/2;
+			saveBtn.invalidate();
+			add_button.setVisibility(View.VISIBLE);
 			
 			
 		}
 		
 	}
 	
-	//修改逻辑
-	private void update(){
-		System.out.println("update");
-	}
 	
 
 	// 保存逻辑
@@ -459,9 +530,14 @@ public class DetailLineActivity extends Activity implements
 		// 描述
 
 		line.description = commentEditText.getText().toString();
-
-		dbmodel.insert(line);
-		btnAnimation();
+		
+		if(detailId == 0){
+			dbmodel.insert(line);
+			btnAnimation();
+		}else{
+			dbmodel.update(line, null);
+			
+		}
 	}
 
 	// ////////////////////click////////////////////////////
@@ -500,7 +576,8 @@ public class DetailLineActivity extends Activity implements
 			dlg.show();
 		} else if (v.equals(saveBtn)) {
 			// 保存按钮
-			save();
+				save();
+
 
 		} else if (v.equals(dateToTextView)) {
 			dateToDateDialog.showDateDialog();
@@ -511,7 +588,14 @@ public class DetailLineActivity extends Activity implements
 
 		}else if(v.equals(returnImgBtn)){
 			this.finish();
+			if(fromFlag == 1 ){
+				overridePendingTransition(R.anim.move_left_in_activity, R.anim.move_right_out_activity);
+			}
 			
+		}else if(v.equals(add_button)){
+			Intent intent = new Intent(this,DetailLineActivity.class);
+			startActivity(intent);
+			finish();
 		}
 
 	}
@@ -578,6 +662,10 @@ public class DetailLineActivity extends Activity implements
 			
 			MOBILE_EXP_REPORT_LINE record =   (MOBILE_EXP_REPORT_LINE)dbmodel.result.get(0);
 			initView(record);
+			
+		}else if(dbmodel.currentMethod.equalsIgnoreCase("insert")){
+			
+			detailId =dbmodel.id;
 			
 		}
 

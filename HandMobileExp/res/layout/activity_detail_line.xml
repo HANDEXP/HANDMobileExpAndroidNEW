@@ -278,6 +278,7 @@
         android:layout_weight="0.25"
         android:background="@drawable/corners_desc_bg"
         android:ems="10"
+        android:textColor="@color/black"
         android:gravity="top"
         android:inputType="textMultiLine" />
 

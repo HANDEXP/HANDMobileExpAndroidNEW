@@ -54,7 +54,6 @@ public class ExpenseTypePopwindow extends PopupWindow{
 
 		this.context = context;
 		this.typelable = typelable;
-		Activity activity = (Activity) context;
 		
 		 LayoutInflater inflater = (LayoutInflater) context  
 	                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -100,10 +99,12 @@ public class ExpenseTypePopwindow extends PopupWindow{
 		
 		try {
 			expense_type_data= new JSONObject(mPreferences.getString(ConstantsUtl.tmp, ""));
+
 			expense_class =  expense_type_data.getJSONObject("body").getJSONArray("list");
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
+			//当费用类型为空的时候会进入这个
 			e.printStackTrace();
 			return;
 		}
@@ -173,6 +174,10 @@ public class ExpenseTypePopwindow extends PopupWindow{
  */
 	
 	public void initTypePicker(int expense_class_id ,int expense_type_id) throws JSONException{
+		if(expense_type_data == null){
+			return ;
+		}
+		
 		
 		for(int i =0;i<expense_class.length();i++){
 			int value = expense_class.getJSONObject(i).getInt("expense_class_id");

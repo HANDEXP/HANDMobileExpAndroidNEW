@@ -32,6 +32,8 @@ public class DbRequestModel extends LMRequestModel{
 		currentMethod = "insert";
 		finalDb.save(obj);
 		
+		id = finalDb.getLastKey(obj.getClass());
+		requestDidFinishLoad(this);
 	}
 	
 	public void query(Class clazz,String strWhere,
@@ -44,6 +46,13 @@ public class DbRequestModel extends LMRequestModel{
 		
 		requestDidFinishLoad(this);
 		
+	}
+	
+	public void update(Object obj,String strWhere)
+	{
+		currentMethod = "update";
+		finalDb.update(obj, strWhere);
+		requestDidFinishLoad(this);
 	}
 	
 }

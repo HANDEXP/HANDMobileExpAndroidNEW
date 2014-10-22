@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 public class DatePickerWrapDialog {
 	
-	public static Calendar c = Calendar.getInstance();
+	public  Calendar c = Calendar.getInstance();
 	
 	//TODO 这里的yyyy-MM-dd 不能写成yyyy-mm-dd
 	protected  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
