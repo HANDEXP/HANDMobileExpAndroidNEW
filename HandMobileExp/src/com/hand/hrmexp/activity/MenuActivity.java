@@ -112,6 +112,8 @@ public class MenuActivity extends FragmentActivity implements LMModelDelegate, V
     		resideMenu.closeMenu();
     	}else if(tag.equalsIgnoreCase("settingItem")){
     		
+    		changeFragment(new SystemSetFragment());
+    		resideMenu.closeMenu();
     	}
     	
     	

@@ -94,6 +94,7 @@
 		    android:theme="@style/Theme.MyTheme"
 		    android:label="批量上传">
 		</activity>
+
     </application>
 
 </manifest>

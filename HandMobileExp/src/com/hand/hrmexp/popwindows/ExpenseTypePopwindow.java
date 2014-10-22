@@ -98,8 +98,7 @@ public class ExpenseTypePopwindow extends PopupWindow{
 		SharedPreferences  mPreferences = PreferenceManager.getDefaultSharedPreferences ( context);
 		
 		try {
-			expense_type_data= new JSONObject(mPreferences.getString(ConstantsUtl.tmp, ""));
-
+			expense_type_data= new JSONObject(mPreferences.getString(ConstantsUtl.expenseType, ""));
 			expense_class =  expense_type_data.getJSONObject("body").getJSONArray("list");
 			
 		} catch (JSONException e) {
