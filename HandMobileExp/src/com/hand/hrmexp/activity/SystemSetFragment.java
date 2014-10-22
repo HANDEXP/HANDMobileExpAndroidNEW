@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +33,7 @@ public class SystemSetFragment extends Fragment implements LMModelDelegate {
 
 	private View rootview;
 	private Button quitButton;
-	private TextView syncView;
+	private LinearLayout syncView;
 	private ExpenseTypeModel model;
 
 	@Override
@@ -64,7 +65,7 @@ public class SystemSetFragment extends Fragment implements LMModelDelegate {
 			}
 		});
 		// 同步按钮
-		syncView = (TextView) rootview.findViewById(R.id.synchData);
+		syncView = (LinearLayout) rootview.findViewById(R.id.synchData);
 		syncView.setOnClickListener(new OnClickListener() {
 
 			@Override

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hand.R;
 import com.hand.hrmexp.activity.DetailListActivity;
+import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_LINE;
 
 import android.content.Context;
 import android.util.Log;
@@ -20,12 +21,12 @@ import android.widget.Toast;
 public class ContactsInfoAdapter extends BaseExpandableListAdapter {
 
 	List<List<String>> group;
-	List<List<String[]>> child;
+	List<List<MOBILE_EXP_REPORT_LINE>> child;
 	Context context;
 	TextView amount;
 	int childResourceId;
 	
-	public ContactsInfoAdapter(List<List<String>> group, List<List<String[]>> child, Context context, int childResourceId, TextView amount){
+	public ContactsInfoAdapter(List<List<String>> group, List<List<MOBILE_EXP_REPORT_LINE>> child, Context context, int childResourceId, TextView amount){
 		this.group = group;
 		this.child = child;
 		this.context = context;
@@ -55,17 +56,17 @@ public class ContactsInfoAdapter extends BaseExpandableListAdapter {
 			
 			convertView = LayoutInflater.from(context).inflate(childResourceId,null);
 		}
-		String[] childInfo = child.get(groupPosition).get(childPosition);
-		String typeString = childInfo[0];
-		String descString = childInfo[1];
+		MOBILE_EXP_REPORT_LINE childInfo = child.get(groupPosition).get(childPosition);
+		String typeString = childInfo.expense_class_desc+">"+childInfo.expense_type_desc;
+		String descString = childInfo.description;
 		if (descString.equalsIgnoreCase("")  || descString == null){
 			
 		}else{
 			TextView desc = (TextView) convertView.findViewById(R.id.descText);
 			desc.setText(descString);			
 		}
-		String amountString = childInfo[2];
-		String status = childInfo[4];
+		String amountString = String.valueOf(childInfo.total_amount);
+		String status = childInfo.local_status;
 
 		TextView type = (TextView) convertView.findViewById(R.id.typeText);
 		type.setText(typeString);
@@ -165,7 +166,7 @@ public class ContactsInfoAdapter extends BaseExpandableListAdapter {
 		}
 		Float sum = (float) 0;
 		for(int i = 0;i < childLen; i += 1){
-			sum += Float.parseFloat(child.get(groupPosition).get(i)[2].substring(1));
+			sum += child.get(groupPosition).get(i).total_amount;
 		}
 		group.get(groupPosition).set(1, "累计：¥"+sum.toString());
 //		if(groupPosition + 1 == group.size()){
@@ -184,7 +185,7 @@ public class ContactsInfoAdapter extends BaseExpandableListAdapter {
 		Float sum = (float) 0;
 		for(int i = 0; i < groupLen; i += 1){
 			for(int j = 0; j < child.get(i).size(); j += 1){
-				float temp = Float.parseFloat(child.get(i).get(j)[2].substring(1));
+				float temp = child.get(i).get(j).total_amount;
 				sum += temp;
 			}
 		}

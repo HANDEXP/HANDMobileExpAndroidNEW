@@ -33,7 +33,7 @@ import com.littlemvc.db.sqlite.FinalDb;
 public class DetailListActivity extends SherlockActivity {
 
 	private List<List<String>> group;
-	private List<List<String[]>> child;
+	private List<List<MOBILE_EXP_REPORT_LINE>> child;
 	private ContactsInfoAdapter adapter;
 	private ExpandableListView detailListView;
 	private TextView amountView;
@@ -111,7 +111,7 @@ public class DetailListActivity extends SherlockActivity {
 					int groupPosition, int childPosition, long id) {
 				// TODO 自动生成的方法存根
 //				Toast.makeText(getApplicationContext(), child.get(groupPosition).get(childPosition)[3], Toast.LENGTH_SHORT).show();
-				Integer detailId = Integer.parseInt(child.get(groupPosition).get(childPosition)[3]);
+				Integer detailId = child.get(groupPosition).get(childPosition).id;
 				Intent intent = new Intent(DetailListActivity.this, DetailLineActivity.class);
 				intent.putExtra("detailId", detailId);
 				startActivity(intent);
@@ -198,9 +198,9 @@ public class DetailListActivity extends SherlockActivity {
 	
 	private void initializeData() throws ParseException {
 		group = new ArrayList<List<String>>();
-		child = new ArrayList<List<String[]>>();
+		child = new ArrayList<List<MOBILE_EXP_REPORT_LINE>>();
 		String[] groupInfo = new String[2];
-		List<String[]> childInfo = new ArrayList<String[]>();
+		List<MOBILE_EXP_REPORT_LINE> childInfo = new ArrayList<MOBILE_EXP_REPORT_LINE>();
 		
 		List<MOBILE_EXP_REPORT_LINE> resultList = finalDb.findAll(MOBILE_EXP_REPORT_LINE.class, "expense_date desc");
 		String topDate = null; 
@@ -219,9 +219,7 @@ public class DetailListActivity extends SherlockActivity {
 					topDate = data.expense_date;
 					groupInfo = new String[]{topDate,"累计：¥"};
 			}
-			
-			
-			childInfo.add(new String[]{data.expense_class_desc+'>'+data.expense_type_desc,data.description,"¥"+data.total_amount,String.valueOf(data.id),data.local_status});
+			childInfo.add(data);
 		}
 		if(childInfo.size() != 0){
 			addInfo(groupInfo, childInfo);
@@ -230,10 +228,10 @@ public class DetailListActivity extends SherlockActivity {
 //		addInfo(new String[] {"2014-09-13","累计：¥600"},childInfo);
 	}
 
-	private void addInfo(String[] g, List<String[]> c) {
+	private void addInfo(String[] g, List<MOBILE_EXP_REPORT_LINE> c) {
 		// TODO Auto-generated method stub
 		List<String> groupitem = new ArrayList<String>();
-		List<String[]> childitem = new ArrayList<String[]>();
+		List<MOBILE_EXP_REPORT_LINE> childitem = new ArrayList<MOBILE_EXP_REPORT_LINE>();
 		for (int i = 0; i < g.length; i += 1) {
 			groupitem.add(g[i]);
 		}
@@ -262,7 +260,7 @@ public class DetailListActivity extends SherlockActivity {
 				/**
 				 *  待完善
 				 */
-				Integer detailId = Integer.parseInt(child.get(groupIndex).get(childIndex)[3]);
+				Integer detailId = child.get(groupIndex).get(childIndex).id;
 				MOBILE_EXP_REPORT_LINE  line = 	 new MOBILE_EXP_REPORT_LINE();
 				line.id = detailId;
 				finalDb.deleteById(MOBILE_EXP_REPORT_LINE.class, line.id);

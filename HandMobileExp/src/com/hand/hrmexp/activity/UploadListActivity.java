@@ -31,7 +31,7 @@ import android.widget.ImageView;
 public class UploadListActivity extends SherlockActivity{
 	
 	List<List<String>> group;
-	List<List<String[]>> child;
+	List<List<MOBILE_EXP_REPORT_LINE>> child;
 	List<Integer[]> flagList = new ArrayList<Integer[]>();
 	ContactsInfoAdapter adapter;
 	ExpandableListView uploadListView;
@@ -137,9 +137,9 @@ public class UploadListActivity extends SherlockActivity{
 	
 	private void initializeData() throws ParseException {
 		group = new ArrayList<List<String>>();
-		child = new ArrayList<List<String[]>>();
+		child = new ArrayList<List<MOBILE_EXP_REPORT_LINE>>();
 		String[] groupInfo = new String[2];
-		List<String[]> childInfo = new ArrayList<String[]>();
+		List<MOBILE_EXP_REPORT_LINE> childInfo = new ArrayList<MOBILE_EXP_REPORT_LINE>();
 		
 		List<MOBILE_EXP_REPORT_LINE> resultList = finalDb.findAll(MOBILE_EXP_REPORT_LINE.class, "expense_date desc");
 		String topDate = null; 
@@ -160,8 +160,8 @@ public class UploadListActivity extends SherlockActivity{
 					groupInfo = new String[]{topDate,"累计：¥"};
 			}
 			
-			
-			childInfo.add(new String[]{data.expense_class_desc+'>'+data.expense_type_desc,data.description,"¥"+data.total_amount,String.valueOf(data.id),data.local_status});
+			childInfo.add(data);
+//			childInfo.add(new String[]{data.expense_class_desc+'>'+data.expense_type_desc,data.description,"¥"+data.total_amount,String.valueOf(data.id),data.local_status});
 //			childInfo.add(new String[]{"行车交通>公交地铁","无备注啊","¥50"});
 		}
 		if(childInfo.size() != 0){
@@ -176,10 +176,10 @@ public class UploadListActivity extends SherlockActivity{
 	 * @param c childList
 	 */
 	
-	private void addInfo(String[] g, List<String[]> c) {
+	private void addInfo(String[] g, List<MOBILE_EXP_REPORT_LINE> c) {
 		// TODO Auto-generated method stub
 		List<String> groupitem = new ArrayList<String>();
-		List<String[]> childitem = new ArrayList<String[]>();
+		List<MOBILE_EXP_REPORT_LINE> childitem = new ArrayList<MOBILE_EXP_REPORT_LINE>();
 		for (int i = 0; i < g.length; i += 1) {
 			groupitem.add(g[i]);
 		}
