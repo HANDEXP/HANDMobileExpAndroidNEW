@@ -23,7 +23,7 @@
 		android:layout_gravity="center_vertical"
 		android:gravity="center_horizontal"
         android:text="myTitle"
-        android:textColor="#ffffff"
+        android:textColor="#b9b9b9"
         android:textSize="18sp" 
         />
 	<ImageView
@@ -32,6 +32,7 @@
 	    android:layout_width="0dp"
 	    android:layout_weight="0.1"
 	    android:src="@drawable/nextbutton"
+	    android:layout_marginRight="5dp"
 		android:layout_gravity="center_vertical"
 	    
 	    />
