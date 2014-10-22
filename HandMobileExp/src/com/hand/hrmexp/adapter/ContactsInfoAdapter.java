@@ -70,7 +70,7 @@ public class ContactsInfoAdapter extends BaseExpandableListAdapter {
 		amount.setText(amountString);
 		if(childResourceId == R.layout.activity_detail_child){
 			ImageView upload = (ImageView) convertView.findViewById(R.id.upload);
-			if(status.equals("new")){
+			if(status.equals("new") || status.equals("NEW")){
 				upload.setVisibility(View.GONE);	
 			}else if(status.equals("upload")){
 				

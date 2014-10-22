@@ -75,22 +75,9 @@ public class DetailListActivity extends SherlockActivity {
 		amountView = (TextView) findViewById(R.id.Amount);
 		//创建数据库链接
 		finalDb   = HrmexpApplication.getApplication().finalDb;
-		try {
-//			loadTestingDate();
-			initializeData();
-		} catch (ParseException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		}
-		detailListView = (ExpandableListView) findViewById(R.id.list);
-		adapter = new ContactsInfoAdapter(group,child,this,R.layout.activity_detail_child,amountView);
-		detailListView.setAdapter(adapter);
 
-		//打开每一个Group
-		int groupCount = detailListView.getCount();
-		for(int i =0; i<groupCount;i++){
-			detailListView.expandGroup(i);
-		}
+		detailListView = (ExpandableListView) findViewById(R.id.list);
+
 		detailListView.setOnGroupClickListener(new OnGroupClickListener() {	
 			@Override
 			public boolean onGroupClick(ExpandableListView arg0, View arg1, int arg2,
@@ -183,7 +170,20 @@ public class DetailListActivity extends SherlockActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+		try {
+//			loadTestingDate();
+			initializeData();
+		} catch (ParseException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}		
+		adapter = new ContactsInfoAdapter(group,child,this,R.layout.activity_detail_child,amountView);
+		detailListView.setAdapter(adapter);
+		//打开每一个Group
+		int groupCount = detailListView.getCount();
+		for(int i =0; i<groupCount;i++){
+			detailListView.expandGroup(i);
+		}
 	};
 	
 	/**
@@ -219,7 +219,7 @@ public class DetailListActivity extends SherlockActivity {
 			}
 			
 			
-			childInfo.add(new String[]{data.expense_class_desc+'>'+data.expense_type_desc,data.description,"¥"+data.expense_amount,String.valueOf(data.id),data.local_status});
+			childInfo.add(new String[]{data.expense_class_desc+'>'+data.expense_type_desc,data.description,"¥"+data.total_amount,String.valueOf(data.id),data.local_status});
 		}
 		if(childInfo.size() != 0){
 			addInfo(groupInfo, childInfo);

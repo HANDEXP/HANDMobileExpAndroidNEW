@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.hand.R;
 import com.hand.hrmexp.activity.DetailListActivity;
 import com.hand.hrmexp.adapter.ContactsInfoAdapter;
@@ -12,6 +14,7 @@ import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_LINE;
 import com.littlemvc.db.sqlite.FinalDb;
 
 import android.app.ExpandableListActivity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -19,37 +22,56 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ImageView;
 
-public class UploadListActivity extends ExpandableListActivity{
+public class UploadListActivity extends SherlockActivity{
 	
 	List<List<String>> group;
 	List<List<String[]>> child;
 	List<Integer[]> flagList = new ArrayList<Integer[]>();
 	ContactsInfoAdapter adapter;
+	ExpandableListView uploadListView;
 	private FinalDb finalDb;
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_uploadlist);
 		finalDb   = HrmexpApplication.getApplication().finalDb;
-		try {
-			initializeData();
-		} catch (ParseException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		}
-		ExpandableListView uploadListView = getExpandableListView();
-		final ContactsInfoAdapter adapter = new ContactsInfoAdapter(group, child, UploadListActivity.this,R.layout.activity_upload_child,null);
-		uploadListView.setAdapter(adapter);
-		uploadListView.setOnChildClickListener(new OnChildClickListener() {
+		//加载ActionBar设置标题
+		getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_titlebar));
+		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		getSupportActionBar().setCustomView(R.layout.abs_layout);
+		TextView titleView = (TextView) findViewById(R.id.contextTitle);
+		titleView.setText("批量上传");
+		//绑定ActionBar按钮事件
+		ImageView returnView = (ImageView) findViewById(R.id.returnImage);
+		returnView.setOnClickListener(new OnClickListener() {
 			
+			@Override
+			public void onClick(View v) {
+				// TODO 自动生成的方法存根
+				finish();
+			}
+		});
+		ImageView addView = (ImageView) findViewById(R.id.addImage);
+		addView.setImageDrawable(getResources().getDrawable(R.drawable.submit));
+		addView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO 自动生成的方法存根
+				Toast.makeText(getApplicationContext(), "upload", Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+		uploadListView = (ExpandableListView) findViewById(R.id.uploadList);
+		uploadListView.setOnChildClickListener(new OnChildClickListener() {		
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View view, int groupPosition,
 					int childPosition, long id) {
@@ -72,11 +94,7 @@ public class UploadListActivity extends ExpandableListActivity{
 			}
 		});
 		
-		//打开每一个Group
-		int groupCount = uploadListView.getCount();
-		for(int i =0; i<groupCount;i++){
-			uploadListView.expandGroup(i);
-		}
+
 		//无法收缩
 		uploadListView.setOnGroupClickListener(new OnGroupClickListener() {
 			
@@ -87,17 +105,26 @@ public class UploadListActivity extends ExpandableListActivity{
 				return true;
 			}
 		});
-		Button testbutton = (Button) findViewById(R.id.testButton);
-		testbutton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO 自动生成的方法存根
-				
-				Toast.makeText(UploadListActivity.this, "test", Toast.LENGTH_SHORT).show();
-			}
-		});
+
 //		uploadListView.setGroupIndicator(this.getResources().getDrawable((Integer) null));
+	}
+	
+	public void onResume(){
+		super.onResume();
+		
+		try {
+			initializeData();
+		} catch (ParseException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+		adapter = new ContactsInfoAdapter(group, child, UploadListActivity.this,R.layout.activity_upload_child,null);
+		uploadListView.setAdapter(adapter);		
+		//打开每一个Group
+		int groupCount = uploadListView.getCount();
+		for(int i =0; i<groupCount;i++){
+			uploadListView.expandGroup(i);
+		}
 	}
 	
 	/**
@@ -134,10 +161,12 @@ public class UploadListActivity extends ExpandableListActivity{
 			}
 			
 			
-			childInfo.add(new String[]{data.expense_class_desc+'>'+data.expense_type_desc,data.description,"¥"+data.expense_amount});
+			childInfo.add(new String[]{data.expense_class_desc+'>'+data.expense_type_desc,data.description,"¥"+data.total_amount,String.valueOf(data.id),data.local_status});
 //			childInfo.add(new String[]{"行车交通>公交地铁","无备注啊","¥50"});
 		}
-		addInfo(groupInfo, childInfo);
+		if(childInfo.size() != 0){
+			addInfo(groupInfo, childInfo);
+		}
 
 	}
 
