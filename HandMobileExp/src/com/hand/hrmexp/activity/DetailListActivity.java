@@ -139,7 +139,6 @@ public class DetailListActivity extends SherlockActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-//		getSherlock().getMenuInflater().inflate(R.menu.activity_loading, menu);
 		return true;
 	}
 	
@@ -267,6 +266,7 @@ public class DetailListActivity extends SherlockActivity {
 				child.get(groupIndex).remove(childIndex);
 				//检查汇总
 				if(adapter.checkSum(groupIndex) == 0){
+					child.remove(groupIndex);
 					group.remove(groupIndex);
 				};
 				dialog.dismiss();

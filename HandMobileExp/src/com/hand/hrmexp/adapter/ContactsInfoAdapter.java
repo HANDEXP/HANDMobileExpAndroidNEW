@@ -161,7 +161,7 @@ public class ContactsInfoAdapter extends BaseExpandableListAdapter {
 	public Float checkSum(Integer groupPosition){
 		Integer childLen = child.get(groupPosition).size();
 		if(childLen == 0){
-//			group.remove(groupPosition);
+//			group.remove((int) groupPosition);
 			return (float) 0;
 		}
 		Float sum = (float) 0;
