@@ -13,10 +13,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hand.R;
 import com.hand.hrmexp.application.HrmexpApplication;
 import com.hand.hrmexp.model.HomeModel;
+import com.hand.hrms4android.exception.ParseExpressionException;
+import com.hand.hrms4android.parser.Expression;
+import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.littlemvc.model.LMModel;
 import com.littlemvc.model.LMModelDelegate;
 import com.mas.customview.ImageViewPager;
@@ -27,6 +31,8 @@ public class HomeFragment extends Fragment implements LMModelDelegate{
 
 	 private LinearLayout expDetailLinell;
 	 private LinearLayout uploadListll;
+	 
+	 private LinearLayout expNewll;
 
 	 
 	 
@@ -40,6 +46,8 @@ public class HomeFragment extends Fragment implements LMModelDelegate{
 	 private ImageViewPager imageViewPager;   
 	 
 	 private HomeModel model;
+	 
+	 private String buildExpUrl;
 	 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -73,6 +81,10 @@ public class HomeFragment extends Fragment implements LMModelDelegate{
 ///////////////////private//////////////////////	
 	private void buildAllViews()
 	{
+		
+		
+
+		
 		todayTextView = (TextView) rootview.findViewById(R.id.todayTextView);
 		weekTextView = (TextView) rootview.findViewById(R.id.weekTextView);
 		monthTextView = (TextView) rootview.findViewById(R.id.monthTextView);
@@ -120,6 +132,28 @@ public class HomeFragment extends Fragment implements LMModelDelegate{
 				startActivity(intent);				
 			}
 		});
+		
+		expNewll = (LinearLayout) rootview.findViewById(R.id.newExpll);
+		expNewll.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent =  new Intent(getActivity(),HtmlBaseActivity.class);
+				intent.putExtra("url", buildExpUrl);
+				startActivity(intent);	
+			}
+		});
+		
+		try {
+			buildExpUrl = XmlConfigReader.getInstance().getAttr(new Expression(
+					"/backend-config/url[@name='build_exp_url']", "value"));
+		} catch (ParseExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Toast.makeText(getActivity(), "读取生成报销单接口失败", Toast.LENGTH_LONG).show();
+			return;
+		}
+		
 		
 	}
 

@@ -134,7 +134,7 @@ public class LoadingActivity extends SherlockActivity implements
 
 		setViewAsNew();
 		//同步费用类型
-		this.expenseModel.load(null);
+		this.model.load();
 
 	}
 
@@ -208,8 +208,9 @@ public class LoadingActivity extends SherlockActivity implements
 				reader.getAttr(new Expression("/backend-config", ""));
 
 				fileOutputStream.close();
-
-				startLoginActivity();
+				
+			
+	
 
 			} catch (Exception ex) {
 
@@ -218,6 +219,7 @@ public class LoadingActivity extends SherlockActivity implements
 				return;
 
 			}
+			expenseModel.load(null);
 		}else if(model.equals(this.expenseModel)){
 			
 
@@ -234,8 +236,8 @@ public class LoadingActivity extends SherlockActivity implements
 			
 			 editor.commit();
 			 
-			 this.model.load();
-			
+	
+				startLoginActivity();
 			
 		}
 		

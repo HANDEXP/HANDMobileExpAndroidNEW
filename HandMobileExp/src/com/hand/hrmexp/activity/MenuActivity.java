@@ -31,7 +31,7 @@ public class MenuActivity extends FragmentActivity implements LMModelDelegate, V
 		// TODO Auto-generated method stub	
 		super.onCreate(arg0);
 		HrmexpApplication.getApplication().transaction =         getSupportFragmentManager().beginTransaction();
-		
+
 		
 		setContentView(R.layout.activity_menu);
 		setUpMenu();
@@ -41,6 +41,8 @@ public class MenuActivity extends FragmentActivity implements LMModelDelegate, V
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
+
+
 		super.onResume();
 	}
 	

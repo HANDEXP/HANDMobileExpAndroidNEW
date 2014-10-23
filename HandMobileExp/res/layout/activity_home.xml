@@ -236,6 +236,30 @@
                 android:textColor="@color/white"
                 android:text="批量上传" />
         </LinearLayout>
+        
+        
+       <LinearLayout
+            android:id="@+id/newExpll"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/newexp"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:text="生成报销单" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

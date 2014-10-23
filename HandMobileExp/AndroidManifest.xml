@@ -94,6 +94,13 @@
 		    android:theme="@style/Theme.MyTheme"
 		    android:label="批量上传">
 		</activity>
+		
+		<activity 
+		    android:name="com.hand.hrmexp.activity.HtmlBaseActivity"
+		    android:label="生成单据"
+		    >
+	    
+		</activity>
 
     </application>
 
