@@ -15,6 +15,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.littlemvc.model.LMModel;
 import com.littlemvc.model.LMModelDelegate;
 import com.littlemvc.model.request.AsHttpRequestModel;
+import com.littlemvc.utl.AsNetWorkUtl;
 
 import com.hand.hrmexp.activity.SettingsActivity;
 import com.hand.hrmexp.application.HrmexpApplication;
@@ -22,7 +23,6 @@ import com.hand.hrms4android.exception.ParseException;
 import com.hand.hrms4android.parser.ConfigReader;
 import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
-import com.handexp.utl.AsNetWorkUtl;
 import com.handexp.utl.ConstantsUtl;
 
 import android.content.Context;
@@ -52,6 +52,8 @@ public class LoadingActivity extends SherlockActivity implements
 
 	private LoadingModel model;
 
+	private ExpenseTypeModel expenseModel;
+
 	private Button reloadButton;
 	private TextView informationTextView;
 	private ImageView alertImage;
@@ -68,6 +70,8 @@ public class LoadingActivity extends SherlockActivity implements
 		baseUrl = mPreferences.getString("sys_basic_url", "");
 
 		model = new LoadingModel(this);
+
+		expenseModel = new ExpenseTypeModel(this);
 
 		if (!checkBaseUrl(baseUrl)) {
 
@@ -91,7 +95,7 @@ public class LoadingActivity extends SherlockActivity implements
 			doReload();
 		}
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		System.out.println("destroy");
@@ -114,7 +118,7 @@ public class LoadingActivity extends SherlockActivity implements
 		return true;
 	}
 
-// ////////////////////////private///////////////////////
+	// ////////////////////////private///////////////////////
 
 	private void buildAllviews() {
 		informationTextView = (TextView) findViewById(R.id.activity_loading_infomation);
@@ -129,7 +133,8 @@ public class LoadingActivity extends SherlockActivity implements
 	public void doReload() {
 
 		setViewAsNew();
-		this.model.load();
+		//同步费用类型
+		this.expenseModel.load(null);
 
 	}
 
@@ -174,64 +179,69 @@ public class LoadingActivity extends SherlockActivity implements
 		startActivity(i);
 		finish();
 	}
-//////////////////////////// model delegate //////////////////////
+
+	// ////////////////////////// model delegate //////////////////////
 
 	@Override
 	public void modelDidFinshLoad(LMModel model) {
 		// TODO Auto-generated method stub
 
-		// AsHttpRequestModel model1 = (AsHttpRequestModel)model;
-		//
-		// SharedPreferences preferences =
-		// PreferenceManager.getDefaultSharedPreferences(this);
-		// Editor editor = preferences.edit();
-		// try {
-		// editor.putString(ConstantsUtl.tmp ,new
-		// String(model1.mresponseBody,"UTF-8"));
-		// } catch (UnsupportedEncodingException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		//
-		// editor.commit();
+
 		//
 		// startLoginActivity();
+		if (model.equals(this.model)) {
 
-		AsHttpRequestModel model1 = (AsHttpRequestModel) model;
+			File dir = HrmexpApplication.getApplication().getDir(
+					ConstantsUtl.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
+					Context.MODE_PRIVATE);
 
-		File dir = HrmexpApplication.getApplication().getDir(
-				ConstantsUtl.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
-				Context.MODE_PRIVATE);
-		
-		File configFile = new File(dir, ConstantsUtl.configFile);
+			File configFile = new File(dir, ConstantsUtl.configFile);
 
-		FileOutputStream fileOutputStream = null;
+			FileOutputStream fileOutputStream = null;
 
-		try {
-			fileOutputStream = new FileOutputStream(configFile);
-			
-			fileOutputStream.write(model1.mresponseBody);
+			try {
+				fileOutputStream = new FileOutputStream(configFile);
 
-			ConfigReader reader = XmlConfigReader.getInstance();
-			reader.getAttr(new Expression("/backend-config", ""));
-			
-			
-			fileOutputStream.close();
-			
-			startLoginActivity();
-		
-		} catch (Exception ex) {
+				fileOutputStream.write(this.model.mresponseBody);
 
-			Toast.makeText(this, "读写配置文件出现错误", Toast.LENGTH_SHORT).show();
-			
-			return;
-			
-		} finally {
-			
+				ConfigReader reader = XmlConfigReader.getInstance();
+				reader.getAttr(new Expression("/backend-config", ""));
+
+				fileOutputStream.close();
+
+				startLoginActivity();
+
+			} catch (Exception ex) {
+
+				Toast.makeText(this, "读写配置文件出现错误", Toast.LENGTH_SHORT).show();
+
+				return;
+
+			}
+		}else if(model.equals(this.expenseModel)){
 			
 
+			 Editor editor = mPreferences.edit();
+			 try {
+				 editor.putString(ConstantsUtl.expenseType ,new String(expenseModel.mresponseBody,"UTF-8"));
+			 
+			 } catch (UnsupportedEncodingException e) {
+				Toast.makeText(this, "费用类型同步失败", Toast.LENGTH_SHORT).show();
+				 
+				 e.printStackTrace();
+				 return;
+			 }
+			
+			 editor.commit();
+			 
+			 this.model.load();
+			
+			
 		}
-
+		
+		
+		
+		
 	}
 
 	@Override
@@ -243,7 +253,13 @@ public class LoadingActivity extends SherlockActivity implements
 	@Override
 	public void modelDidFaildLoadWithError(LMModel model) {
 		// TODO Auto-generated method stub
-		Toast.makeText(this, "请求配置文件出现错误", Toast.LENGTH_SHORT).show();
+		if (model.equals(this.model)) {
+			Toast.makeText(this, "请求配置文件出现错误", Toast.LENGTH_SHORT).show();
+
+		} else if (model.equals(this.expenseModel)) {
+			Toast.makeText(this, "同步费用类型失败", Toast.LENGTH_SHORT).show();
+
+		}
 	}
 
 }

@@ -37,7 +37,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.opengl.Visibility;
 import android.os.Bundle;
@@ -535,7 +534,7 @@ public class DetailLineActivity extends Activity implements
 			dbmodel.insert(line);
 			btnAnimation();
 		}else{
-			dbmodel.update(line, null);
+			dbmodel.update(line, " id = " + detailId );
 			
 		}
 	}

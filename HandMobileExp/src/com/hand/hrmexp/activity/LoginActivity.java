@@ -11,10 +11,15 @@ import com.hand.hrmexp.model.LoginModel;
 import com.littlemvc.model.LMModel;
 import com.littlemvc.model.LMModelDelegate;
 import com.littlemvc.model.request.AsHttpRequestModel;
+import com.littlemvc.utl.AsNetWorkUtl;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -87,7 +92,21 @@ public class LoginActivity extends Activity implements LMModelDelegate {
 		loginParm.put("user_password", passwordEditText.getText().toString());
 		loginParm.put("device_type", "Android");
 		loginParm.put("push_token", "-1");
-		loginParm.put("device_Id", "-1");	
+		loginParm.put("device_id",  ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId());	
+	}
+	
+	private void storeSomething(String token) throws JSONException {
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		Editor editor = preferences.edit();
+
+		try {
+
+				editor.putString("token",token);
+
+		} finally {
+			editor.commit();
+		}
+
 	}
 
 	@Override
@@ -101,7 +120,11 @@ public class LoginActivity extends Activity implements LMModelDelegate {
 			String code = ((JSONObject) jsonobj.get("head")).get("code").toString();
 			if(code.equals("ok")){
 				String token = ((JSONObject)jsonobj.get("body")).get("token").toString();
-
+				
+				/////////将返回的token加到工具头中
+				storeSomething(token);
+				AsNetWorkUtl.addHeader("token", token);
+				
 				Intent intent = new Intent(LoginActivity.this,MenuActivity.class);
 				startActivity(intent);
 				finish();

@@ -1,7 +1,7 @@
 package com.hand.hrmexp.activity;
 
 import com.hand.R;
-import com.handexp.utl.AsNetWorkUtl;
+import com.littlemvc.utl.AsNetWorkUtl;
 
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -55,6 +55,8 @@ public class HtmlFragment extends Fragment{
 	 */
     protected void load(String url) {
     	//System.out.println(AsNetWorkUtl.getAsNetWorkUtl(null).getAbsoluteUrl(url.replace("${base_url}", "")));
+    	String  _url   = AsNetWorkUtl.getAsNetWorkUtl(null).getAbsoluteUrl(url.replace("${base_url}", ""));
+    	
 	    contentWebView.loadUrl(AsNetWorkUtl.getAsNetWorkUtl(null).getAbsoluteUrl(url.replace("${base_url}", "")));
     }
     

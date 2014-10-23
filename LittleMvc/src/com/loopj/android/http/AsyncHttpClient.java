@@ -18,6 +18,7 @@
 
 package com.loopj.android.http;
 
+import android.app.Application;
 import android.content.Context;
 import android.os.Looper;
 import android.util.Log;
@@ -139,6 +140,9 @@ public class AsyncHttpClient {
     private final Map<Context, List<RequestHandle>> requestMap;
     private final Map<String, String> clientHeaderMap;
     private boolean isUrlEncodingEnabled = true;
+    
+    
+
 
     /**
      * Creates a new AsyncHttpClient with default constructor arguments values

@@ -6,9 +6,10 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
-import com.handexp.utl.AsNetWorkUtl;
 import com.littlemvc.db.sqlite.FinalDb;
 import com.littlemvc.model.request.db.DbRequestModel;
+import com.littlemvc.utl.AsNetWorkUtl;
+import com.loopj.android.http.AsyncHttpClient;
 
 import android.app.Application;
 
@@ -32,8 +33,11 @@ public class HrmexpApplication extends Application implements BDLocationListener
 		super.onCreate();
 		instance = this;
 		finalDb = FinalDb.create(this);
+		
 		DbRequestModel.finalDb = finalDb;
 		
+		//由于添加了缓存的问题，所以这里必须获得上下文
+		AsNetWorkUtl.application = this;
 		locationInit();
 		
 

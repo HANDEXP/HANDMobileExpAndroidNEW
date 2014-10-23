@@ -7,7 +7,6 @@ import android.util.Log;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
-import com.handexp.utl.AsNetWorkUtl;
 import com.littlemvc.model.LMModelDelegate;
 import com.littlemvc.model.request.*;
 

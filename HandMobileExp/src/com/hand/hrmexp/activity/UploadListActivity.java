@@ -11,7 +11,10 @@ import com.hand.hrmexp.activity.DetailListActivity;
 import com.hand.hrmexp.adapter.ContactsInfoAdapter;
 import com.hand.hrmexp.application.HrmexpApplication;
 import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_LINE;
+import com.hand.hrmexp.model.UploadModel;
 import com.littlemvc.db.sqlite.FinalDb;
+import com.littlemvc.model.LMModel;
+import com.littlemvc.model.LMModelDelegate;
 
 import android.app.ExpandableListActivity;
 import android.content.Intent;
@@ -28,7 +31,7 @@ import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ImageView;
 
-public class UploadListActivity extends SherlockActivity{
+public class UploadListActivity extends SherlockActivity implements LMModelDelegate{
 	
 	List<List<String>> group;
 	List<List<MOBILE_EXP_REPORT_LINE>> child;
@@ -37,11 +40,16 @@ public class UploadListActivity extends SherlockActivity{
 	ExpandableListView uploadListView;
 	private FinalDb finalDb;
 	
+	private UploadModel upModel;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);				
 		setContentView(R.layout.activity_uploadlist);
+		
+		upModel = new UploadModel(this);
+		
 		finalDb   = HrmexpApplication.getApplication().finalDb;
 		//加载ActionBar设置标题
 		getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_titlebar));
@@ -66,6 +74,11 @@ public class UploadListActivity extends SherlockActivity{
 			@Override
 			public void onClick(View v) {
 				// TODO 自动生成的方法存根
+				for (Integer[] curreyArray : flagList){
+					MOBILE_EXP_REPORT_LINE data = child.get(curreyArray[0]).get(curreyArray[1]);	
+					upModel.upload(data);
+				}
+				
 				Toast.makeText(getApplicationContext(), "upload", Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -188,6 +201,24 @@ public class UploadListActivity extends SherlockActivity{
 			childitem.add(c.get(j));
 		}
 		child.add(childitem);
+	}
+
+	@Override
+	public void modelDidFinshLoad(LMModel model) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void modelDidStartLoad(LMModel model) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void modelDidFaildLoadWithError(LMModel model) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

@@ -19,16 +19,23 @@
 package com.loopj.android.http;
 
 import android.util.Log;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.protocol.HttpContext;
+
+import com.littlemvc.utl.AsNetWorkUtl;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
+import java.util.List;
 
 /**
  * Internal class, representing the HttpRequest, done in asynchronous manner
@@ -100,6 +107,26 @@ public class AsyncHttpRequest implements Runnable {
         if (!isCancelled() && responseHandler != null) {
             responseHandler.sendResponseMessage(response);
         }
+        
+		// //// update by emerson
+		CookieStore cookieStore = client.getCookieStore();
+		if (cookieStore != null && cookieStore.getCookies().size() != 0) {
+			AsNetWorkUtl.setCookieStore(cookieStore);
+			CookieSyncManager.createInstance(AsNetWorkUtl.application);
+			CookieManager cookieManager = CookieManager.getInstance();
+			cookieManager.setAcceptCookie(true);
+			// cookieManager.removeSessionCookie();
+			CookieSyncManager.getInstance().sync();
+
+			List<Cookie> cookies = cookieStore.getCookies();
+			for (Cookie cookie : cookies) {
+				String cookieString = cookie.getName() + "=" + cookie.getValue() + "; domain=" + cookie.getDomain()
+				        + "; ";
+				cookieManager.setCookie(cookie.getDomain(), cookieString);
+				CookieSyncManager.getInstance().sync();
+			}
+		}
+		// ////update end;
     }
 
     private void makeRequestWithRetries() throws IOException {

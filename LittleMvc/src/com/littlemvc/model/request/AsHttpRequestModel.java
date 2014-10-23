@@ -3,6 +3,7 @@
  */
 package com.littlemvc.model.request;
 
+import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -148,5 +149,50 @@ public class AsHttpRequestModel extends LMRequestModel{
 		});
 
 }
+	
+	public void uploadBytes(String url,HashMap param,byte[] myByte,String fileName)
+	{
+		
+		RequestParams requestParams = PackParam(param);
+		if(myByte == null){
+			//解决上传数据为空的情况下
+			myByte = new byte[1];
+		}
+		
+		requestParams.put(fileName, new ByteArrayInputStream(myByte), fileName);
+		
+		utl.post(url, requestParams, new AsyncHttpResponseHandler () {
+		    public void onStart() {
+		    	requestDidStartLoad(AsHttpRequestModel.this);
+		    }
+			
+			
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					byte[] responseBody) {
+				mstatusCode = statusCode;
+				mheaders = headers;
+				mresponseBody = responseBody;
+				
+				requestDidFinishLoad(AsHttpRequestModel.this);
+				
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers,
+					byte[] responseBody, Throwable error) {
+				// TODO Auto-generated method stub
+				mstatusCode = statusCode;
+				mheaders = headers;
+				mresponseBody = responseBody;
+				
+				
+				requestDidFailLoadWithError(AsHttpRequestModel.this);
+				
+			}
+		
+		});
+	}
+	
 	
 }
