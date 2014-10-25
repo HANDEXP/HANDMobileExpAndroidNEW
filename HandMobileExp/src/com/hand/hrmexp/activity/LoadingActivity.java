@@ -42,10 +42,10 @@ import android.widget.Toast;
 /**
  * @author jiang titeng
  * 
- *         All right reserve
+ *         All right reserve 
  */
 public class LoadingActivity extends SherlockActivity implements
-		LMModelDelegate {
+		LMModelDelegate {  
 
 	private SharedPreferences mPreferences;
 	private String baseUrl;
@@ -71,7 +71,7 @@ public class LoadingActivity extends SherlockActivity implements
 
 		model = new LoadingModel(this);
 
-		expenseModel = new ExpenseTypeModel(this);
+
 
 		if (!checkBaseUrl(baseUrl)) {
 
@@ -210,9 +210,11 @@ public class LoadingActivity extends SherlockActivity implements
 
 				fileOutputStream.write(this.model.mresponseBody);
 
-				ConfigReader reader = XmlConfigReader.getInstance();
-				reader.getAttr(new Expression("/backend-config", ""));
+				HrmexpApplication.getApplication().reader = XmlConfigReader.getInstance();
+				HrmexpApplication.getApplication().reader.getAttr(new Expression("/backend-config", ""));
+				
 
+				
 				fileOutputStream.close();
 
 			} catch (Exception ex) {
@@ -222,6 +224,8 @@ public class LoadingActivity extends SherlockActivity implements
 				return;
 
 			}
+			
+			expenseModel = new ExpenseTypeModel(this);
 			expenseModel.load(null);
 		} else if (model.equals(this.expenseModel)) {
 

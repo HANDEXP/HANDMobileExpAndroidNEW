@@ -6,6 +6,8 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
+import com.hand.hrms4android.parser.ConfigReader;
+import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.littlemvc.db.sqlite.FinalDb;
 import com.littlemvc.model.request.db.DbRequestModel;
 import com.littlemvc.utl.AsNetWorkUtl;
@@ -22,6 +24,10 @@ public class HrmexpApplication extends Application implements BDLocationListener
 	
 	
 	public LocationClient mLocationClient;
+	
+	
+	//reader
+	public ConfigReader reader;
 	
 	public static HrmexpApplication getApplication(){
 		return instance;
