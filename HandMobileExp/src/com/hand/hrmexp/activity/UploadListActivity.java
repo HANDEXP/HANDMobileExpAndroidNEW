@@ -4,6 +4,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.hand.R;
@@ -12,9 +15,12 @@ import com.hand.hrmexp.adapter.ContactsInfoAdapter;
 import com.hand.hrmexp.application.HrmexpApplication;
 import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_LINE;
 import com.hand.hrmexp.model.UploadModel;
+import com.handexp.utl.DialogUtl;
 import com.littlemvc.db.sqlite.FinalDb;
 import com.littlemvc.model.LMModel;
 import com.littlemvc.model.LMModelDelegate;
+import com.littlemvc.model.request.db.DbRequestModel;
+import com.mas.customview.ProgressDialog;
 
 import android.app.ExpandableListActivity;
 import android.content.Intent;
@@ -35,12 +41,19 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 	
 	List<List<String>> group;
 	List<List<MOBILE_EXP_REPORT_LINE>> child;
-	List<Integer[]> flagList = new ArrayList<Integer[]>();
 	ContactsInfoAdapter adapter;
 	ExpandableListView uploadListView;
 	private FinalDb finalDb;
 	
-	private UploadModel upModel;
+	public DbRequestModel dbmodel;
+	
+	ProgressDialog  progressDialog;
+	//存放选择的上传数据的位置
+	List<Integer[]> flagList = new ArrayList<Integer[]>();
+	//存放选择的上传数据的数量
+	int uploadCount;
+	//上传过程中是否有失败
+	Boolean isFaildFlag = false;
 	
 	
 	@Override
@@ -48,7 +61,11 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 		super.onCreate(savedInstanceState);				
 		setContentView(R.layout.activity_uploadlist);
 		
-		upModel = new UploadModel(this);
+		//指示器 
+		progressDialog  = new ProgressDialog(this,"正在上传.....");  
+		progressDialog.setCancelable(false);
+
+		dbmodel = new DbRequestModel(this);
 		
 		finalDb   = HrmexpApplication.getApplication().finalDb;
 		//加载ActionBar设置标题
@@ -74,12 +91,25 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 			@Override
 			public void onClick(View v) {
 				// TODO 自动生成的方法存根
-				for (Integer[] curreyArray : flagList){
-					MOBILE_EXP_REPORT_LINE data = child.get(curreyArray[0]).get(curreyArray[1]);	
-					upModel.upload(data);
+				if(flagList.size() == 0){
+					Toast.makeText(getApplicationContext(), "请选择需要上传的数据", Toast.LENGTH_SHORT).show();
+					return;
 				}
 				
-				Toast.makeText(getApplicationContext(), "upload", Toast.LENGTH_SHORT).show();
+				//开启指示器
+				progressDialog.show(); 
+				//初始化
+				uploadCount = flagList.size();
+				isFaildFlag =false;
+				
+				for (Integer[] curreyArray : flagList){
+					MOBILE_EXP_REPORT_LINE data = child.get(curreyArray[0]).get(curreyArray[1]);	
+					UploadModel upModel = new UploadModel(UploadListActivity.this);
+					upModel.tag = data;
+					upModel.upload(data);
+				
+				}
+				
 			}
 		});
 		
@@ -131,13 +161,7 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		}
-		adapter = new ContactsInfoAdapter(group, child, UploadListActivity.this,R.layout.activity_upload_child,null);
-		uploadListView.setAdapter(adapter);		
-		//打开每一个Group
-		int groupCount = uploadListView.getCount();
-		for(int i =0; i<groupCount;i++){
-			uploadListView.expandGroup(i);
-		}
+
 	}
 	
 	/**
@@ -154,7 +178,7 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 		String[] groupInfo = new String[2];
 		List<MOBILE_EXP_REPORT_LINE> childInfo = new ArrayList<MOBILE_EXP_REPORT_LINE>();
 		
-		List<MOBILE_EXP_REPORT_LINE> resultList = finalDb.findAll(MOBILE_EXP_REPORT_LINE.class, "expense_date desc");
+		List<MOBILE_EXP_REPORT_LINE> resultList = finalDb.findAllByWhere(MOBILE_EXP_REPORT_LINE.class, "local_status  = 'new'  ");
 		String topDate = null; 
 		Boolean flag = false;
 		
@@ -179,6 +203,14 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 		}
 		if(childInfo.size() != 0){
 			addInfo(groupInfo, childInfo);
+		}
+		
+		adapter = new ContactsInfoAdapter(group, child, UploadListActivity.this,R.layout.activity_upload_child,null);
+		uploadListView.setAdapter(adapter);		
+		//打开每一个Group
+		int groupCount = uploadListView.getCount();
+		for(int i =0; i<groupCount;i++){
+			uploadListView.expandGroup(i);
 		}
 
 	}
@@ -207,6 +239,48 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 	public void modelDidFinshLoad(LMModel model) {
 		// TODO Auto-generated method stub
 		
+		//上传的model
+		if(model.getClass().getName().equalsIgnoreCase(UploadModel.class.getName())){
+			
+			 UploadModel _model     = (UploadModel) model;
+			 
+			 String json = new String(_model.mresponseBody);
+			 JSONObject jsonobj;
+			try {
+				uploadCount--;
+				jsonobj = new JSONObject(json);
+				 String code = ((JSONObject) jsonobj.get("head")).get("code").toString();
+				 if(code.equalsIgnoreCase("success")){
+					 String local_id = ((JSONObject)jsonobj.get("body")).get("local_id").toString();
+					 //修改为上传状态 
+					  MOBILE_EXP_REPORT_LINE data   = (MOBILE_EXP_REPORT_LINE)_model.tag;
+					  data.local_status = "upload";
+					  dbmodel.update(data," id = " + data.id);
+				 }
+				
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				
+			}
+			 
+			
+			if(uploadCount == 0){
+				
+				flagList = new ArrayList<Integer[]>();
+				progressDialog.dismiss();
+				try {
+					initializeData();
+				} catch (ParseException e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				}
+				
+			}
+			 
+
+		}
+	
 	}
 
 	@Override
@@ -218,6 +292,37 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 	@Override
 	public void modelDidFaildLoadWithError(LMModel model) {
 		// TODO Auto-generated method stub
+		
+		//上传失败
+		if(model.getClass().getName().equalsIgnoreCase(UploadModel.class.getName()))
+		{
+			
+			uploadCount--;
+			isFaildFlag = true;
+			if(uploadCount == 0){
+				
+				flagList = new ArrayList<Integer[]>();
+				progressDialog.dismiss();
+				
+				try {
+					initializeData();
+				} catch (ParseException e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				}
+				
+				if(isFaildFlag){
+					DialogUtl.showAlert(this,"网络出现问题，请检查网络后重新提交");
+					//弹出窗口上传过程有数据发生错误
+				}
+				
+			}
+			
+			
+		}else {
+			
+			
+		}
 		
 	}
 	

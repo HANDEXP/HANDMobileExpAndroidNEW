@@ -16,7 +16,6 @@ import com.hand.R;
 import com.hand.hrmexp.application.HrmexpApplication;
 import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_LINE;
 import com.hand.hrmexp.dialogs.DatePickerWrapDialog;
-import com.hand.hrmexp.popwindows.CalendarPopwindow;
 import com.hand.hrmexp.popwindows.ExpenseTypePopwindow;
 import com.handexp.utl.BitmapUtl;
 import com.handexp.utl.DialogUtl;
@@ -450,9 +449,9 @@ public class DetailLineActivity extends Activity implements
 			//添加以提交的图片
 			ImageView view = new ImageView(this);
 			view.setBackgroundResource(R.drawable.submitted);
-			FrameLayout.LayoutParams  layoutparams = new FrameLayout.LayoutParams(200,80);
+			FrameLayout.LayoutParams  layoutparams = new FrameLayout.LayoutParams(230,120);
 			layoutparams.gravity = Gravity.BOTTOM |Gravity.CENTER;
-			layoutparams.bottomMargin = 30;
+			layoutparams.bottomMargin = 50;
 			rootView.addView(view,layoutparams);
 		
 			saveBtn.setVisibility(View.INVISIBLE);
