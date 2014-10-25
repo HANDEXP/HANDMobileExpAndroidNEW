@@ -46,7 +46,7 @@ import android.widget.Toast;
  */
 public class LoadingActivity extends SherlockActivity implements
 		LMModelDelegate {  
-
+  
 	private SharedPreferences mPreferences;
 	private String baseUrl;
 

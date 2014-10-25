@@ -18,6 +18,7 @@
 		       android:layout_alignParentLeft="true"
 		       android:layout_centerVertical="true"
 		        android:src="@drawable/leftdate"
+		        android:id="@+id/leftDateImageView"
 		        />
 		    
 		    <TextView 
@@ -27,6 +28,7 @@
 				android:layout_centerInParent="true"
 				android:gravity="center_vertical"
 		        android:textColor="@color/black"
+		        android:id="@+id/dateTextView"
 		        />
 		    		    <ImageView 
 		        android:layout_width="wrap_content"
@@ -34,8 +36,8 @@
 		        android:src="@drawable/rightdate"
 		        android:layout_marginRight="15dp"
 		        android:layout_alignParentRight="true"
-		        		       android:layout_centerVertical="true"
-		        
+		        android:layout_centerVertical="true"
+		        android:id="@+id/rightDateImageView"
 		        
 		        />
 		    

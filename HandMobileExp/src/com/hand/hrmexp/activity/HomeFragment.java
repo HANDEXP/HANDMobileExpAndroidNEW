@@ -34,7 +34,7 @@ public class HomeFragment extends Fragment implements LMModelDelegate{
 	 
 	 private LinearLayout expNewll;
 
-	 
+	 private LinearLayout pieChartll;
 	 
 	 /////三个汇总金额
 	 private TextView todayTextView;
@@ -141,6 +141,18 @@ public class HomeFragment extends Fragment implements LMModelDelegate{
 				Intent intent =  new Intent(getActivity(),HtmlBaseActivity.class);
 				intent.putExtra("url", buildExpUrl);
 				startActivity(intent);	
+			}
+		});
+		
+		pieChartll = (LinearLayout) rootview.findViewById(R.id.pieChartll);
+		pieChartll.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO 自动生成的方法存根
+				Intent intent =  new Intent(getActivity(),PieCharActivity.class);
+				startActivity(intent);
+				
 			}
 		});
 		
