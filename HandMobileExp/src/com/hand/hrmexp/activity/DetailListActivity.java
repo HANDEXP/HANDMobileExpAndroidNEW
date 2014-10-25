@@ -51,6 +51,35 @@ public class DetailListActivity extends SherlockActivity {
 		getSupportActionBar().setCustomView(R.layout.abs_layout);
 		TextView titleView = (TextView) findViewById(R.id.contextTitle);
 		titleView.setText("报销明细");
+		bindAllViews();
+		
+	}	
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		try {
+//			loadTestingDate();
+			initializeData();
+		} catch (ParseException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}		
+		adapter = new ContactsInfoAdapter(group,child,this,R.layout.activity_detail_child,amountView,null);
+		detailListView.setAdapter(adapter);
+		//打开每一个Group
+		int groupCount = detailListView.getCount();
+		for(int i =0; i<groupCount;i++){
+			detailListView.expandGroup(i);
+		}
+	};	
+	
+	/**
+	 * 设置View绑定事件
+	 * 
+	 */
+	
+	private void bindAllViews(){
 		//绑定ActionBar按钮事件
 		ImageView returnView = (ImageView) findViewById(R.id.returnImage);
 		returnView.setOnClickListener(new OnClickListener() {
@@ -120,8 +149,7 @@ public class DetailListActivity extends SherlockActivity {
 				return false;
 			}
 		});
-		
-	}	
+	}
 	
 	/**
 	 * 
@@ -168,24 +196,7 @@ public class DetailListActivity extends SherlockActivity {
 	}
 	
 	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		try {
-//			loadTestingDate();
-			initializeData();
-		} catch (ParseException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		}		
-		adapter = new ContactsInfoAdapter(group,child,this,R.layout.activity_detail_child,amountView);
-		detailListView.setAdapter(adapter);
-		//打开每一个Group
-		int groupCount = detailListView.getCount();
-		for(int i =0; i<groupCount;i++){
-			detailListView.expandGroup(i);
-		}
-	};
+
 	
 	/**
 	 * 
@@ -223,8 +234,6 @@ public class DetailListActivity extends SherlockActivity {
 		if(childInfo.size() != 0){
 			addInfo(groupInfo, childInfo);
 		}
-		
-//		addInfo(new String[] {"2014-09-13","累计：¥600"},childInfo);
 	}
 
 	private void addInfo(String[] g, List<MOBILE_EXP_REPORT_LINE> c) {
@@ -241,9 +250,13 @@ public class DetailListActivity extends SherlockActivity {
 		child.add(childitem);
 	}
 
-
+	/**
+	 * 
+	 * 创建弹出框
+	 * 
+	 * @param position
+	 */
 	
-	//创建弹出框
 	private void getAlertDialog(final Integer[] position){
 		AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 		dialog.setTitle("你确定要删除这条数据");
@@ -286,7 +299,14 @@ public class DetailListActivity extends SherlockActivity {
 		dialog.show();
 	}
 	
-	//获得索引
+	/**
+	 * 
+	 * 获得索引 
+	 * 
+	 * @param position
+	 * @return
+	 */
+	
 	private Integer[] getItemIndex(int position){
 		Integer groupLen = group.size();
 		Integer total = 0;

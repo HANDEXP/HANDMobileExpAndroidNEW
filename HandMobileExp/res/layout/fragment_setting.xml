@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.7"
+        android:layout_weight="0.5"
         android:text=""
         android:background="#dcdcdc" />
     
@@ -27,7 +27,7 @@
             android:layout_weight="0.85"
             android:text="个人中心"
             android:layout_marginLeft="25dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
             android:textSize="20sp"/>
         <ImageView
@@ -42,7 +42,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.7"
+        android:layout_weight="0.5"
         android:text=""
         android:background="#dcdcdc" />
     
@@ -61,7 +61,7 @@
             android:layout_weight="0.85"
             android:text="数据同步"
             android:layout_marginLeft="25dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
             android:textSize="20sp"/>
         <ImageView
@@ -88,7 +88,7 @@
             android:layout_weight="0.85"
             android:text="数据备份"
             android:layout_marginLeft="25dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
             android:textSize="20sp"/>
         <ImageView
@@ -115,7 +115,7 @@
             android:layout_weight="0.85"
             android:text="数据恢复"
             android:layout_marginLeft="25dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
             android:textSize="20sp"/>
         <ImageView
@@ -130,10 +130,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.7"
+        android:layout_weight="0.5"
         android:text=""
         android:background="#dcdcdc" />
     <LinearLayout
+        android:id="@+id/gusture"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.2"
@@ -148,7 +149,7 @@
             android:layout_weight="0.85"
             android:text="手机密码"
             android:layout_marginLeft="25dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
             android:textSize="20sp"/>
         <ImageView
@@ -159,18 +160,22 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"/>
     </LinearLayout> 
+    <View style="@style/Divider"/>
     <Button
         android:id="@+id/quitButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="100dp"
         android:layout_gravity="center_horizontal"
         android:text="退出软件"
         android:textColor="#ffffff"
-        android:textSize="24sp"
-        android:paddingLeft="100dp"
-        android:paddingRight="100dp"
+        android:textSize="20sp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        
         android:background="@drawable/bg_quitbutton"/>
               
 </LinearLayout>

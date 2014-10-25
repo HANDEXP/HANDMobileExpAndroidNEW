@@ -94,6 +94,7 @@ public class LoadingActivity extends SherlockActivity implements
 
 			doReload();
 		}
+
 	}
 
 	@Override
@@ -133,7 +134,7 @@ public class LoadingActivity extends SherlockActivity implements
 	public void doReload() {
 
 		setViewAsNew();
-		//同步费用类型
+		// 同步费用类型
 		this.model.load();
 
 	}
@@ -180,12 +181,17 @@ public class LoadingActivity extends SherlockActivity implements
 		finish();
 	}
 
+	private void startGustureActivity() {
+		Intent i = new Intent(this, GustureUnlockActivity.class);
+		startActivity(i);
+		finish();
+	}
+
 	// ////////////////////////// model delegate //////////////////////
 
 	@Override
 	public void modelDidFinshLoad(LMModel model) {
 		// TODO Auto-generated method stub
-
 
 		//
 		// startLoginActivity();
@@ -208,9 +214,6 @@ public class LoadingActivity extends SherlockActivity implements
 				reader.getAttr(new Expression("/backend-config", ""));
 
 				fileOutputStream.close();
-				
-			
-	
 
 			} catch (Exception ex) {
 
@@ -220,30 +223,35 @@ public class LoadingActivity extends SherlockActivity implements
 
 			}
 			expenseModel.load(null);
-		}else if(model.equals(this.expenseModel)){
-			
+		} else if (model.equals(this.expenseModel)) {
 
-			 Editor editor = mPreferences.edit();
-			 try {
-				 editor.putString(ConstantsUtl.expenseType ,new String(expenseModel.mresponseBody,"UTF-8"));
-			 
-			 } catch (UnsupportedEncodingException e) {
+			Editor editor = mPreferences.edit();
+			try {
+				editor.putString(ConstantsUtl.expenseType, new String(
+						expenseModel.mresponseBody, "UTF-8"));
+
+			} catch (UnsupportedEncodingException e) {
 				Toast.makeText(this, "费用类型同步失败", Toast.LENGTH_SHORT).show();
-				 
-				 e.printStackTrace();
-				 return;
-			 }
-			
-			 editor.commit();
-			 
-	
+
+				e.printStackTrace();
+				return;
+			}
+
+			editor.commit();
+
+			if (isEnabledLock()) {
+//				Toast.makeText(getApplicationContext(), "True",
+//						Toast.LENGTH_SHORT).show();
+				startGustureActivity();
+				finish();
+			} else {
+//				Toast.makeText(getApplicationContext(), "False",
+//						Toast.LENGTH_SHORT).show();
 				startLoginActivity();
-			
+			}
+
 		}
-		
-		
-		
-		
+
 	}
 
 	@Override
@@ -261,6 +269,28 @@ public class LoadingActivity extends SherlockActivity implements
 		} else if (model.equals(this.expenseModel)) {
 			Toast.makeText(this, "同步费用类型失败", Toast.LENGTH_SHORT).show();
 
+		}
+	}
+
+	/**
+	 * 检查是否已经设置手势密码并启用手势密码
+	 * 
+	 * @return
+	 */
+
+	private Boolean isEnabledLock() {
+		SharedPreferences preferences = getSharedPreferences("gustureLock",
+				Context.MODE_APPEND);
+		String enabledFlag = preferences.getString("enabledFlag", "False");
+		String choosePattern = preferences.getString("choosePattern", "False");
+		String userName = preferences.getString("userName", "False");
+		String userPassword = preferences.getString("userPassword", "False");
+		// 检查是否都存在
+		if (enabledFlag != "False" && choosePattern != "False"
+				&& userName != "False" && userPassword != "False") {
+			return true;
+		} else {
+			return false;
 		}
 	}
 

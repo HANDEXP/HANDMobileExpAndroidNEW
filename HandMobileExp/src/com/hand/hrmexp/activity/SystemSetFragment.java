@@ -34,6 +34,7 @@ public class SystemSetFragment extends Fragment implements LMModelDelegate {
 	private View rootview;
 	private Button quitButton;
 	private LinearLayout syncView;
+	private LinearLayout gustureView;
 	private ExpenseTypeModel model;
 
 	@Override
@@ -73,6 +74,18 @@ public class SystemSetFragment extends Fragment implements LMModelDelegate {
 				// TODO 自动生成的方法存根
 
 				model.load(null);
+			}
+		});
+		// 手势
+		gustureView = (LinearLayout) rootview.findViewById(R.id.gusture);
+		gustureView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO 自动生成的方法存根
+				Intent intent = new Intent(getActivity(),GustureOptionsActivity.class);
+				startActivity(intent);			
+				getActivity().overridePendingTransition(R.anim.move_right_in_activity,R.anim.move_left_out_activity);				
 			}
 		});
 	}

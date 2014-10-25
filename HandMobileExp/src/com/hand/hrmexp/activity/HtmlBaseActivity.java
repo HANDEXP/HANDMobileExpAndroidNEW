@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -33,6 +34,7 @@ public class HtmlBaseActivity extends SherlockActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_html_base);
 		
@@ -96,6 +98,7 @@ public class HtmlBaseActivity extends SherlockActivity{
     	String  _url   = AsNetWorkUtl.getAsNetWorkUtl(null).getAbsoluteUrl(url.replace("${base_url}", ""));
     	
 	    contentWebView.loadUrl(AsNetWorkUtl.getAsNetWorkUtl(null).getAbsoluteUrl(url.replace("${base_url}", "")));
+//    	contentWebView.loadUrl("http://www.baidu.com/");
     }
     
 	private class AlertWebChromeClient extends WebChromeClient{

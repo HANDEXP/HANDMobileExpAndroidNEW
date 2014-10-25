@@ -25,6 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ExpandableListView.OnGroupClickListener;
@@ -131,14 +132,17 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		}
-		adapter = new ContactsInfoAdapter(group, child, UploadListActivity.this,R.layout.activity_upload_child,null);
+		adapter = new ContactsInfoAdapter(group, child, UploadListActivity.this,R.layout.activity_upload_child,null,flagList);
 		uploadListView.setAdapter(adapter);		
 		//打开每一个Group
 		int groupCount = uploadListView.getCount();
 		for(int i =0; i<groupCount;i++){
 			uploadListView.expandGroup(i);
 		}
+	
 	}
+	
+
 	
 	/**
 	 * 
@@ -154,7 +158,7 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 		String[] groupInfo = new String[2];
 		List<MOBILE_EXP_REPORT_LINE> childInfo = new ArrayList<MOBILE_EXP_REPORT_LINE>();
 		
-		List<MOBILE_EXP_REPORT_LINE> resultList = finalDb.findAll(MOBILE_EXP_REPORT_LINE.class, "expense_date desc");
+		List<MOBILE_EXP_REPORT_LINE> resultList = finalDb.findAll(MOBILE_EXP_REPORT_LINE.class,"expense_date desc");
 		String topDate = null; 
 		Boolean flag = false;
 		
@@ -174,8 +178,6 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 			}
 			
 			childInfo.add(data);
-//			childInfo.add(new String[]{data.expense_class_desc+'>'+data.expense_type_desc,data.description,"¥"+data.total_amount,String.valueOf(data.id),data.local_status});
-//			childInfo.add(new String[]{"行车交通>公交地铁","无备注啊","¥50"});
 		}
 		if(childInfo.size() != 0){
 			addInfo(groupInfo, childInfo);

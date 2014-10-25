@@ -99,9 +99,22 @@
 		    android:name="com.hand.hrmexp.activity.HtmlBaseActivity"
 		    android:label="生成单据"
 		    >
-	    
+	    </activity>
+		<activity
+		    android:name="com.hand.hrmexp.activity.GustureOptionsActivity"
+		    android:theme="@style/Theme.MyTheme"
+		    android:label="手势选项">
 		</activity>
-
+		<activity
+		    android:name="com.hand.hrmexp.activity.GustureLockActivity"
+		    android:theme="@style/Theme.Sherlock.NoActionBar"
+		    android:label="手势配置">
+		</activity>
+		<activity
+		    android:name="com.hand.hrmexp.activity.GustureUnlockActivity"
+		    android:theme="@style/Theme.Sherlock.NoActionBar"
+		    android:label="解锁页面">
+		</activity>
     </application>
 
 </manifest>

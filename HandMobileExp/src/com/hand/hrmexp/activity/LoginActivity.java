@@ -14,6 +14,7 @@ import com.littlemvc.model.request.AsHttpRequestModel;
 import com.littlemvc.utl.AsNetWorkUtl;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -95,7 +96,7 @@ public class LoginActivity extends Activity implements LMModelDelegate {
 		loginParm.put("device_id",  ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId());	
 	}
 	
-	private void storeSomething(String token) throws JSONException {
+	public void storeSomething(String token) throws JSONException {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		Editor editor = preferences.edit();
 
@@ -124,7 +125,8 @@ public class LoginActivity extends Activity implements LMModelDelegate {
 				/////////将返回的token加到工具头中
 				storeSomething(token);
 				AsNetWorkUtl.addHeader("token", token);
-				
+				//存登录信息
+				saveUserData();
 				Intent intent = new Intent(LoginActivity.this,MenuActivity.class);
 				startActivity(intent);
 				finish();
@@ -154,5 +156,17 @@ public class LoginActivity extends Activity implements LMModelDelegate {
 		// TODO Auto-generated method stub
 		
 		Toast.makeText(LoginActivity.this, "网络繁忙请稍后再试", Toast.LENGTH_LONG).show();
+	}
+	
+	private void saveUserData() {
+		SharedPreferences preferences=getSharedPreferences("gustureLock",Context.MODE_APPEND);
+//		Toast.makeText(getApplicationContext(), "userName:"+loginParm.get("user_name"),
+//				Toast.LENGTH_SHORT).show();
+//		Toast.makeText(getApplicationContext(), "userPassword:"+loginParm.get("user_password"),
+//				Toast.LENGTH_SHORT).show();
+		String userName = loginParm.get("user_name");
+		String userPassword = loginParm.get("user_password");
+		preferences.edit().putString("userName",userName).commit();
+		preferences.edit().putString("userPassword",userPassword).commit();
 	}
 }
