@@ -86,9 +86,9 @@ public class ContactsInfoAdapter extends BaseExpandableListAdapter {
 			ImageView upload = (ImageView) convertView
 					.findViewById(R.id.upload);
 			if (status.equals("new") || status.equals("NEW")) {
-				upload.setVisibility(View.GONE);
-			} else if (status.equals("upload")) {
-
+				upload.setVisibility(View.INVISIBLE);
+			} else {
+				upload.setVisibility(View.VISIBLE);
 			}
 		} else if (childResourceId == R.layout.activity_upload_child) {
 			//上传页面检查是否已经选中
