@@ -26,17 +26,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.85"
             android:text="个人中心"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+			android:layout_gravity="center_vertical"
             android:textSize="20sp"/>
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.15"
             android:src="@drawable/nextbutton"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="5dp"/>
+            android:layout_gravity="center_vertical"
+           />
     </LinearLayout>
 
     <TextView
@@ -60,17 +59,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.85"
             android:text="数据同步"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="10dp"
+                 android:layout_marginLeft="15dp"
+          	android:layout_gravity="center_vertical"
             android:textSize="20sp"/>
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.15"
             android:src="@drawable/nextbutton"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="5dp"/>
+            android:layout_gravity="center_vertical"
+           />
     </LinearLayout>   
 	<View style="@style/Divider"/>
     <LinearLayout
@@ -87,17 +85,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.85"
             android:text="数据备份"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="10dp"
+                 android:layout_marginLeft="15dp"
+          android:layout_gravity="center_vertical"
             android:textSize="20sp"/>
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.15"
             android:src="@drawable/nextbutton"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_gravity="center_vertical"
+            />
     </LinearLayout>   
     <View style="@style/Divider"/>
     <LinearLayout
@@ -114,17 +111,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.85"
             android:text="数据恢复"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="10dp"
+          	android:layout_gravity="center_vertical"
+          	     android:layout_marginLeft="15dp"
             android:textSize="20sp"/>
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.15"
             android:src="@drawable/nextbutton"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="5dp"/>
+      	    android:layout_gravity="center_vertical"
+            
+            />
     </LinearLayout>   
     <View style="@style/Divider"/>
     <TextView
@@ -148,17 +145,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.85"
             android:text="手机密码"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="10dp"
+                 android:layout_marginLeft="15dp"
+          	android:layout_gravity="center_vertical"
             android:textSize="20sp"/>
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.15"
             android:src="@drawable/nextbutton"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="5dp"/>
+    		          android:layout_gravity="center_vertical"	
+    		/>
     </LinearLayout> 
     <View style="@style/Divider"/>
     <Button

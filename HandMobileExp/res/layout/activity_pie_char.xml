@@ -12,11 +12,12 @@
 			android:background="#B3EE3A"		    
 		    >
 		    <ImageView 
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_width="40dp"
+		        android:layout_height="match_parent"
 		        android:layout_marginLeft="15dp"
 		       android:layout_alignParentLeft="true"
 		       android:layout_centerVertical="true"
+		       android:scaleType="center"
 		        android:src="@drawable/leftdate"
 		        android:id="@+id/leftDateImageView"
 		        />
@@ -31,9 +32,10 @@
 		        android:id="@+id/dateTextView"
 		        />
 		    		    <ImageView 
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_width="40dp"
+		        android:layout_height="match_parent"
 		        android:src="@drawable/rightdate"
+		        android:scaleType="center"
 		        android:layout_marginRight="15dp"
 		        android:layout_alignParentRight="true"
 		        android:layout_centerVertical="true"

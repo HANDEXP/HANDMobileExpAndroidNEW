@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,7 +29,7 @@ public class HtmlFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		View root = inflater.inflate(R.layout.activity_html_base, container,false);
+		View root = inflater.inflate(R.layout.activity_html_fragment, container,false);
 		bindAllViews(root);
 		return root;
 	}
@@ -47,6 +48,7 @@ public class HtmlFragment extends Fragment{
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		String url = getArguments().getString("url");
+		String title =  getArguments().getString("title");
 		load(url);
 	}
 
@@ -156,8 +158,9 @@ public class HtmlFragment extends Fragment{
 			return false;
 		}
 
+
 		@Override
-		public void onPageFinished(WebView view, String url) {
+		public void onPageFinished	(WebView view, String url) {
 			super.onPageFinished(view, url);
 			//每次网络请求初始化 timer;
 

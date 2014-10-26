@@ -72,7 +72,12 @@ public class DateUtl {
 		 Calendar   calendar = Calendar.getInstance(); 
 		calendar.setTime(date);
 		calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-		calendar.add(Calendar.WEEK_OF_YEAR, 1);
+		
+		//当时间为周日的情况下，不需要加一周
+		if(date.getDay() !=0){
+			calendar.add(Calendar.WEEK_OF_YEAR, 1);
+		}
+
 	
 		Date  lastWeekDay = calendar.getTime();
 		
@@ -85,9 +90,12 @@ public class DateUtl {
 	{
 		Calendar   calendar = Calendar.getInstance(); 
 		calendar.setTime(date);
-		
 		calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		
+		//当时间为周日的情况下，需要减少一周
+		if(date.getDay() ==0){
+			calendar.add(Calendar.WEEK_OF_YEAR, -1);
+			
+		}
 		return calendar.getTime();
 		
 		

@@ -256,6 +256,7 @@ public class DetailLineActivity extends Activity implements
 				return;
 			}
 			
+			
 			Bitmap myBitmap = BitmapUtl.bytesToBitmap(mContent, opts);
 			
 			//已经压缩过的所以速率是100
