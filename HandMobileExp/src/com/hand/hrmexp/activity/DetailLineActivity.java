@@ -341,7 +341,7 @@ public class DetailLineActivity extends Activity implements
 			}
 		});
 		
-		anima.setDuration(500).start();
+		anima.setDuration(300).start();
 		
 
 		

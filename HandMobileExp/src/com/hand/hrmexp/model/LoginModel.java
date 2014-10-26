@@ -9,6 +9,7 @@ import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.littlemvc.model.LMModelDelegate;
 import com.littlemvc.model.request.*;
+import com.littlemvc.utl.AsNetWorkUtl;
 
 public class LoginModel extends AsHttpRequestModel{
 	private  XmlConfigReader configReader;	
@@ -25,6 +26,8 @@ public class LoginModel extends AsHttpRequestModel{
 			        .getAttr(new Expression(
 			                "/backend-config/url[@name='login_submit_url']",
 			                "value"));
+			
+			AsNetWorkUtl.removeAllCookies();
 			
 			this.post(queryUrl, parm);
 			

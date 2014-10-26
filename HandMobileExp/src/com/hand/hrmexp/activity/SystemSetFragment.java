@@ -53,6 +53,10 @@ public class SystemSetFragment extends Fragment implements LMModelDelegate {
 	 */
 	private void buildAllViews() {
 
+		
+		TextView _title = (TextView) getActivity().findViewById(R.id.main_head_title);
+		_title.setText("设置");
+		
 		model = new ExpenseTypeModel(this);
 		// 退出按钮
 		quitButton = (Button) rootview.findViewById(R.id.quitButton);

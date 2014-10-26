@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -195,6 +196,13 @@ public class HtmlBaseActivity extends SherlockActivity{
 				return true;
 			}
 			return false;
+		}
+		
+		@Override
+		public void onPageStarted(WebView view, String url, Bitmap favicon) {
+			// TODO Auto-generated method stub
+			super.onPageStarted(view, url, favicon);
+			  
 		}
 
 		@Override

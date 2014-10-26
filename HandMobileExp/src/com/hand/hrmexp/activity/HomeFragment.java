@@ -83,7 +83,8 @@ public class HomeFragment extends Fragment implements LMModelDelegate{
 	{
 		
 		
-
+		TextView _title = (TextView) getActivity().findViewById(R.id.main_head_title);
+		_title.setText("首页");
 		
 		todayTextView = (TextView) rootview.findViewById(R.id.todayTextView);
 		weekTextView = (TextView) rootview.findViewById(R.id.weekTextView);

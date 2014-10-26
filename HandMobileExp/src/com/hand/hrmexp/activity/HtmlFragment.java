@@ -20,6 +20,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class HtmlFragment extends Fragment{
@@ -49,6 +50,8 @@ public class HtmlFragment extends Fragment{
 		super.onActivityCreated(savedInstanceState);
 		String url = getArguments().getString("url");
 		String title =  getArguments().getString("title");
+		TextView _title = (TextView) getActivity().findViewById(R.id.main_head_title);
+		_title.setText(title);
 		load(url);
 	}
 
