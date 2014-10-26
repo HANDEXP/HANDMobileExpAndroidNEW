@@ -188,9 +188,11 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 		String[] groupInfo = new String[2];
 		List<MOBILE_EXP_REPORT_LINE> childInfo = new ArrayList<MOBILE_EXP_REPORT_LINE>();
 		
-		List<MOBILE_EXP_REPORT_LINE> resultList = finalDb.findAllByWhere(MOBILE_EXP_REPORT_LINE.class, "local_status  = 'new'  ");
+		List<MOBILE_EXP_REPORT_LINE> resultList = finalDb.findAllByWhere(MOBILE_EXP_REPORT_LINE.class, "local_status  = 'new'  " + " order by expense_date desc");
 		String topDate = null; 
 		Boolean flag = false;
+		
+	
 		
 		for(int i =0;i<resultList.size();i++){
 			MOBILE_EXP_REPORT_LINE data = 	resultList.get(i);

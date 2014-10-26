@@ -197,7 +197,7 @@ public class PieCharActivity extends SherlockActivity implements LMModelDelegate
 			   
 				if(line.expense_class_id == expense_class_id){
 					
-					amount += line.expense_amount;
+					amount += line.total_amount;
 					
 				}
 				
