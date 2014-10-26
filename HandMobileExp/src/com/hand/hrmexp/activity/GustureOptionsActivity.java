@@ -21,6 +21,7 @@ public class GustureOptionsActivity extends SherlockActivity{
 	
 	private LinearLayout setLockLL; 
 	private SwitchButton switchButtonView;
+	private ImageView returnImgView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -78,6 +79,16 @@ public class GustureOptionsActivity extends SherlockActivity{
 				preferences.edit().putString("enabledFlag",enabledFlag).commit();
 //				Toast.makeText(getApplicationContext(), enabledFlag, Toast.LENGTH_SHORT).show();
 				
+			}
+		});
+		returnImgView = (ImageView) findViewById(R.id.returnImage);
+		returnImgView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO 自动生成的方法存根
+				finish();
+				overridePendingTransition(R.anim.move_right_in_activity, R.anim.move_left_out_activity);
 			}
 		});
 	}
