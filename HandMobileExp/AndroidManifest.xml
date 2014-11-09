@@ -122,7 +122,10 @@
 		    >
 	    
 		</activity>
-
+		<activity
+		    android:name="com.hand.hrmexp.activity.PicGridActivity"
+		    android:label="图片Grid">
+		</activity>
     </application>
 
 </manifest>

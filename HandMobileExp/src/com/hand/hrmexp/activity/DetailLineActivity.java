@@ -2,8 +2,11 @@ package com.hand.hrmexp.activity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
@@ -16,6 +19,7 @@ import com.hand.R;
 import com.hand.hrmexp.application.HrmexpApplication;
 import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_LINE;
 import com.hand.hrmexp.dialogs.DatePickerWrapDialog;
+import com.hand.hrmexp.model.ImageItem;
 import com.hand.hrmexp.popwindows.ExpenseTypePopwindow;
 import com.handexp.utl.BitmapUtl;
 import com.handexp.utl.DialogUtl;
@@ -98,9 +102,10 @@ public class DetailLineActivity extends Activity implements
 	private ImageButton returnImgBtn;
 	// 拍照
 	private ImageView photoImgView;
-	// 照片实际的数据
+	// 显示照片实际的数据
 	private byte[] mContent;
-
+	// 照片列表数据
+	private ArrayList<ImageItem> dataList = new ArrayList<ImageItem>();
 	// 备注
 	private EditText commentEditText;
 
@@ -224,6 +229,7 @@ public class DetailLineActivity extends Activity implements
 	}
 	
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -243,27 +249,18 @@ public class DetailLineActivity extends Activity implements
 			mContent = baos.toByteArray();
 			break;
 		case ACTION_GET_CONTENT:
-			// 获得图片的uri
-			Uri originalUri = data.getData();
-
-			try {
-				mContent = BitmapUtl.readStream(getContentResolver().openInputStream(Uri.parse(originalUri.toString())));
-			}  catch (Exception e) {
-				Toast.makeText(DetailLineActivity.this, "获取相册图片失败", Toast.LENGTH_LONG).show();
-
-				e.printStackTrace();
-				
+			
+			
+			dataList = (ArrayList<ImageItem>) data.getSerializableExtra("dataList");
+			if(dataList.size() == 0){
+				photoImgView.setImageDrawable(getResources().getDrawable(R.drawable.camera));
 				return;
 			}
-			
-			
+			mContent = dataList.get(0).getmContent();
 			Bitmap myBitmap = BitmapUtl.bytesToBitmap(mContent, opts);
-			
-			//已经压缩过的所以速率是100
-			mContent = BitmapUtl.BitmapTobytes(myBitmap, 100);
 			photoImgView.setImageBitmap(myBitmap);
+			Toast.makeText(getApplicationContext(), "FFFFF", Toast.LENGTH_SHORT).show();
 			break;
-
 		}
 
 	}
@@ -524,8 +521,28 @@ public class DetailLineActivity extends Activity implements
 
 		line.local_status = "new";
 		// 图片
-
-		line.item1 = mContent;
+		for(int i = 0;i<dataList.size();i++){
+			Class<? extends MOBILE_EXP_REPORT_LINE> ownerClass = line.getClass();
+			String fieldName = "item".concat(String.valueOf(i+1));
+			try {
+				Field field = ownerClass.getField(fieldName);
+				try {
+					field.set(line, dataList.get(0).getmContent());
+				} catch (IllegalAccessException e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				}
+					
+			} catch (NoSuchFieldException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+			}
+				
+		}
+//		line.item1 = dataList.get(0).getmContent();
 		// 描述
 
 		line.description = commentEditText.getText().toString();
@@ -549,30 +566,9 @@ public class DetailLineActivity extends Activity implements
 					| Gravity.CENTER, 0, 0);
 
 		} else if (v.equals(photoImgView)) {
-			// 拍照逻辑
-			final CharSequence[] items = { "相册", "拍照" };
-			AlertDialog dlg = new AlertDialog.Builder(DetailLineActivity.this)
-					.setTitle("选择图片")
-					.setItems(items, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int item) {
-							// 这里item是根据选择的方式，
-							// 在items数组里面定义了两种方式，拍照的下标为1所以就调用拍照方法
-							if (item == 1) {
-								Intent getImageByCamera = new Intent(
-										"android.media.action.IMAGE_CAPTURE");
-								startActivityForResult(getImageByCamera,
-										IMAGE_CAPTURE);
-							} else {
-								Intent getImage = new Intent(
-										Intent.ACTION_GET_CONTENT);
-								getImage.addCategory(Intent.CATEGORY_OPENABLE);
-								getImage.setType("image/jpeg");
-								startActivityForResult(getImage,
-										ACTION_GET_CONTENT);
-							}
-						}
-					}).create();
-			dlg.show();
+			Intent intent = new Intent(getApplicationContext(),PicGridActivity.class);
+			intent.putExtra("dataList", (Serializable) dataList);
+			startActivityForResult(intent,ACTION_GET_CONTENT);
 		} else if (v.equals(saveBtn)) {
 			// 保存按钮
 				save();
