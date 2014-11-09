@@ -122,12 +122,10 @@
 		    >
 	    
 		</activity>
-		
-				<activity 
-		    android:name="com.hand.hrmexp.activity.PieCharActivity"
-		    android:label="报销图表"
-		    >
-	    
+
+		<activity
+		    android:name="com.hand.hrmexp.activity.PicGridActivity"
+		    android:label="图片Grid">
 		</activity>
 
     </application>

@@ -88,7 +88,7 @@ public class GustureOptionsActivity extends SherlockActivity{
 			public void onClick(View v) {
 				// TODO 自动生成的方法存根
 				finish();
-				overridePendingTransition(R.anim.move_right_in_activity, R.anim.move_left_out_activity);
+				overridePendingTransition(R.anim.move_left_in_activity,R.anim.move_right_out_activity);
 			}
 		});
 	}
