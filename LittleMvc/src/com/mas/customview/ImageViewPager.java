@@ -173,7 +173,7 @@ public class ImageViewPager extends LinearLayout{
     	
 		@Override
 		public void destroyItem(View arg0, int arg1, Object arg2) {
-//			((ViewPager) arg0).removeView((View) arg2);
+			((ViewPager) arg0).removeView((View) arg2);
 		}
     }
     

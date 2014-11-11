@@ -272,7 +272,7 @@ public class PicGridActivity extends Activity implements OnClickListener {
 	/**
 	 * 获取图片的真实地址
 	 * @param originUrl
-	 * @return String真实地址
+	 * @return String真实地址 	 	
 	 */
 	private String getRealPath(Uri originUrl){
 		String[] proj = {MediaStore.Images.Media.DATA};
