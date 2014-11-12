@@ -12,6 +12,7 @@ import com.littlemvc.model.LMModel;
 import com.littlemvc.model.LMModelDelegate;
 import com.littlemvc.model.request.AsHttpRequestModel;
 import com.littlemvc.utl.AsNetWorkUtl;
+import com.mas.customview.ProgressDialog;
 
 import android.app.Activity;
 import android.content.Context;
@@ -34,6 +35,7 @@ public class LoginActivity extends Activity implements LMModelDelegate {
 	
 	EditText usernameEditText;
 	EditText passwordEditText;
+	private ProgressDialog dialog;
 	
 	Button loginButton;
 	
@@ -52,7 +54,7 @@ public class LoginActivity extends Activity implements LMModelDelegate {
 		
 		model = new LoginModel(this);
 		loginParm = new HashMap<String, String>();
-		
+		dialog = new ProgressDialog(this, "登录中,请稍后。");
 		
 		
 	}
@@ -139,22 +141,21 @@ public class LoginActivity extends Activity implements LMModelDelegate {
 			e.printStackTrace();
 			
 		} finally{
-			
+			dialog.dismiss();
 		};		
 	}
 
 	@Override
 	public void modelDidStartLoad(LMModel model) {
 		// TODO Auto-generated method stub
-		
-
+		dialog.show();
 				
 	}
 
 	@Override
 	public void modelDidFaildLoadWithError(LMModel model) {
 		// TODO Auto-generated method stub
-		
+		dialog.dismiss();
 		Toast.makeText(LoginActivity.this, "网络繁忙请稍后再试", Toast.LENGTH_LONG).show();
 	}
 	

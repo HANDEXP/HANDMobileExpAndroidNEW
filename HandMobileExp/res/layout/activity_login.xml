@@ -65,7 +65,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
         android:text="@string/app_login" 
-        android:background="@drawable/corners_login_bg"
+        android:background="@drawable/btn_press_selector"
         android:textColor="#fff"/>
 
 

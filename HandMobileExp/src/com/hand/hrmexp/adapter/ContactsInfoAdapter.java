@@ -1,6 +1,7 @@
 package com.hand.hrmexp.adapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.hand.R;
@@ -28,7 +29,8 @@ public class ContactsInfoAdapter extends BaseExpandableListAdapter {
 	TextView amount;
 	int childResourceId;
 	List<Integer[]> flagList;
-
+	HashMap<String, Integer> iconMap;
+	
 	public ContactsInfoAdapter(List<List<String>> group,
 			List<List<MOBILE_EXP_REPORT_LINE>> child, Context context,
 			int childResourceId, TextView amount, List<Integer[]> flagList) {
@@ -38,6 +40,11 @@ public class ContactsInfoAdapter extends BaseExpandableListAdapter {
 		this.childResourceId = childResourceId;
 		this.amount = amount;
 		this.flagList = flagList;
+		this.iconMap = new HashMap<String, Integer>();
+		iconMap.put("交通", R.drawable.traffic);
+		iconMap.put("餐饮", R.drawable.food);
+		iconMap.put("通讯", R.drawable.communication);
+		iconMap.put("票务", R.drawable.ticket);
 	}
 
 	@Override
@@ -64,6 +71,7 @@ public class ContactsInfoAdapter extends BaseExpandableListAdapter {
 		}
 		MOBILE_EXP_REPORT_LINE childInfo = child.get(groupPosition).get(
 				childPosition);
+		String classString = childInfo.expense_class_desc;
 		String typeString = childInfo.expense_class_desc + ">"
 				+ childInfo.expense_type_desc;
 		String descString = childInfo.description;
@@ -90,6 +98,18 @@ public class ContactsInfoAdapter extends BaseExpandableListAdapter {
 			} else {
 				upload.setVisibility(View.VISIBLE);
 			}
+			int resId;
+			try {
+				
+				resId = iconMap.get(classString);
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+				resId = R.drawable.food;
+			}
+			//设置类型图片
+			ImageView typeImage = (ImageView) convertView.findViewById(R.id.typeImage);
+			typeImage.setImageResource(resId);
 		} else if (childResourceId == R.layout.activity_upload_child) {
 			//上传页面检查是否已经选中
 			if (checkSelected(groupPosition, childPosition)) {
