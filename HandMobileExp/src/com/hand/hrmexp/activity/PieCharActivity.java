@@ -16,6 +16,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.hand.R;
+import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_DATA;
 import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_LINE;
 import com.hand.hrmexp.model.PieCharModel;
 import com.handexp.utl.ExpenseIdToDesc;
@@ -182,7 +183,7 @@ public class PieCharActivity extends SherlockActivity implements LMModelDelegate
 		//取出所有组，取出重复
 	   for (  int i =0;  i< piecharmodel.result.size();i++){
 		   
-		MOBILE_EXP_REPORT_LINE line =    (MOBILE_EXP_REPORT_LINE)piecharmodel.result.get(i);
+		   MOBILE_EXP_REPORT_DATA line =    (MOBILE_EXP_REPORT_DATA)piecharmodel.result.get(i);
 		set.add(line.expense_class_id);
 	   }
 	   
@@ -193,7 +194,7 @@ public class PieCharActivity extends SherlockActivity implements LMModelDelegate
 		   String expense_class_desc = ExpenseIdToDesc.ExpenseClassIdToDesc(expense_class_id);
 		   float amount = 0;
 		   for(int i =0;  i< piecharmodel.result.size();i++){
-				MOBILE_EXP_REPORT_LINE line =    (MOBILE_EXP_REPORT_LINE)piecharmodel.result.get(i);
+			   MOBILE_EXP_REPORT_DATA line =    (MOBILE_EXP_REPORT_DATA)piecharmodel.result.get(i);
 			   
 				if(line.expense_class_id == expense_class_id){
 					

@@ -36,6 +36,22 @@ public class DbRequestModel extends LMRequestModel{
 		requestDidFinishLoad(this);
 	}
 	
+	public  void  queryByColumn(Class clazz,String strWhere,String orderBy)
+	{
+		currentMethod = "query";
+		
+	}
+	
+	public void queryWithColumnWithWhere(Class clazz,String strWhere)
+	{
+		currentMethod = "query";
+		
+		 result = finalDb.findByColumNameWithWhere(clazz,strWhere);
+		
+		requestDidFinishLoad(this);
+		
+	}
+	
 	public void query(Class clazz,String strWhere,
 			String orderBy)
 	{

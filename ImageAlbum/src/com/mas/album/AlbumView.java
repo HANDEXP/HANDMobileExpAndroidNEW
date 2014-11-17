@@ -71,7 +71,7 @@ public class AlbumView extends Activity {
 
 	ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-	private int MAX_PIC = 9;
+	private int MAX_PIC = 7;
 
 	private int MAX_SIZE = 300000;
 

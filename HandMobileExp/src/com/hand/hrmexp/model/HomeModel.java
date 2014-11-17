@@ -48,7 +48,7 @@ public class HomeModel extends DbRequestModel{
 		//TODO 注意sum出来的结果是string类型 不能getint
 		this.finalDb.checkTableExist(MOBILE_EXP_REPORT_LINE.class);
 		
-		Cursor currentDay = 	this.finalDb.db.rawQuery("select sum(total_amount) from  com_hand_hrmexp_dao_MOBILE_EXP_REPORT_LINE where expense_date =  ?"  
+		Cursor currentDay = 	this.finalDb.db.rawQuery("select sum(total_amount) from  MOBILE_EXP_REPORT_LINE where expense_date =  ?"  
 				
 				 ,new String[]{nowDate});
 		while(currentDay.moveToNext()){
@@ -58,7 +58,7 @@ public class HomeModel extends DbRequestModel{
 			
 		}
 		
-		Cursor weekDay  =  this.finalDb.db.rawQuery("select sum(total_amount) from  com_hand_hrmexp_dao_MOBILE_EXP_REPORT_LINE where expense_date >= ? and expense_date <= ?", new String[]{firstDateOfWeek,lastDateOfWeek} );
+		Cursor weekDay  =  this.finalDb.db.rawQuery("select sum(total_amount) from  MOBILE_EXP_REPORT_LINE where expense_date >= ? and expense_date <= ?", new String[]{firstDateOfWeek,lastDateOfWeek} );
 		
 		while(weekDay.moveToNext()){
 			
@@ -68,7 +68,7 @@ public class HomeModel extends DbRequestModel{
 		}
 		
 		
-		Cursor monthDay = this.finalDb.db.rawQuery("select sum(total_amount) from  com_hand_hrmexp_dao_MOBILE_EXP_REPORT_LINE where expense_date >= ? and expense_date <= ?",  new String[]{firstDateOfMonth,LastDateOfMonth});
+		Cursor monthDay = this.finalDb.db.rawQuery("select sum(total_amount) from  MOBILE_EXP_REPORT_LINE where expense_date >= ? and expense_date <= ?",  new String[]{firstDateOfMonth,LastDateOfMonth});
 		
 		while(monthDay.moveToNext()){
 			
