@@ -205,7 +205,7 @@ public class SqlBuilder {
  */
 	public static String getSelectSqlByColumnName(Class<?> clazz){
 		
-		StringBuffer strSql  =  new StringBuffer("select    ");
+		StringBuffer strSql  =  new StringBuffer("select    id, ");
 		
 		TableInfo info = TableInfo.get(clazz);
 		
