@@ -53,6 +53,13 @@ public class DetailListActivity extends SherlockActivity {
 		TextView titleView = (TextView) findViewById(R.id.contextTitle);
 		titleView.setText("报销明细");
 		bindAllViews();
+
+	}	
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
 		try {
 //			loadTestingDate();
 			initializeData();
@@ -68,11 +75,7 @@ public class DetailListActivity extends SherlockActivity {
 		for(int i =0; i<groupCount;i++){
 			detailListView.expandGroup(i);
 		}	
-	}	
-
-	@Override
-	protected void onResume() {
-		super.onResume();
+		
 		adapter.notifyDataSetChanged();
 	};	
 	
@@ -214,7 +217,7 @@ public class DetailListActivity extends SherlockActivity {
 		String[] groupInfo = new String[2];
 		List<MOBILE_EXP_REPORT_DATA> childInfo = new ArrayList<MOBILE_EXP_REPORT_DATA>();
 		
-		List<MOBILE_EXP_REPORT_DATA> dataList = finalDb.findAll(MOBILE_EXP_REPORT_DATA.class, "expense_date desc");
+		List<MOBILE_EXP_REPORT_DATA> dataList = finalDb.findByColumName(MOBILE_EXP_REPORT_DATA.class, "expense_date desc");
 //		List<MOBILE_EXP_REPORT_DATA> dataList = data2line(resultList);
 //		resultList = null;
 //		System.gc();

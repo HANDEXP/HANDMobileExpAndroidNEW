@@ -39,16 +39,6 @@ public class MOBILE_EXP_REPORT_DATA {
 
 	public String CREATION_DATE;
 	public String CREATED_BY;
-	public int segment_1;
-	public int segment_2;
-	public int segment_3;
-	public int segment_4;
-	public int segment_5;
-	public int segment_6;
-	public int segment_7;
-	public int segment_8;
-	public int segment_9;
-	public int segment_10;
 
 	public MOBILE_EXP_REPORT_DATA() {
 		// TODO Auto-generated constructor stub
