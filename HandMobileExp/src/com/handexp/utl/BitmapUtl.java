@@ -71,7 +71,7 @@ public class BitmapUtl {
 	 * bytes ------------- bitmap
 	 */
 	public static Bitmap bytesToBitmap ( byte[] bytes , BitmapFactory.Options opts )
-	{
+	{       
 		if (bytes != null)
 			if (opts != null)
 				return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);

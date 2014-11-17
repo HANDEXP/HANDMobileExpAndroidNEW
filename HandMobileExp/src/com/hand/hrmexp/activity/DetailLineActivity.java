@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONException;
@@ -19,7 +20,6 @@ import com.hand.R;
 import com.hand.hrmexp.application.HrmexpApplication;
 import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_LINE;
 import com.hand.hrmexp.dialogs.DatePickerWrapDialog;
-import com.hand.hrmexp.model.ImageItem;
 import com.hand.hrmexp.popwindows.ExpenseTypePopwindow;
 import com.handexp.utl.BitmapUtl;
 import com.handexp.utl.DialogUtl;
@@ -28,6 +28,9 @@ import com.littlemvc.db.sqlite.FinalDb;
 import com.littlemvc.model.LMModel;
 import com.littlemvc.model.LMModelDelegate;
 import com.littlemvc.model.request.db.DbRequestModel;
+import com.mas.album.AlbumView;
+import com.mas.album.Util;
+import com.mas.album.items.ImageItem;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -105,7 +108,9 @@ public class DetailLineActivity extends Activity implements
 	// 显示照片实际的数据
 	private byte[] mContent;
 	// 照片列表数据
-	private ArrayList<ImageItem> dataList = new ArrayList<ImageItem>();
+	private ArrayList<ImageItem> imageList = new ArrayList<ImageItem>();
+	
+	
 	// 备注
 	private EditText commentEditText;
 
@@ -134,6 +139,9 @@ public class DetailLineActivity extends Activity implements
 	// 相册
 	public static final int ACTION_GET_CONTENT = 1;
 
+	
+	public static final int ALBUM = 2;
+	
 	public DbRequestModel dbmodel;
 
 	ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -151,6 +159,8 @@ public class DetailLineActivity extends Activity implements
 	public LocationClient mLocationClient;
 	
 	public BDLocation location;
+	
+	public int MAX_SIZE = 300000;
 	
 	//解决光标位置问题
 	OnKeyListener  keylistener = 	new OnKeyListener() {
@@ -201,7 +211,7 @@ public class DetailLineActivity extends Activity implements
 		
 		//默认情况
 		if(detailId == 0){
-		
+			ImageItem.mMemoryCache.put("imageList", imageList);
 			mLocationClient.requestLocation();
 			location = mLocationClient.getLastKnownLocation();
 			if(location !=null){
@@ -239,27 +249,63 @@ public class DetailLineActivity extends Activity implements
 			return;
 		}
 		
+		Bitmap bitmap;
+		Uri originalUri;
+		byte[]  content = null;
+		
 		switch (requestCode) {
 		case IMAGE_CAPTURE:
-			Bundle extras = data.getExtras();
-			Bitmap bitmap = (Bitmap) extras.get("data");
-			bitmap.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+			
+			originalUri = data.getData();
 
-			photoImgView.setImageBitmap(bitmap);
-			mContent = baos.toByteArray();
+			try {
+				content = Util.readStream(getContentResolver()
+						.openInputStream(Uri.parse(originalUri.toString())));
+				
+				
+				bitmap = Util.CompressBytes(content);
+				content = Util.CompressBytes(content, this.MAX_SIZE);
+				
+				photoImgView.setImageBitmap(bitmap);
+				imageList.add(new ImageItem(content, bitmap));
+				
+				System.gc();
+				
+			
+			}  catch (Exception e) {
+				Toast.makeText(DetailLineActivity.this, "获取相册图片失败", Toast.LENGTH_LONG).show();
+
+				e.printStackTrace();
+				
+				return;
+			}
 			break;
 		case ACTION_GET_CONTENT:
 			
 			
-			dataList = (ArrayList<ImageItem>) data.getSerializableExtra("dataList");
-			if(dataList.size() == 0){
-				photoImgView.setImageDrawable(getResources().getDrawable(R.drawable.camera));
+			originalUri = data.getData();
+
+			try {
+				content = Util.readStream(getContentResolver()
+						.openInputStream(Uri.parse(originalUri.toString())));
+				
+				bitmap = Util.CompressBytes(content);
+				content = Util.CompressBytes(content, this.MAX_SIZE);
+				
+				photoImgView.setImageBitmap(bitmap);
+				imageList.add(new ImageItem(content, bitmap));
+				
+				System.gc();
+				
+			
+			}  catch (Exception e) {
+				Toast.makeText(DetailLineActivity.this, "获取相册图片失败", Toast.LENGTH_LONG).show();
+
+				e.printStackTrace();
+				
 				return;
 			}
-			mContent = dataList.get(0).getmContent();
-			Bitmap myBitmap = BitmapUtl.bytesToBitmap(mContent, opts);
-			photoImgView.setImageBitmap(myBitmap);
-			Toast.makeText(getApplicationContext(), "FFFFF", Toast.LENGTH_SHORT).show();
+			
 			break;
 		}
 
@@ -295,6 +341,11 @@ public class DetailLineActivity extends Activity implements
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+ 
+        //退出的时候清理缓存
+        ImageItem.mMemoryCache = new HashMap<String, ArrayList<ImageItem>>();
+        System.gc();
+        
         if(fromFlag == 1){
         	overridePendingTransition(R.anim.move_left_in_activity, R.anim.move_right_out_activity);
         }
@@ -437,10 +488,36 @@ public class DetailLineActivity extends Activity implements
 	
 		
 		status = _record.local_status;
-		
+		ImageItem.mMemoryCache.put("imageList", imageList);
+
 		if(_record.item1 !=null){
-			mContent = _record.item1;
-			photoImgView.setImageBitmap(BitmapUtl.bytesToBitmap(_record.item1, null));
+			Class<? extends MOBILE_EXP_REPORT_LINE> ownerClass = _record.getClass();
+			for(int i =1;i<10;i++){
+				String fieldName = "item" + i;
+				try {
+					Field field = ownerClass.getField(fieldName);
+					byte[] content = (byte[]) field.get(_record);
+					imageList.add(new ImageItem(content, Util.CompressBytes(content)));
+					
+				} catch (NoSuchFieldException e) {
+					
+					e.printStackTrace();
+					
+				} catch (IllegalAccessException e) {
+					
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					
+					e.printStackTrace();
+				}catch (NullPointerException e){
+					break;
+				}
+				
+			}
+
+			
+//			mContent = _record.item1;
+//			photoImgView.setImageBitmap(BitmapUtl.bytesToBitmap(_record.item1, null));
 		}
 		if(status.equalsIgnoreCase("upload")){						
 		
@@ -520,21 +597,29 @@ public class DetailLineActivity extends Activity implements
 		line.expense_place = placeEditText.getText().toString();
 
 		line.local_status = "new";
+		
+		this.imageList =ImageItem.mMemoryCache.get("imageList");
+		
+	
 		// 图片
-		for(int i = 0;i<dataList.size();i++){
+		for(int i = 0;i<9;i++){
 			Class<? extends MOBILE_EXP_REPORT_LINE> ownerClass = line.getClass();
 			String fieldName = "item".concat(String.valueOf(i+1));
 			try {
 				Field field = ownerClass.getField(fieldName);
 				try {
-					field.set(line, dataList.get(0).getmContent());
+					if(i >= imageList.size() ){
+						field.set(line, null);
+					}else {
+						field.set(line, imageList.get(i).content);
+					}
 				} catch (IllegalAccessException e) {
 					// TODO 自动生成的 catch 块
 					e.printStackTrace();
 				} catch (IllegalArgumentException e) {
 					// TODO 自动生成的 catch 块
 					e.printStackTrace();
-				}
+				} 
 					
 			} catch (NoSuchFieldException e) {
 				// TODO 自动生成的 catch 块
@@ -555,7 +640,49 @@ public class DetailLineActivity extends Activity implements
 			
 		}
 	}
+	////////////////弹出相册逻/////////////////
+	public  void showAlbum()
+	{
+		Intent intent = new Intent(this,AlbumView.class);
+		ImageItem.mMemoryCache.put("imageList", imageList);
 
+		startActivityForResult(intent,this.ALBUM);
+	}
+	
+	
+
+	//////////////////弹出照相对话框////////////
+	public void showCapture()
+	{
+		
+		// 拍照逻辑
+		final CharSequence[] items = { "相册", "拍照" };
+		AlertDialog dlg = new AlertDialog.Builder(DetailLineActivity.this)
+				.setTitle("选择图片")
+				.setItems(items, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+						// 这里item是根据选择的方式，
+						// 在items数组里面定义了两种方式，拍照的下标为1所以就调用拍照方法
+						if (item == 1) {
+							Intent getImageByCamera = new Intent(
+									"android.media.action.IMAGE_CAPTURE");
+							startActivityForResult(getImageByCamera,
+									IMAGE_CAPTURE);
+						} else {
+							Intent getImage = new Intent(
+									Intent.ACTION_GET_CONTENT);
+							getImage.addCategory(Intent.CATEGORY_OPENABLE);
+							getImage.setType("image/jpeg");
+							startActivityForResult(getImage,
+									ACTION_GET_CONTENT);
+						}
+					}
+				}).create();
+		dlg.show();
+	}
+	
+	
+	
 	// ////////////////////click////////////////////////////
 	@Override
 	public void onClick(View v) {
@@ -566,9 +693,11 @@ public class DetailLineActivity extends Activity implements
 					| Gravity.CENTER, 0, 0);
 
 		} else if (v.equals(photoImgView)) {
-			Intent intent = new Intent(getApplicationContext(),PicGridActivity.class);
-			intent.putExtra("dataList", (Serializable) dataList);
-			startActivityForResult(intent,ACTION_GET_CONTENT);
+			if(imageList.size() == 0){ 
+				showCapture();
+			}else {
+				showAlbum();
+			}
 		} else if (v.equals(saveBtn)) {
 			// 保存按钮
 				save();
@@ -583,6 +712,10 @@ public class DetailLineActivity extends Activity implements
 
 		}else if(v.equals(returnImgBtn)){
 			this.finish();
+	        //退出的时候清理缓存
+	        ImageItem.mMemoryCache = new HashMap<String, ArrayList<ImageItem>>();
+	        System.gc();
+			
 			if(fromFlag == 1 ){
 				overridePendingTransition(R.anim.move_left_in_activity, R.anim.move_right_out_activity);
 			}

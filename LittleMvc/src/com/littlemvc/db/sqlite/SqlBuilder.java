@@ -377,7 +377,7 @@ public class SqlBuilder {
 		if(value!=null){
 			kv = new KeyValue(pcolumn, value);
 		}else{
-			if(property.getDefaultValue()!=null && property.getDefaultValue().trim().length()!=0)
+//			if(property.getDefaultValue()!=null && property.getDefaultValue().trim().length()!=0)
 				kv = new KeyValue(pcolumn, property.getDefaultValue());
 		}
 		return kv;

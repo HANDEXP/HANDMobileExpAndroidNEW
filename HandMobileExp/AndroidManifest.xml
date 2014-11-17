@@ -34,6 +34,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
+    
+    <uses-library android:name="com.mas.album" android:required="true" />
+    
     <application
         android:name="com.hand.hrmexp.application.HrmexpApplication"
         
@@ -64,6 +67,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        
+        <activity 
+            android:name="com.mas.album.AlbumView"
+         />     
+ <!--        
+         <intent-filter >
+             <action android:name="com.mas.album.AlbumView"/>
+             <category android:name="android.intent.category.DEFAULT" />
+             <category android:name="com.hand" />
+             
+         </intent-filter>
+            
+        </activity>
+   -->       
+        
         <activity
             android:name="com.hand.hrmexp.activity.SettingsActivity"
             android:label="设置" >

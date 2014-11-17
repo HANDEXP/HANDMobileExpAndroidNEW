@@ -55,7 +55,6 @@ public class HomeFragment extends Fragment implements LMModelDelegate{
 		// TODO Auto-generated method stub
 		rootview  = inflater.inflate(R.layout.activity_home, container, false);
 		buildAllViews();
-		
 		model = new HomeModel(this);
 		model.load();
 		return   rootview;
@@ -66,16 +65,16 @@ public class HomeFragment extends Fragment implements LMModelDelegate{
 	@Override
 	public void onResume() {
 		super.onResume();
-		//imageViewPager.imageDisplayStart();
-		this.model.load();
+//		imageViewPager.imageDisplayStart();
+
 		
 
 	}
 	
 	@Override
 	public void onStop() {
-		imageViewPager.imageDisplayShutdown();
 		super.onStop();
+		imageViewPager.imageDisplayShutdown();
 	}
 	
 ///////////////////private//////////////////////	

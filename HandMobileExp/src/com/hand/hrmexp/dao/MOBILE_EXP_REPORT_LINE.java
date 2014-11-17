@@ -33,7 +33,7 @@ public class MOBILE_EXP_REPORT_LINE {
 	public String local_status;
 
 	public int service_id;
-
+ 
 	public String CREATION_DATE;
 	public String CREATED_BY;
 	public byte[] item1;
