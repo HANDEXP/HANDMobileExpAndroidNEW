@@ -203,7 +203,7 @@ public class DetailListActivity extends SherlockActivity {
 	 * 初始化数据
 	 * @throws ParseException 
 	 * 
-	 * 
+	 *  
 	 */
 	
 	private void initializeData() throws ParseException {
@@ -212,7 +212,7 @@ public class DetailListActivity extends SherlockActivity {
 		String[] groupInfo = new String[2];
 		List<MOBILE_EXP_REPORT_LINE> childInfo = new ArrayList<MOBILE_EXP_REPORT_LINE>();
 		
-		List<MOBILE_EXP_REPORT_LINE> resultList = finalDb.findAll(MOBILE_EXP_REPORT_LINE.class, "expense_date desc");
+		List<MOBILE_EXP_REPORT_LINE> resultList = finalDb.findByColumName(MOBILE_EXP_REPORT_LINE.class, "expense_date desc");
 		String topDate = null; 
 		Boolean flag = false;
 		for(int i =0;i<resultList.size();i++){

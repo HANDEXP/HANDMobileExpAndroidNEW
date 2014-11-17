@@ -42,6 +42,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class AlbumView extends Activity {
 
@@ -65,6 +66,8 @@ public class AlbumView extends Activity {
 	private ImageView addPic;
 
 	private TextView returnTextView;
+	
+	private  TextView numTextView;
 
 	ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -126,6 +129,8 @@ public class AlbumView extends Activity {
 				imageadapter.notifyDataSetChanged();
 				// mViewPager.requestLayout();
 				// mGridView.requestLayout();
+				
+				setImageNum();
 
 				goBackGrid();
 			}
@@ -138,8 +143,13 @@ public class AlbumView extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				
+				if(imageList.size() <=9){
+					showDialog();
+				}else{
+					Toast.makeText(AlbumView.this, "最多选择9张照片", Toast.LENGTH_LONG).show();
 
-				showDialog();
+				}
 
 			}
 		});
@@ -169,6 +179,10 @@ public class AlbumView extends Activity {
 
 			}
 		});
+		
+		
+		numTextView  = (TextView) findViewById(R.id.numTextView);
+		setImageNum();
 
 	}
 
@@ -198,6 +212,9 @@ public class AlbumView extends Activity {
 
 				imageList.add(new ImageItem(mContent, bm));
 				System.gc();
+				setImageNum();
+
+				
 				showGrid();
 
 				viewpageradapter = new ViewPagerAdapter(imageList,
@@ -225,6 +242,9 @@ public class AlbumView extends Activity {
 
 				imageList.add(new ImageItem(mContent, bm));
 				System.gc();
+				setImageNum();
+
+				
 				showGrid();
 
 				viewpageradapter = new ViewPagerAdapter(imageList,
@@ -255,17 +275,24 @@ public class AlbumView extends Activity {
 		return super.onKeyDown(keyCode, event);
 	}
 
-	/****************** private *************************/
+/****************** private *************************/
 
 	private void prepare() {
 
 		imageList = (ArrayList<ImageItem>) ImageItem.mMemoryCache
 				.get("imageList");
 		
-		BitmapFactory.Options option = new BitmapFactory.Options();
-		option.inJustDecodeBounds = false;
-		option.inSampleSize = 1;
+		
 
+	}
+	
+/**
+ * 设置头部显示的照片数量	
+ */
+	public void setImageNum(){
+		
+		numTextView.setText(imageList.size() + " photo");
+		
 	}
 
 	public void setMaxPic(int max) {

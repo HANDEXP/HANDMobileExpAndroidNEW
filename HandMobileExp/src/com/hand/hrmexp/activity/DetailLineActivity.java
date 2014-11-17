@@ -105,8 +105,7 @@ public class DetailLineActivity extends Activity implements
 	private ImageButton returnImgBtn;
 	// 拍照
 	private ImageView photoImgView;
-	// 显示照片实际的数据
-	private byte[] mContent;
+
 	// 照片列表数据
 	private ArrayList<ImageItem> imageList = new ArrayList<ImageItem>();
 	
@@ -263,7 +262,7 @@ public class DetailLineActivity extends Activity implements
 						.openInputStream(Uri.parse(originalUri.toString())));
 				
 				
-				bitmap = Util.CompressBytes(content);
+				bitmap  = Util.CompressBytes(content);
 				content = Util.CompressBytes(content, this.MAX_SIZE);
 				
 				photoImgView.setImageBitmap(bitmap);
@@ -307,6 +306,20 @@ public class DetailLineActivity extends Activity implements
 			}
 			
 			break;
+			
+		case ALBUM:
+				if(ImageItem.mMemoryCache.get("imageList").size() == 0 ){
+				
+					photoImgView.setImageResource(R.drawable.camera);
+					
+				}else{
+					Bitmap bm  = ImageItem.mMemoryCache.get("imageList").get(0).bm;
+					photoImgView.setImageBitmap(bm);
+					
+				}
+				
+				break;
+			
 		}
 
 	}
@@ -515,9 +528,9 @@ public class DetailLineActivity extends Activity implements
 				
 			}
 
-			
+			photoImgView.setImageBitmap(imageList.get(0).bm);
 //			mContent = _record.item1;
-//			photoImgView.setImageBitmap(BitmapUtl.bytesToBitmap(_record.item1, null));
+
 		}
 		if(status.equalsIgnoreCase("upload")){						
 		
