@@ -146,7 +146,9 @@
 		    android:name="com.hand.hrmexp.activity.PicGridActivity"
 		    android:label="图片Grid">
 		</activity>
-
+		<activity 
+		    android:name="com.hand.hrmexp.activity.CurrencyListActivity"
+		    android:label="币种选择"></activity>
     </application>
 
 </manifest>

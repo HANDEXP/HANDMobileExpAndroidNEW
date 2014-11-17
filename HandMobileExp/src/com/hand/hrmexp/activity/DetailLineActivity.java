@@ -1,10 +1,8 @@
 package com.hand.hrmexp.activity;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.Serializable;
 
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,9 +20,7 @@ import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_LINE;
 import com.hand.hrmexp.dialogs.DatePickerWrapDialog;
 import com.hand.hrmexp.popwindows.ExpenseTypePopwindow;
 import com.handexp.utl.BitmapUtl;
-import com.handexp.utl.DialogUtl;
 import com.handexp.utl.ViewUtl;
-import com.littlemvc.db.sqlite.FinalDb;
 import com.littlemvc.model.LMModel;
 import com.littlemvc.model.LMModelDelegate;
 import com.littlemvc.model.request.db.DbRequestModel;
@@ -37,37 +33,25 @@ import com.nineoldandroids.animation.ObjectAnimator;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Selection;
 import android.text.TextWatcher;
-import android.util.Base64;
-import android.view.View.OnClickListener;
-import android.support.v4.app.Fragment;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
 import android.view.Window;
-import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebView.FindListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -87,6 +71,12 @@ public class DetailLineActivity extends Activity implements
 
 	private ExpenseTypePopwindow expenseTypePicker;
 
+	// 币种和汇率
+	private TextView currenyTextView;
+	private EditText exchangeRateTextView;
+	
+	public static final int CURRENCY_CONTENT = 3;
+	
 	// 地点
 	private LinearLayout placell;
 
@@ -307,6 +297,13 @@ public class DetailLineActivity extends Activity implements
 			}
 			
 			break;
+		case CURRENCY_CONTENT:
+			Bundle bundle = data.getExtras();
+			String currency = bundle.getString("currency");
+			String exchangeRate = bundle.getString("exchangeRate");
+			currenyTextView.setText(currency);
+			exchangeRateTextView.setText(exchangeRate);
+			break;
 		}
 
 	}
@@ -410,8 +407,19 @@ public class DetailLineActivity extends Activity implements
 		expenseTypell = (LinearLayout) findViewById(R.id.expense_type);
 		expenseTypell.setOnClickListener(this);
 		expenseTypeTextView = (TextView) findViewById(R.id.detailTypeLabel);
+		expenseTypeTextView.setOnClickListener(this);
 		expenseTypePicker = new ExpenseTypePopwindow(this, expenseTypeTextView);
 
+		// 币种和汇率
+		currenyTextView = (TextView) findViewById(R.id.currencyLabel);
+		currenyTextView.setOnClickListener(this);
+		currenyTextView.setText("CNY-人民币");
+		exchangeRateTextView = (EditText) findViewById(R.id.exchangeRateLabel);
+		exchangeRateTextView.setOnClickListener(this);
+		exchangeRateTextView.setOnKeyListener(keylistener);
+		exchangeRateTextView.setText("1.00");
+		
+		
 		// 日期
 		datell = (LinearLayout) findViewById(R.id.llcalendar_id);
 
@@ -476,6 +484,10 @@ public class DetailLineActivity extends Activity implements
 		
 		placeEditText.setText(_record.expense_place);
 		commentEditText.setText(_record.description);
+		
+		//币种和汇率
+		currenyTextView.setText(_record.currency);
+		exchangeRateTextView.setText(_record.exchangeRate);
 		
 		//初始化picker
 		try {
@@ -593,6 +605,10 @@ public class DetailLineActivity extends Activity implements
 		line.expense_class_id = expenseTypePicker.expense_class_id;
 		line.expense_type_id = expenseTypePicker.expense_type_id;
 
+		// 币种和汇率
+		line.currency = currenyTextView.getText().toString();
+		line.exchangeRate = exchangeRateTextView.getText().toString();
+		
 		// 地点
 		line.expense_place = placeEditText.getText().toString();
 
@@ -688,10 +704,15 @@ public class DetailLineActivity extends Activity implements
 	public void onClick(View v) {
 
 		// 点击费用类型，弹出picker选择
-		if (v.equals(expenseTypell)) {
+		if (v.equals(expenseTypeTextView)) {
 			expenseTypePicker.showAtLocation(rootView, Gravity.BOTTOM
 					| Gravity.CENTER, 0, 0);
 
+		} else if(v.equals(currenyTextView)){
+			Intent intent = new Intent(getApplicationContext(),CurrencyListActivity.class);
+			startActivityForResult(intent, CURRENCY_CONTENT);
+		} else if(v.equals(exchangeRateTextView)){
+			Toast.makeText(getApplicationContext(), "exchangeRateTextView", Toast.LENGTH_SHORT).show();
 		} else if (v.equals(photoImgView)) {
 			if(imageList.size() == 0){ 
 				showCapture();

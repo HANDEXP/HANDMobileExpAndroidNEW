@@ -9,8 +9,9 @@ import java.util.List;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.hand.R;
-import com.hand.hrmexp.adapter.ContactsInfoAdapter;
+import com.hand.hrmexp.adapter.DetailListAdapter;
 import com.hand.hrmexp.application.HrmexpApplication;
+import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_DATA;
 import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_LINE;
 
 import android.app.AlertDialog;
@@ -33,8 +34,8 @@ import com.littlemvc.db.sqlite.FinalDb;
 public class DetailListActivity extends SherlockActivity {
 
 	private List<List<String>> group;
-	private List<List<MOBILE_EXP_REPORT_LINE>> child;
-	private ContactsInfoAdapter adapter;
+	private List<List<MOBILE_EXP_REPORT_DATA>> child;
+	private DetailListAdapter adapter;
 	private ExpandableListView detailListView;
 	private TextView amountView;
 	private  FinalDb finalDb;
@@ -52,26 +53,27 @@ public class DetailListActivity extends SherlockActivity {
 		TextView titleView = (TextView) findViewById(R.id.contextTitle);
 		titleView.setText("报销明细");
 		bindAllViews();
-		
-	}	
-
-	@Override
-	protected void onResume() {
-		super.onResume();
 		try {
 //			loadTestingDate();
 			initializeData();
 		} catch (ParseException e) {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
-		}		
-		adapter = new ContactsInfoAdapter(group,child,this,R.layout.activity_detail_child,amountView,null);
+		}	
+		
+		adapter = new DetailListAdapter(group,child,this,R.layout.activity_detail_child,amountView,null);
 		detailListView.setAdapter(adapter);
 		//打开每一个Group
 		int groupCount = detailListView.getCount();
 		for(int i =0; i<groupCount;i++){
 			detailListView.expandGroup(i);
-		}
+		}	
+	}	
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		adapter.notifyDataSetChanged();
 	};	
 	
 	/**
@@ -208,15 +210,18 @@ public class DetailListActivity extends SherlockActivity {
 	
 	private void initializeData() throws ParseException {
 		group = new ArrayList<List<String>>();
-		child = new ArrayList<List<MOBILE_EXP_REPORT_LINE>>();
+		child = new ArrayList<List<MOBILE_EXP_REPORT_DATA>>();
 		String[] groupInfo = new String[2];
-		List<MOBILE_EXP_REPORT_LINE> childInfo = new ArrayList<MOBILE_EXP_REPORT_LINE>();
+		List<MOBILE_EXP_REPORT_DATA> childInfo = new ArrayList<MOBILE_EXP_REPORT_DATA>();
 		
-		List<MOBILE_EXP_REPORT_LINE> resultList = finalDb.findAll(MOBILE_EXP_REPORT_LINE.class, "expense_date desc");
+		List<MOBILE_EXP_REPORT_DATA> dataList = finalDb.findAll(MOBILE_EXP_REPORT_DATA.class, "expense_date desc");
+//		List<MOBILE_EXP_REPORT_DATA> dataList = data2line(resultList);
+//		resultList = null;
+//		System.gc();
 		String topDate = null; 
 		Boolean flag = false;
-		for(int i =0;i<resultList.size();i++){
-			MOBILE_EXP_REPORT_LINE data = 	resultList.get(i);
+		for(int i =0;i<dataList.size();i++){
+			MOBILE_EXP_REPORT_DATA data = 	dataList.get(i);
 			if(topDate == null){
 				topDate = data.expense_date;
 				groupInfo = new String[]{topDate,"累计：¥"};
@@ -236,10 +241,10 @@ public class DetailListActivity extends SherlockActivity {
 		}
 	}
 
-	private void addInfo(String[] g, List<MOBILE_EXP_REPORT_LINE> c) {
+	private void addInfo(String[] g, List<MOBILE_EXP_REPORT_DATA> c) {
 		// TODO Auto-generated method stub
 		List<String> groupitem = new ArrayList<String>();
-		List<MOBILE_EXP_REPORT_LINE> childitem = new ArrayList<MOBILE_EXP_REPORT_LINE>();
+		List<MOBILE_EXP_REPORT_DATA> childitem = new ArrayList<MOBILE_EXP_REPORT_DATA>();
 		for (int i = 0; i < g.length; i += 1) {
 			groupitem.add(g[i]);
 		}
@@ -345,4 +350,38 @@ public class DetailListActivity extends SherlockActivity {
 		return flag;
 	}
 
+	private List<MOBILE_EXP_REPORT_DATA> data2line(List<MOBILE_EXP_REPORT_LINE> resultline){
+		List<MOBILE_EXP_REPORT_DATA> datalist = new ArrayList<MOBILE_EXP_REPORT_DATA>();
+		for(int i = 0; i< resultline.size(); i++){
+			try {
+				MOBILE_EXP_REPORT_LINE line = resultline.get(i);
+				MOBILE_EXP_REPORT_DATA data = new MOBILE_EXP_REPORT_DATA();
+				data.setId(line.id);
+				data.setExpense_class_id(line.expense_class_id);
+				data.setExpense_class_desc(line.expense_class_desc);
+				data.setExpense_type_id(line.expense_type_id);
+				data.setExpense_type_desc(line.expense_type_desc);
+				data.setExpense_amount(line.expense_amount);
+				data.setTotal_amount(line.total_amount);
+				data.setCurrency(line.currency);
+				data.setExchangeRate(line.exchangeRate);
+				data.setExpense_number(line.expense_number);
+				data.setExpense_date(line.expense_date);
+				data.setExpense_date_to(line.expense_date_to);
+				data.setExpense_place(line.expense_place);
+				data.setDescription(line.description);
+				data.setLocal_status(line.local_status);
+				data.setService_id(line.service_id);
+				data.setCREATION_DATE(line.CREATION_DATE);
+				data.setCREATED_BY(line.CREATED_BY);		
+				datalist.add(data);				
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+				continue;
+			}
+
+		}	
+		return datalist;
+	}
 }
