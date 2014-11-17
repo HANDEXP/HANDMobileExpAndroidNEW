@@ -125,6 +125,22 @@ public class MOBILE_EXP_REPORT_LINE {
 		this.expense_number = expense_number;
 	}
 
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+
+	public String getExchangeRate() {
+		return exchangeRate;
+	}
+
+	public void setExchangeRate(String exchangeRate) {
+		this.exchangeRate = exchangeRate;
+	}
+
 	public float getTotal_amount() {
 		return total_amount;
 	}

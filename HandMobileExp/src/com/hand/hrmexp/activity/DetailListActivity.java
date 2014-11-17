@@ -205,7 +205,7 @@ public class DetailListActivity extends SherlockActivity {
 	 * 初始化数据
 	 * @throws ParseException 
 	 * 
-	 * 
+	 *  
 	 */
 	
 	private void initializeData() throws ParseException {

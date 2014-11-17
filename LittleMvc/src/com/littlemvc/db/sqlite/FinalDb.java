@@ -665,7 +665,21 @@ public class FinalDb {
 		return findAllBySql(clazz, SqlBuilder.getSelectSQL(clazz)
 				+ " ORDER BY " + orderBy);
 	}
-
+	
+	/**
+	 * 查找数据通过类字段名拼接
+	 * add by jtt
+	 * @param clazz
+	 * @param orderBy
+	 *            排序的字段
+	 */
+	public <T> List<T> findByColumName(Class<T> clazz, String orderBy) {
+		checkTableExist(clazz);
+		return findAllBySql(clazz, SqlBuilder.getSelectSqlByColumnName(clazz)
+				+ " ORDER BY " + orderBy);
+	}
+	
+	
 	/**
 	 * 根据条件查找所有数据
 	 * 

@@ -198,6 +198,30 @@ public class SqlBuilder {
 	public static String getSelectSQL(Class<?> clazz){
 		return getSelectSqlByTableName(TableInfo.get(clazz).getTableName());
 	}
+/**
+ * add by jtt 	
+ * @param clazz
+ * @return
+ */
+	public static String getSelectSqlByColumnName(Class<?> clazz){
+		
+		StringBuffer strSql  =  new StringBuffer("select    ");
+		
+		TableInfo info = TableInfo.get(clazz);
+		
+		Collection<Property> propertys = info.propertyMap.values();
+		for(Property property : propertys){
+			String FieldName    =   property.getFieldName();
+			strSql.append(FieldName + ",");
+			
+		}
+		strSql.deleteCharAt(strSql.length() - 1);
+		
+		strSql.append("  from  " + info.getTableName());
+		
+		return strSql.toString();
+		
+	}
 	
 	public static String getSelectSQLByWhere(Class<?> clazz,String strWhere){
 		TableInfo table=TableInfo.get(clazz);
