@@ -687,6 +687,15 @@ public class FinalDb {
 	}
 	
 	
+	public <T> List<T> findByColumNameWithWhere(Class<T> clazz, String strWhere,String orderBy  ){
+		checkTableExist(clazz);
+		return findAllBySql(clazz, SqlBuilder.getSelectSqlByColumnName(clazz)
+				+ " where " + strWhere  + " order by " + orderBy);
+		
+	}
+	
+	
+	
 	/**
 	 * 根据条件查找所有数据
 	 * 
