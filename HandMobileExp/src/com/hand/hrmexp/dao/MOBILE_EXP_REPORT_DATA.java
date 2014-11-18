@@ -26,7 +26,7 @@ public class MOBILE_EXP_REPORT_DATA {
 	public float total_amount;
 
 	public String currency;
-	public String exchangeRate;
+	public float exchangeRate;
 	public String expense_date;
 	public String expense_date_to;
 
@@ -110,12 +110,12 @@ public class MOBILE_EXP_REPORT_DATA {
 		this.currency = currency;
 	}
 
-	public String getExchangeRate(){
+	public float getExchangeRate(){
 		return exchangeRate;
 	}
 	
-	public void setExchangeRate(String exchangeRate){
-		this.exchangeRate = exchangeRate;
+	public void setExchangeRate(float exchangeRate2){
+		this.exchangeRate = exchangeRate2;
 	}
 	
 	public int getExpense_number() {

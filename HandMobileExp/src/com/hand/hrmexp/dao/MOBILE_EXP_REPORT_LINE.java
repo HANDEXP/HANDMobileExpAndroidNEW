@@ -24,7 +24,7 @@ public class MOBILE_EXP_REPORT_LINE {
 	public int expense_number;
 
 	public String currency;
-	public String exchangeRate;
+	public float exchangeRate;
 	public float total_amount;
 
 	public String expense_date;
@@ -133,11 +133,11 @@ public class MOBILE_EXP_REPORT_LINE {
 		this.currency = currency;
 	}
 
-	public String getExchangeRate() {
+	public float getExchangeRate() {
 		return exchangeRate;
 	}
 
-	public void setExchangeRate(String exchangeRate) {
+	public void setExchangeRate(float exchangeRate) {
 		this.exchangeRate = exchangeRate;
 	}
 

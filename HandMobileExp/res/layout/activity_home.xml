@@ -5,22 +5,20 @@
     android:background="#ffffff"
     android:orientation="vertical" >
 
-
     <com.mas.customview.ImageViewPager
         android:id="@+id/imageViewPager"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.7"
-	 />
+        android:layout_weight="0.7" />
 
     <Button
+        android:id="@+id/writeBtn"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/writeBtn"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/button_shape"
+        android:background="@drawable/write_btn_press_selector"
         android:text="记一笔"
         android:textColor="#ffffff"
         android:textSize="20dp" />
@@ -28,8 +26,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_marginBottom="10dp"
+        android:layout_weight="1"
         android:background="#ffffff"
         android:orientation="vertical" >
 
@@ -68,14 +66,14 @@
                 android:text="0.00"
                 android:textSize="20dp" />
         </LinearLayout>
-		        <View
+
+        <View
             android:layout_width="fill_parent"
-            android:layout_marginLeft="15dp"
             android:layout_height="1dip"
+            android:layout_marginLeft="15dp"
             android:background="#CCCCCC"
             android:padding="15dp" />
-        
-        
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
@@ -112,12 +110,13 @@
                 android:textSize="20dp" />
         </LinearLayout>
 
-                <View
+        <View
             android:layout_width="fill_parent"
             android:layout_height="1dip"
-              android:layout_marginLeft="15dp"
+            android:layout_marginLeft="15dp"
             android:background="#CCCCCC"
             android:padding="15dp" />
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
@@ -153,113 +152,152 @@
                 android:text="0.00"
                 android:textSize="20dp" />
         </LinearLayout>
-                        <View
+
+        <View
             android:layout_width="fill_parent"
             android:layout_height="1dip"
-              android:layout_marginLeft="15dp"
+            android:layout_marginLeft="15dp"
             android:background="#CCCCCC"
             android:padding="15dp" />
     </LinearLayout>
-	
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.4"
         android:layout_marginTop="15dp"
+        android:layout_weight="0.4"
         android:background="#3C719F"
         android:orientation="horizontal" >
 
         <LinearLayout
             android:id="@+id/expDetailLinell"
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:background="@drawable/item_press_selector"
+            android:gravity="center_horizontal|center_vertical"
             android:orientation="vertical" >
 
-            <ImageView
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/newexp"
-                android:scaleType="centerCrop"
-                android:layout_gravity="center"
-                 />
+                android:layout_height="wrap_content" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:layout_gravity="center"
-                android:text="报销明细" />
+                <ImageView
+                    android:id="@+id/newexp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/newexp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/newexp"
+                    android:layout_centerHorizontal="true"
+                    android:text="报销明细"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_height="wrap_content"
+            android:id="@+id/pieChartll"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:id="@+id/pieChartll"
+            android:background="@drawable/item_press_selector"
+            android:gravity="center_horizontal|center_vertical"
             android:orientation="vertical" >
 
-            <ImageView
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/chart" />
+                android:layout_height="wrap_content" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textColor="@color/white"
-                android:text="报销图表" />
+                <ImageView
+                    android:id="@+id/chart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:src="@drawable/chart" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/chart"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:text="报销图表"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/uploadListll"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="1"
+            android:background="@drawable/item_press_selector"
+            android:gravity="center_horizontal|center_vertical"
             android:orientation="vertical" >
 
-            <ImageView
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/doneexp"
-                android:layout_gravity="center"
-                />
+                android:layout_height="wrap_content" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textColor="@color/white"
-                android:text="批量上传" />
+                <ImageView
+                    android:id="@+id/doneexp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:src="@drawable/doneexp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/doneexp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:text="批量上传"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
         </LinearLayout>
-        
-        
-       <LinearLayout
+
+        <LinearLayout
             android:id="@+id/newExpll"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="1"
+            android:background="@drawable/item_press_selector"
+            android:gravity="center_horizontal|center_vertical"
             android:orientation="vertical" >
 
-            <ImageView
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/newexp"
-                android:layout_gravity="center"
-                />
+                android:layout_height="wrap_content" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textColor="@color/white"
-                android:text="生成报销单" />
+                <ImageView
+                    android:id="@+id/newexp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:src="@drawable/newexp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/newexp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:text="生成报销单"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 

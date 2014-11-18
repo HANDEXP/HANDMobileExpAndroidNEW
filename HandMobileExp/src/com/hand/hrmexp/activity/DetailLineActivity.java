@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 
 import java.lang.reflect.Field;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +48,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.Window;
 import android.view.WindowManager;
@@ -409,7 +411,6 @@ public class DetailLineActivity extends Activity implements
 	
 	
 	private void buildAllviews() {
-
 		//绑定返回按钮
 		returnImgBtn =	(ImageButton) findViewById(R.id.return_btn);
 		returnImgBtn.setOnClickListener(this);
@@ -430,6 +431,32 @@ public class DetailLineActivity extends Activity implements
 		exchangeRateTextView = (EditText) findViewById(R.id.exchangeRateLabel);
 		exchangeRateTextView.setOnClickListener(this);
 		exchangeRateTextView.setOnKeyListener(keylistener);
+		exchangeRateTextView.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO 自动生成的方法存根
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO 自动生成的方法存根
+
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO 自动生成的方法存根
+				if(s.toString().equals(".")){
+					exchangeRateTextView.setText("0.");
+				}else {
+					return;
+				}
+				
+			}
+		});
 		exchangeRateTextView.setText("1.00");
 		
 		
@@ -500,7 +527,7 @@ public class DetailLineActivity extends Activity implements
 		
 		//币种和汇率
 		currenyTextView.setText(_record.currency);
-		exchangeRateTextView.setText(_record.exchangeRate);
+		exchangeRateTextView.setText(String.valueOf(_record.exchangeRate));
 		
 		//初始化picker
 		try {
@@ -620,7 +647,10 @@ public class DetailLineActivity extends Activity implements
 
 		// 币种和汇率
 		line.currency = currenyTextView.getText().toString();
-		line.exchangeRate = exchangeRateTextView.getText().toString();
+		float data = Float.parseFloat(exchangeRateTextView.getText().toString());   
+		DecimalFormat   fnum  =   new  DecimalFormat("##0.00");    
+		String   exchangeRate=fnum.format(data);
+		line.exchangeRate = Float.parseFloat(exchangeRate);
 		
 		// 地点
 		line.expense_place = placeEditText.getText().toString();
@@ -725,7 +755,7 @@ public class DetailLineActivity extends Activity implements
 			Intent intent = new Intent(getApplicationContext(),CurrencyListActivity.class);
 			startActivityForResult(intent, CURRENCY_CONTENT);
 		} else if(v.equals(exchangeRateTextView)){
-			Toast.makeText(getApplicationContext(), "exchangeRateTextView", Toast.LENGTH_SHORT).show();
+			
 		} else if (v.equals(photoImgView)) {
 			if(imageList.size() == 0){ 
 				showCapture();
@@ -791,7 +821,11 @@ public class DetailLineActivity extends Activity implements
 			if (priceNumerText.getText().toString().equalsIgnoreCase("")) {
 
 				priceNumber = 0;
-			} else {
+			}else {
+				if(s.toString().charAt(0) == '.') {
+						
+					priceNumerText.setText("0".concat(s.toString()));
+				}
 				priceNumber = Float.parseFloat(priceNumerText.getText()
 						.toString());
 

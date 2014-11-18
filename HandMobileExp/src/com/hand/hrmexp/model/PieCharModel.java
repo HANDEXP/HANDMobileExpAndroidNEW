@@ -15,7 +15,7 @@ public class PieCharModel extends DbRequestModel{
 	
 	public void load(String _date)
 	{
-		queryWithColumnWithWhere(MOBILE_EXP_REPORT_DATA.class, "expense_date like  '" + _date + "%'" );
+		queryWithColumnWithWhere(MOBILE_EXP_REPORT_DATA.class, "expense_date like  '" + _date + "%'" ,"1 desc");
 		System.out.println("expense_date like  '" + _date + "%'");
 	}
 	

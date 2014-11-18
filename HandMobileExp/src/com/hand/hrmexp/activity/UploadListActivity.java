@@ -12,7 +12,9 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.hand.R;
 import com.hand.hrmexp.activity.DetailListActivity;
 import com.hand.hrmexp.adapter.ContactsInfoAdapter;
+import com.hand.hrmexp.adapter.DetailListAdapter;
 import com.hand.hrmexp.application.HrmexpApplication;
+import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_DATA;
 import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_LINE;
 import com.hand.hrmexp.model.UploadModel;
 import com.handexp.utl.DialogUtl;
@@ -41,8 +43,8 @@ import android.widget.ImageView;
 public class UploadListActivity extends SherlockActivity implements LMModelDelegate{
 	
 	List<List<String>> group;
-	List<List<MOBILE_EXP_REPORT_LINE>> child;
-	ContactsInfoAdapter adapter;
+	List<List<MOBILE_EXP_REPORT_DATA>> child;
+	DetailListAdapter adapter;
 	ExpandableListView uploadListView;
 	private FinalDb finalDb;
 	
@@ -104,7 +106,7 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 				isFaildFlag =false;
 				
 				for (Integer[] curreyArray : flagList){
-					MOBILE_EXP_REPORT_LINE data = child.get(curreyArray[0]).get(curreyArray[1]);	
+					MOBILE_EXP_REPORT_DATA data = child.get(curreyArray[0]).get(curreyArray[1]);	
 					UploadModel upModel = new UploadModel(UploadListActivity.this);
 					upModel.tag = data;
 					upModel.upload(data);
@@ -162,7 +164,7 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		}
-		adapter = new ContactsInfoAdapter(group, child, UploadListActivity.this,R.layout.activity_upload_child,null,flagList);
+		adapter = new DetailListAdapter(group, child, UploadListActivity.this,R.layout.activity_upload_child,null,flagList);
 		uploadListView.setAdapter(adapter);		
 		//打开每一个Group
 		int groupCount = uploadListView.getCount();
@@ -184,18 +186,18 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 	
 	private void initializeData() throws ParseException {
 		group = new ArrayList<List<String>>();
-		child = new ArrayList<List<MOBILE_EXP_REPORT_LINE>>();
+		child = new ArrayList<List<MOBILE_EXP_REPORT_DATA>>();
 		String[] groupInfo = new String[2];
-		List<MOBILE_EXP_REPORT_LINE> childInfo = new ArrayList<MOBILE_EXP_REPORT_LINE>();
+		List<MOBILE_EXP_REPORT_DATA> childInfo = new ArrayList<MOBILE_EXP_REPORT_DATA>();
 		
-		List<MOBILE_EXP_REPORT_LINE> resultList = finalDb.findAllByWhere(MOBILE_EXP_REPORT_LINE.class, "local_status  = 'new'  " + " order by expense_date desc");
+		List<MOBILE_EXP_REPORT_DATA> resultList = finalDb.findByColumNameWithWhere(MOBILE_EXP_REPORT_DATA.class, "local_status  = 'new'" , " expense_date desc");
 		String topDate = null; 
 		Boolean flag = false;
 		
 	
 		
 		for(int i =0;i<resultList.size();i++){
-			MOBILE_EXP_REPORT_LINE data = 	resultList.get(i);
+			MOBILE_EXP_REPORT_DATA data = 	resultList.get(i);
 			if(topDate == null){
 				topDate = data.expense_date;
 				groupInfo = new String[]{topDate,"累计：¥"};
@@ -215,7 +217,7 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 			addInfo(groupInfo, childInfo);
 		}
 		
-		adapter = new ContactsInfoAdapter(group, child, UploadListActivity.this,R.layout.activity_upload_child,null, flagList);
+		adapter = new DetailListAdapter(group, child, UploadListActivity.this,R.layout.activity_upload_child,null, flagList);
 		uploadListView.setAdapter(adapter);		
 		//打开每一个Group
 		int groupCount = uploadListView.getCount();
@@ -231,10 +233,10 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 	 * @param c childList
 	 */
 	
-	private void addInfo(String[] g, List<MOBILE_EXP_REPORT_LINE> c) {
+	private void addInfo(String[] g, List<MOBILE_EXP_REPORT_DATA> c) {
 		// TODO Auto-generated method stub
 		List<String> groupitem = new ArrayList<String>();
-		List<MOBILE_EXP_REPORT_LINE> childitem = new ArrayList<MOBILE_EXP_REPORT_LINE>();
+		List<MOBILE_EXP_REPORT_DATA> childitem = new ArrayList<MOBILE_EXP_REPORT_DATA>();
 		for (int i = 0; i < g.length; i += 1) {
 			groupitem.add(g[i]);
 		}

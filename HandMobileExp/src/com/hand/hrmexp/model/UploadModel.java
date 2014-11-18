@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import org.apache.http.Header;
 
+import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_DATA;
 import com.hand.hrmexp.dao.MOBILE_EXP_REPORT_LINE;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.parser.Expression;
@@ -43,7 +44,7 @@ public class UploadModel extends AsHttpRequestModel{
 		};
 		return param;
 	}
-	public void upload(MOBILE_EXP_REPORT_LINE data){
+	public void upload(MOBILE_EXP_REPORT_DATA data){
 				
 		String queryUrl = null;
 		try {
@@ -55,13 +56,11 @@ public class UploadModel extends AsHttpRequestModel{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if(data.item1  != null){
-			uploadBytes(queryUrl, packParam(data), data.item1, "upload1");
-		}else {
-			uploadBytes(queryUrl, packParam(data), data.item1, "");
-
-			
-		}
+//		if(data.item1  != null){
+//			uploadBytes(queryUrl, packParam(data), data.item1, "upload1");
+//		}else {
+//			uploadBytes(queryUrl, packParam(data), data.item1, "");	
+//		}
 		
 		
 		
