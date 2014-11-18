@@ -164,13 +164,13 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		}
-		adapter = new DetailListAdapter(group, child, UploadListActivity.this,R.layout.activity_upload_child,null,flagList);
-		uploadListView.setAdapter(adapter);		
+//		adapter = new DetailListAdapter(group, child, UploadListActivity.this,R.layout.activity_upload_child,null,flagList);
+//		uploadListView.setAdapter(adapter);		
 		//打开每一个Group
-		int groupCount = uploadListView.getCount();
-		for(int i =0; i<groupCount;i++){
-			uploadListView.expandGroup(i);
-		}
+//		int groupCount = uploadListView.getCount();
+//		for(int i =0; i<groupCount;i++){
+//			uploadListView.expandGroup(i);
+//		}
 	
 	}
 	

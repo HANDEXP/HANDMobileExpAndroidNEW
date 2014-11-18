@@ -527,7 +527,7 @@ public class DetailLineActivity extends Activity implements
 		
 		//币种和汇率
 		currenyTextView.setText(_record.currency);
-		exchangeRateTextView.setText(String.valueOf(_record.exchangeRate));
+		exchangeRateTextView.setText(String.format("%.2f",_record.exchangeRate));
 		
 		//初始化picker
 		try {

@@ -1,5 +1,6 @@
 package com.hand.hrmexp.adapter;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DetailListAdapter extends BaseExpandableListAdapter {
 
@@ -77,7 +79,8 @@ public class DetailListAdapter extends BaseExpandableListAdapter {
 			TextView desc = (TextView) convertView.findViewById(R.id.descText);
 			desc.setText(descString);
 		}
-		String amountString = String.valueOf(childInfo.total_amount);
+		DecimalFormat decimalFormat=new DecimalFormat("0.00");
+		String amountString = String.valueOf(decimalFormat.format(childInfo.total_amount));
 		String status = childInfo.local_status;
 
 		TextView type = (TextView) convertView.findViewById(R.id.typeText);
@@ -109,10 +112,16 @@ public class DetailListAdapter extends BaseExpandableListAdapter {
 		} else if (childResourceId == R.layout.activity_upload_child) {
 			//上传页面检查是否已经选中
 			if (checkSelected(groupPosition, childPosition)) {
+
 				convertView.setBackgroundColor(Color.rgb(255, 255, 204));
 				ImageView selectImageView = (ImageView) convertView
 						.findViewById(R.id.isSelectImage);
 				selectImageView.setImageResource(R.drawable.selected);
+			}else{
+				convertView.setBackgroundColor(Color.rgb(255, 255, 255));
+				ImageView selectImageView = (ImageView) convertView
+						.findViewById(R.id.isSelectImage);
+				selectImageView.setImageResource(R.drawable.unselected);				
 			}
 		}
 		return convertView;
