@@ -148,7 +148,8 @@
 		</activity>
 		<activity 
 		    android:name="com.hand.hrmexp.activity.CurrencyListActivity"
-		    android:label="币种选择"></activity>
+		    android:label="币种选择">
+		</activity>
     </application>
 
 </manifest>
