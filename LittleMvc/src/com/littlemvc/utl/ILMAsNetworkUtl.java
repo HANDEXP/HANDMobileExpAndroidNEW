@@ -21,5 +21,4 @@ public abstract class ILMAsNetworkUtl  extends AbNetworkUtl{
 
 	public abstract   void post(String url,RequestParams param,AsyncHttpResponseHandler handler);
 	
-	
 }

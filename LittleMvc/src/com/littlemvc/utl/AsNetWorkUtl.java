@@ -76,6 +76,8 @@ public class AsNetWorkUtl extends ILMAsNetworkUtl {
 	}
 	
 	
+
+	
 /**
  * 
  * 	为客户端添加头字段

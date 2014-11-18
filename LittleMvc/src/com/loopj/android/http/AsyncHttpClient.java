@@ -125,7 +125,7 @@ public class AsyncHttpClient {
     public static final String ENCODING_GZIP = "gzip";
 
     public static final int DEFAULT_MAX_CONNECTIONS = 10;
-    public static final int DEFAULT_SOCKET_TIMEOUT = 10 * 1000;
+    public static final int DEFAULT_SOCKET_TIMEOUT = 30 * 1000;
     public static final int DEFAULT_MAX_RETRIES = 5;
     public static final int DEFAULT_RETRY_SLEEP_TIME_MILLIS = 1500;
     public static final int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
@@ -1283,7 +1283,7 @@ public class AsyncHttpClient {
      * @param params          additional request params
      * @param responseHandler ResponseHandlerInterface or its subclass to be notified on progress
      */
-    private HttpEntity paramsToEntity(RequestParams params, ResponseHandlerInterface responseHandler) {
+    public HttpEntity paramsToEntity(RequestParams params, ResponseHandlerInterface responseHandler) {
         HttpEntity entity = null;
 
         try {

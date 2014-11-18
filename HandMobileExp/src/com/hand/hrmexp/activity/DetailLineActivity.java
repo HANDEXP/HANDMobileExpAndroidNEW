@@ -208,7 +208,10 @@ public class DetailLineActivity extends Activity implements
 			if(location !=null){
 				String  province = location.getProvince();
 				String  city =  location.getCity();
-				placeEditText.setText(province + ">"  + city);
+				if(!province.equalsIgnoreCase("null") && !city.equalsIgnoreCase("null") ){
+				
+					placeEditText.setText(province + ">"  + city);
+				}
 				
 			}
 			

@@ -6,6 +6,7 @@ package com.littlemvc.model.request;
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.Header;
@@ -149,7 +150,54 @@ public class AsHttpRequestModel extends LMRequestModel{
 		});
 
 }
-	
+/**
+ * 支持多张照片上传	
+ */
+	public void uploadFiles(String url,HashMap param,List<HashMap<String,Object>> files)
+	{
+		
+		RequestParams requestParams = PackParam(param);
+		for(HashMap<String,Object> file: files)
+		{
+			requestParams.put((String)file.get("fileName"), new ByteArrayInputStream((byte[]) file.get("content")),(String)file.get("fileName"),"image/jpeg");
+		}
+		
+		utl.post(url, requestParams, new AsyncHttpResponseHandler () {
+		    public void onStart() {
+		    	requestDidStartLoad(AsHttpRequestModel.this);
+		    }
+			
+			
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					byte[] responseBody) {
+				mstatusCode = statusCode;
+				mheaders = headers;
+				mresponseBody = responseBody;
+				
+				requestDidFinishLoad(AsHttpRequestModel.this);
+				
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers,
+					byte[] responseBody, Throwable error) {
+				// TODO Auto-generated method stub
+				mstatusCode = statusCode;
+				mheaders = headers;
+				mresponseBody = responseBody;
+				
+				
+				requestDidFailLoadWithError(AsHttpRequestModel.this);
+				
+			}
+		
+		});
+		
+	}
+/*
+ * 上传照片为 一张或则一张一下的时候调用的接口
+ */
 	public void uploadBytes(String url,HashMap param,byte[] myByte,String fileName)
 	{
 		
@@ -159,7 +207,7 @@ public class AsHttpRequestModel extends LMRequestModel{
 			myByte = new byte[1];
 		}
 		
-		requestParams.put(fileName, new ByteArrayInputStream(myByte), fileName);
+		requestParams.put(fileName, new ByteArrayInputStream(myByte), fileName,"image/jpeg");
 		
 		utl.post(url, requestParams, new AsyncHttpResponseHandler () {
 		    public void onStart() {

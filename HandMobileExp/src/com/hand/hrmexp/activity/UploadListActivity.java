@@ -130,7 +130,7 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 						flagList.remove(curreyArray);
 						view.setBackgroundColor(Color.rgb(255, 255, 255));
 						selectImageView.setImageResource(R.drawable.unselected);
-						return false;
+						return true;
 					};
 				}
 				flagList.add(array);
@@ -265,7 +265,7 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 				 if(code.equalsIgnoreCase("success")){
 					 String local_id = ((JSONObject)jsonobj.get("body")).get("local_id").toString();
 					 //修改为上传状态 
-					  MOBILE_EXP_REPORT_LINE data   = (MOBILE_EXP_REPORT_LINE)_model.tag;
+					 MOBILE_EXP_REPORT_DATA data   = (MOBILE_EXP_REPORT_DATA)_model.tag;
 					  data.local_status = "upload";
 					  dbmodel.update(data," id = " + data.id);
 				 }

@@ -62,6 +62,8 @@ public class DetailListAdapter extends BaseExpandableListAdapter {
 			boolean isLastChild, View convertView, ViewGroup parents) {
 		// TODO Auto-generated method stub
 
+
+		
 		if (convertView == null) {
 
 			convertView = LayoutInflater.from(context).inflate(childResourceId,
