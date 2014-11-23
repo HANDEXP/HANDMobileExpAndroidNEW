@@ -37,6 +37,7 @@ public class UploadModel extends AsHttpRequestModel{
 	
 	public HashMap<String,String> packParam(final MOBILE_EXP_REPORT_LINE data)
 	{
+		final String[] currency = data.currency.split("-");
 		HashMap <String,String> param = new HashMap<String,String>(){
 			{
 				put("expense_class_id",String.format("%d",data.expense_class_id));
@@ -48,6 +49,9 @@ public class UploadModel extends AsHttpRequestModel{
 				put("expense_place",data.expense_place);
 				put("description",data.description);
 				put("local_id",String.format("%d",data.id));
+				put("exchange_rate",String.valueOf(data.exchangeRate));
+				put("currency_code", currency[0]);
+				
 				
 			}
 			
