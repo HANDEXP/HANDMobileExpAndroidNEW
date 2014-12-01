@@ -6,8 +6,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.hand.R;
 import com.hand.hrmexp.model.LoginModel;
+import com.handexp.utl.ConstantsUtl;
 import com.littlemvc.model.LMModel;
 import com.littlemvc.model.LMModelDelegate;
 import com.littlemvc.model.request.AsHttpRequestModel;
@@ -42,7 +45,8 @@ public class LoginActivity extends Activity implements LMModelDelegate {
 	LoginModel model;
 	
 	HashMap<String, String> loginParm;
-
+	SharedPreferences preferences;
+	Editor editor;
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -51,7 +55,8 @@ public class LoginActivity extends Activity implements LMModelDelegate {
 		setContentView(R.layout.activity_login);
 		
 		buildAllViews();
-		
+		preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		editor = preferences.edit();
 		model = new LoginModel(this);
 		loginParm = new HashMap<String, String>();
 		dialog = new ProgressDialog(this, "登录中,请稍后。");
@@ -94,16 +99,27 @@ public class LoginActivity extends Activity implements LMModelDelegate {
 		loginParm.put("user_name", usernameEditText.getText().toString());
 		loginParm.put("user_password", passwordEditText.getText().toString());
 		loginParm.put("device_type", "Android");
-		loginParm.put("push_token", "-1");
+		try {
+			editor.putString(ConstantsUtl.SYS_PREFRENCES_PUSH_TOKEN, JPushInterface.getRegistrationID(this.getApplicationContext()));
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			editor.commit();
+		}
+		String token = preferences.getString(ConstantsUtl.SYS_PREFRENCES_PUSH_TOKEN, "");
+		if (token.length() != 0) {
+			loginParm.put("push_token", token);
+		}else{
+			loginParm.put("push_token", "-1");
+		}
 		loginParm.put("device_id",  ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId());	
 	}
 	
 	public void storeSomething(String token) throws JSONException {
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		Editor editor = preferences.edit();
 
 		try {
-
+				
 				editor.putString("token",token);
 
 		} finally {

@@ -70,13 +70,14 @@ public class HtmlBaseActivity extends SherlockActivity{
 		contentWebView = (WebView)findViewById(R.id.activity_html_base_webview);
 		contentWebView.setWebChromeClient(new AlertWebChromeClient());
 		contentWebView.setWebViewClient(new ContentWebClient());
-		contentWebView.getSettings().setRenderPriority(RenderPriority.HIGH);
-		if (Build.VERSION.SDK_INT >= 19) {
-			contentWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-		}       
-		else {
-			contentWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-		}
+//		contentWebView.getSettings().setRenderPriority(RenderPriority.HIGH);
+		contentWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+//		if (Build.VERSION.SDK_INT >= 19) {
+//			contentWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+//		}       
+//		else {
+//			contentWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+//		}
 		WebSettings webSettings = contentWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		

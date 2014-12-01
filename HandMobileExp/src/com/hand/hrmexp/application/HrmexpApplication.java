@@ -1,6 +1,8 @@
 package com.hand.hrmexp.application;
 
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -45,7 +47,8 @@ public class HrmexpApplication extends Application implements BDLocationListener
 		//由于添加了缓存的问题，所以这里必须获得上下文
 		AsNetWorkUtl.application = this;
 		locationInit();
-		
+		JPushInterface.setDebugMode(true);
+		JPushInterface.init(this);
 
 		
 	}

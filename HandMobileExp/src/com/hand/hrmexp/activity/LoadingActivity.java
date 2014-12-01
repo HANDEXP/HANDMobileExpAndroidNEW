@@ -62,10 +62,10 @@ public class LoadingActivity extends SherlockActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_loading);
 
 		buildAllviews();
-
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		baseUrl = mPreferences.getString("sys_basic_url", "");
 
