@@ -1,17 +1,32 @@
 package com.hand.hrmexp.receiver;
 
+import java.util.Date;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.hand.R;
+import com.hand.hrmexp.activity.LoadingActivity;
+import com.hand.hrmexp.application.HrmexpApplication;
 
 
 import cn.jpush.android.api.JPushInterface;
 
 
+
+import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 public class JPushReceiver extends BroadcastReceiver{
 	private static final String TAG = "JPush";
@@ -29,7 +44,7 @@ public class JPushReceiver extends BroadcastReceiver{
                         
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
         	Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
-//        	processCustomMessage(context, bundle);
+        	processCustomMessage(context, bundle);
         
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
@@ -47,7 +62,58 @@ public class JPushReceiver extends BroadcastReceiver{
         	Log.d(TAG, "[MyReceiver] Unhandled intent - " + intent.getAction());
         }		
 	}	
+	private void processCustomMessage(Context context, Bundle bundle)
+	{
+		
+        String title = bundle.getString(JPushInterface.EXTRA_TITLE);
+        String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
+        NotificationCompat.BigTextStyle  notiStyle = new
+                NotificationCompat.BigTextStyle();
 
+        // go to loading activity
+        
+        Intent notifyIntent =
+                new Intent(context,LoadingActivity.class);
+        
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(
+                context,
+                0,
+                notifyIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+//		RemoteViews expandedView = new RemoteViews(context.getPackageName(), 
+//		        R.layout.customer_notitfication_layout);
+//		
+//		expandedView.setTextViewText(R.id.displayMessage, message);
+		
+		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		Notification noti  =  new NotificationCompat.Builder(context)
+        .setSmallIcon(R.drawable.icon)
+        .setAutoCancel(true)
+        .setContentTitle("汉得移动报销")
+        .setContentText(message)
+        .setStyle(notiStyle.bigText(message).setBigContentTitle("汉得移动报销"))
+        .setContentIntent(pendingIntent)
+        
+        .build();
+		//为了自动展开
+		if(Build.VERSION.SDK_INT >= 16){
+			noti.priority = Notification.PRIORITY_MAX;
+		}else {
+			
+		}
+		
+//		noti.bigContentView = expandedView;
+	
+		notificationManager.notify(new Date().getSeconds(), noti);
+		
+		
+	}
+	
+	
 	// 打印所有的 intent extra 数据
 	private static String printBundle(Bundle bundle) {
 		StringBuilder sb = new StringBuilder();

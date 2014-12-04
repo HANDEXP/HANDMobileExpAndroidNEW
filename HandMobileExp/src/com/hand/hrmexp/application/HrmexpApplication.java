@@ -1,6 +1,8 @@
 package com.hand.hrmexp.application;
 
 
+import cn.jpush.android.api.BasicPushNotificationBuilder;
+import cn.jpush.android.api.CustomPushNotificationBuilder;
 import cn.jpush.android.api.JPushInterface;
 
 import com.baidu.location.BDLocation;
@@ -8,6 +10,7 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
+import com.hand.R;
 import com.hand.hrms4android.parser.ConfigReader;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.littlemvc.db.sqlite.FinalDb;
@@ -48,6 +51,8 @@ public class HrmexpApplication extends Application implements BDLocationListener
 		AsNetWorkUtl.application = this;
 		locationInit();
 		JPushInterface.setDebugMode(true);
+		
+
 		JPushInterface.init(this);
 
 		
