@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -63,7 +64,13 @@ public class ExpenseTypePopwindow extends PopupWindow{
 
 		 setContentView(Picker_city_province);
 		 setWidth(LayoutParams.MATCH_PARENT);
-		 setHeight(LayoutParams.WRAP_CONTENT);
+		 
+		 DisplayMetrics dm = new DisplayMetrics();
+
+		    ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+		    int height =  (int) (dm.heightPixels/2.5);
+		    
+		 setHeight(height);
 		
 		init();
 		
@@ -112,7 +119,7 @@ public class ExpenseTypePopwindow extends PopupWindow{
 		
 		
 
-		province.setVisibleItems(4);
+		province.setVisibleItems(6);
 		province.setViewAdapter(new expenseclassAdapter(context));
 		
 		province.addChangingListener(new OnWheelChangedListener() {
@@ -208,7 +215,7 @@ public class ExpenseTypePopwindow extends PopupWindow{
 			e.printStackTrace();
 		}
 		city.setViewAdapter(new expensetypeAdapter(context));
-		city.setCurrentItem(expense_type.length() / 2);
+		city.setCurrentItem(0);
 		updatelabel();
 	}
 	

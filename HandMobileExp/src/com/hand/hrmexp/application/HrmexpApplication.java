@@ -84,8 +84,8 @@ public class HrmexpApplication extends Application implements BDLocationListener
 	} else if (location.getLocType() == BDLocation.TypeNetWorkLocation){
 		sb.append("\naddr : ");
 		sb.append(location.getAddrStr());
-		System.out.println(location.getProvince());
-		System.out.println(location.getCity());
+		//System.out.println(location.getProvince());
+		//System.out.println(location.getCity());
 	} 
 	
 	}
@@ -99,7 +99,7 @@ public class HrmexpApplication extends Application implements BDLocationListener
 		option.setLocationMode(LocationMode.Hight_Accuracy);//设置定位模式
 		option.setCoorType("gcj02");//返回的定位结果是百度经纬度，默认值gcj02
 		option.setIsNeedAddress(true);
-		option.setScanSpan(1000*60*15);//设置发起定位请求的间隔时间为5000ms		
+		option.setScanSpan(1000*60*1);//设置发起定位请求的间隔时间为5000ms		
 		 mLocationClient = new LocationClient(this);
 		 mLocationClient.registerLocationListener(this); 
 		 mLocationClient.setLocOption(option);	 

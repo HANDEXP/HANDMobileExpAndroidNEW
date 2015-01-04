@@ -1,11 +1,13 @@
 package com.hand.hrmexp.activity;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.Serializable;
-
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,6 +36,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,6 +44,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images.Media;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Display;
@@ -168,6 +174,11 @@ public class DetailLineActivity extends Activity implements
 	BitmapFactory.Options opts;
 	
 	
+	//uri
+	
+	Uri photoUri;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -239,9 +250,10 @@ public class DetailLineActivity extends Activity implements
 
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if(data == null){
-			return;
-		}
+//		if(data == null){
+//			return;
+//		}
+
 		
 		Bitmap bitmap;
 		Uri originalUri;
@@ -250,11 +262,21 @@ public class DetailLineActivity extends Activity implements
 		switch (requestCode) {
 		case IMAGE_CAPTURE:
 			
-			originalUri = data.getData();
+			if(resultCode == 0){
+				return;
+			}
+			originalUri = photoUri;
+			
+	
+				
 
+			
 			try {
+				
+				
+				Uri uri  =  Uri.parse(originalUri.toString());
 				content = Util.readStream(getContentResolver()
-						.openInputStream(Uri.parse(originalUri.toString())));
+						.openInputStream(uri));
 				
 				
 				bitmap  = Util.CompressBytes(content);
@@ -262,6 +284,8 @@ public class DetailLineActivity extends Activity implements
 				
 				photoImgView.setImageBitmap(bitmap);
 				imageList.add(new ImageItem(content, bitmap));
+				
+			
 				
 				System.gc();
 				
@@ -275,11 +299,16 @@ public class DetailLineActivity extends Activity implements
 			}
 			break;
 		case ACTION_GET_CONTENT:
-			
+			if(data == null){
+				return;
+			}
 			
 			originalUri = data.getData();
+			
+
 
 			try {
+				
 				content = Util.readStream(getContentResolver()
 						.openInputStream(Uri.parse(originalUri.toString())));
 				
@@ -302,6 +331,12 @@ public class DetailLineActivity extends Activity implements
 			
 			break;
 		case CURRENCY_CONTENT:
+			if(data == null){
+				
+				return;
+			}
+			
+			
 			Bundle bundle = data.getExtras();
 			String currency = bundle.getString("currency");
 			String exchangeRate = bundle.getString("exchangeRate");
@@ -728,6 +763,23 @@ public class DetailLineActivity extends Activity implements
 						if (item == 1) {
 							Intent getImageByCamera = new Intent(
 									"android.media.action.IMAGE_CAPTURE");
+							
+							SimpleDateFormat timeStampFormat = new SimpleDateFormat(
+									"yyyy_MM_dd_HH_mm_ss");
+									String filename = timeStampFormat.format(new Date());
+									ContentValues values = new ContentValues();
+									values.put(Media.TITLE, filename);
+							 photoUri = getContentResolver().insert(
+									MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+							getImageByCamera.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+//							  File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +"tmp");
+//							    if(!dir.exists())
+//							        dir.mkdir();
+//							  File file =   new File(dir,"img");
+//							  
+//							    
+//							getImageByCamera.putExtra(MediaStore.EXTRA_OUTPUT, file.toURI());
 							startActivityForResult(getImageByCamera,
 									IMAGE_CAPTURE);
 						} else {

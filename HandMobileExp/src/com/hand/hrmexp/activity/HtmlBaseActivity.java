@@ -49,6 +49,9 @@ public class HtmlBaseActivity extends SherlockActivity{
 		TextView titleView = (TextView) findViewById(R.id.contextTitle);
 		titleView.setText("生成单据");
 		//绑定ActionBar按钮事件
+		
+		((ImageView)findViewById(R.id.addImage)).setVisibility(View.INVISIBLE);;
+		
 		ImageView returnView = (ImageView) findViewById(R.id.returnImage);
 		returnView.setOnClickListener(new OnClickListener() {
 			

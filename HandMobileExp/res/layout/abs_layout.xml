@@ -7,9 +7,9 @@
 	<ImageView
 	    android:id="@+id/returnImage"
 	    android:layout_height="wrap_content"
-	    android:layout_width="0dp"
-	    android:layout_weight="0.15"
-	    android:src="@drawable/previousbutton"
+	    android:layout_width="40dp"
+	    android:scaleType="center"
+	    android:src="@drawable/white_left"
 	    android:layout_gravity="center_vertical"
 	    
 	    />  
@@ -23,7 +23,7 @@
 		android:layout_gravity="center_vertical"
 		android:gravity="center_horizontal"
         android:text="myTitle"
-        android:textColor="#b9b9b9"
+        android:textColor="@color/white"
         android:textSize="18sp" 
         />
 	<ImageView

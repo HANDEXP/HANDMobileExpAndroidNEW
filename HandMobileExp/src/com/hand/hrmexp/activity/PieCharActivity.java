@@ -71,7 +71,7 @@ public class PieCharActivity extends SherlockActivity implements LMModelDelegate
 		//加载ActionBar设置标题
 		getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_titlebar));
 		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-		getSupportActionBar().setCustomView(R.layout.abs_layout);
+		getSupportActionBar().setCustomView(R.layout.abs_layout1);
 		TextView titleView = (TextView) findViewById(R.id.contextTitle);
 		titleView.setText("报销明细");
 		

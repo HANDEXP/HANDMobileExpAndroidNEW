@@ -5,10 +5,13 @@
     android:background="#3C719F" 
 	>
     <ImageButton 
+        android:background="@android:color/transparent"
         android:layout_alignParentLeft="true"
         android:id="@+id/return_btn"
+        android:src="@drawable/white_left"
+        android:scaleType="center"
         android:layout_height="match_parent"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
       />
 
     <TextView

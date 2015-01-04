@@ -75,13 +75,11 @@ public class AlbumView extends Activity {
 
 	private int MAX_SIZE = 300000;
 
-	// µ±Ç°Í¼Æ¬Î»ÖÃ
+	// ï¿½ï¿½Ç°Í¼Æ¬Î»ï¿½ï¿½
 	private int currentPosition;
 
-	// ÅÄÕÕ
-	public static final int IMAGE_CAPTURE = 0;
+		public static final int IMAGE_CAPTURE = 0;
 
-	// Ïà²á
 	public static final int ACTION_GET_CONTENT = 1;
 
 	@Override
@@ -118,7 +116,6 @@ public class AlbumView extends Activity {
 			@Override
 			public void onClick(View v) {
 				int position = currentPosition;
-				// É¾³ýÊý¾Ý
 				imageList.remove(currentPosition);
 
 				// viewpageradapter.notifyDataSetChanged();
@@ -136,7 +133,6 @@ public class AlbumView extends Activity {
 			}
 		});
 
-		// Ìí¼ÓÏàÆ¬°´Å¥
 		addPic = (ImageView) findViewById(R.id.addPic);
 
 		addPic.setOnClickListener(new OnClickListener() {
@@ -147,7 +143,7 @@ public class AlbumView extends Activity {
 				if(imageList.size() <=9){
 					showDialog();
 				}else{
-					Toast.makeText(AlbumView.this, "×î¶àÑ¡Ôñ9ÕÅÕÕÆ¬", Toast.LENGTH_LONG).show();
+					Toast.makeText(AlbumView.this, "æœ€å¤§åªèƒ½9å¼ ç…§ç‰‡", Toast.LENGTH_LONG).show();
 
 				}
 
@@ -156,14 +152,12 @@ public class AlbumView extends Activity {
 
 		mFrameLayout = (FrameLayout) findViewById(R.id.mFrameLayout);
 
-		// ³õÊ¼»¯viewpager
 
 		mViewPager = (ViewPager) findViewById(R.id.mViewPager);
 		viewpageradapter = new ViewPagerAdapter(imageList, this);
 		mViewPager.setAdapter(viewpageradapter);
 		mViewPager.setOnPageChangeListener(new MyPageChangeListener());
 
-		// ³õÊ¼»¯gridview
 		mGridView = (GridView) findViewById(R.id.mGridView);
 		imageadapter = new ImageGridAdapter(imageList, this);
 		mGridView.setAdapter(imageadapter);
@@ -285,10 +279,7 @@ public class AlbumView extends Activity {
 		
 
 	}
-	
-/**
- * ÉèÖÃÍ·²¿ÏÔÊ¾µÄÕÕÆ¬ÊýÁ¿	
- */
+
 	public void setImageNum(){
 		
 		numTextView.setText(imageList.size() + " photo");
@@ -364,13 +355,13 @@ public class AlbumView extends Activity {
 
 	private void showDialog() {
 
-		final CharSequence[] items = { "Ïà²á", "ÅÄÕÕ" };
+		final CharSequence[] items = { "ç›¸å†Œ", "æ‹ç…§" };
 		AlertDialog dlg = new AlertDialog.Builder(AlbumView.this)
-				.setTitle("Ñ¡ÔñÍ¼Æ¬")
+				.setTitle("é€‰æ‹©å›¾ç‰‡")
 				.setItems(items, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
-						// ÕâÀïitemÊÇ¸ù¾ÝÑ¡ÔñµÄ·½Ê½£¬
-						// ÔÚitemsÊý×éÀïÃæ¶¨ÒåÁËÁ½ÖÖ·½Ê½£¬ÅÄÕÕµÄÏÂ±êÎª1ËùÒÔ¾Íµ÷ÓÃÅÄÕÕ·½·¨
+		
+						
 						if (item == 1) {
 							Intent getImageByCamera = new Intent(
 									"android.media.action.IMAGE_CAPTURE");
