@@ -50,7 +50,7 @@ public class CurrencyListActivity extends SherlockActivity implements LMModelDel
 		getSupportActionBar().setCustomView(R.layout.abs_layout);
 		TextView titleView = (TextView) findViewById(R.id.contextTitle);
 		titleView.setText("币种选择");
-		ImageView returnView = (ImageView) findViewById(R.id.returnImage);
+		TextView returnView = (TextView) findViewById(R.id.returnImage);
 		returnView.setOnClickListener(new OnClickListener() {
 			
 			@Override

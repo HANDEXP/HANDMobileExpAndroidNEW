@@ -43,15 +43,20 @@ public class DatePickerWrapDialog {
 		//android月份从0开始很蛋疼
 		int _month = month +1 ;
 		String month_ = String.format("%d",_month);
-		
+		String  dayOfMonth_ = String.format("%d", dayOfMonth);
 		//为了满足yyyy-mm-dd的要求,对于9以下的月份要拼接成 09 08 类型
 		if(_month <=9){
 			
 			month_ = "0" + month_;
 		}
 		
+		if(dayOfMonth <= 9){
+			
+			dayOfMonth_ = "0" + dayOfMonth_;
+		}
 		
-		setView.setText(year + "-" + month_  + "-" + dayOfMonth);
+		
+		setView.setText(year + "-" + month_  + "-" + dayOfMonth_);
 		
 	}
 	
@@ -60,6 +65,7 @@ public class DatePickerWrapDialog {
 	{
 		try {
 			Date _date = (Date) sdf.parse(date);
+		
 			int month = _date.getMonth();
 			c.setTime(_date);
 			getNumber();

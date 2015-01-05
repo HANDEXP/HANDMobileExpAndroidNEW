@@ -63,6 +63,8 @@ public class HomeFragment extends Fragment implements LMModelDelegate {
 	@Override
 	public void onResume() {
 		super.onResume();
+		model = new HomeModel(this);
+		model.load();
 		// imageViewPager.imageDisplayStart();
 
 	}

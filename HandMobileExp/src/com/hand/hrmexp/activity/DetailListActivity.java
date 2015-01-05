@@ -86,7 +86,7 @@ public class DetailListActivity extends SherlockActivity {
 	
 	private void bindAllViews(){
 		//绑定ActionBar按钮事件
-		ImageView returnView = (ImageView) findViewById(R.id.returnImage);
+		TextView returnView = (TextView) findViewById(R.id.returnImage);
 		returnView.setOnClickListener(new OnClickListener() {
 			
 			@Override

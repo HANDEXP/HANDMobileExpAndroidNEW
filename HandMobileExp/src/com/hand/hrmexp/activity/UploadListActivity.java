@@ -78,7 +78,7 @@ public class UploadListActivity extends SherlockActivity implements LMModelDeleg
 		TextView titleView = (TextView) findViewById(R.id.contextTitle);
 		titleView.setText("批量上传");
 		//绑定ActionBar按钮事件
-		ImageView returnView = (ImageView) findViewById(R.id.returnImage);
+		TextView returnView = (TextView) findViewById(R.id.returnImage);
 		returnView.setOnClickListener(new OnClickListener() {
 			
 			@Override

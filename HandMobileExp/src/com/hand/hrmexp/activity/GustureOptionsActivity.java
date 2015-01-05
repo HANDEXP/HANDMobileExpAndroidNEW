@@ -21,7 +21,7 @@ public class GustureOptionsActivity extends SherlockActivity{
 	
 	private LinearLayout setLockLL; 
 	private SwitchButton switchButtonView;
-	private ImageView returnImgView;
+	private TextView returnImgView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -81,7 +81,7 @@ public class GustureOptionsActivity extends SherlockActivity{
 				
 			}
 		});
-		returnImgView = (ImageView) findViewById(R.id.returnImage);
+		returnImgView = (TextView) findViewById(R.id.returnImage);
 		returnImgView.setOnClickListener(new OnClickListener() {
 			
 			@Override

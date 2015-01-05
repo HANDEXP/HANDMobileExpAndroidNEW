@@ -52,7 +52,7 @@ public class HtmlBaseActivity extends SherlockActivity{
 		
 		((ImageView)findViewById(R.id.addImage)).setVisibility(View.INVISIBLE);;
 		
-		ImageView returnView = (ImageView) findViewById(R.id.returnImage);
+		TextView returnView = (TextView) findViewById(R.id.returnImage);
 		returnView.setOnClickListener(new OnClickListener() {
 			
 			@Override

@@ -75,7 +75,7 @@ public class PieCharActivity extends SherlockActivity implements LMModelDelegate
 		TextView titleView = (TextView) findViewById(R.id.contextTitle);
 		titleView.setText("报销明细");
 		
-		ImageView returnView = (ImageView) findViewById(R.id.returnImage);
+		TextView returnView = (TextView) findViewById(R.id.returnImage);
 		returnView.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -119,7 +119,7 @@ public class PieCharActivity extends SherlockActivity implements LMModelDelegate
 		}else if(v.equals(rightDateImageView)){
 			month = month +1;
 			if(month == 12){
-				month = 1;
+				month = 0;
 				year = year +1;
 				
 			}

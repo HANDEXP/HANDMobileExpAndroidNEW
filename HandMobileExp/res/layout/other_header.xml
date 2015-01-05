@@ -4,14 +4,17 @@
      android:layout_height="50dip"
     android:background="#3C719F" 
 	>
-    <ImageButton 
+    <TextView
         android:background="@android:color/transparent"
         android:layout_alignParentLeft="true"
         android:id="@+id/return_btn"
-        android:src="@drawable/white_left"
+        android:text="首页"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:drawableLeft="@drawable/white_left"
         android:scaleType="center"
         android:layout_height="match_parent"
-        android:layout_width="40dp"
+        android:layout_width="50dp"
       />
 
     <TextView

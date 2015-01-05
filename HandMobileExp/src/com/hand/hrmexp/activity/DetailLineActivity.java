@@ -100,7 +100,7 @@ public class DetailLineActivity extends Activity implements
 
 	private DatePickerWrapDialog dateFromDateDialog;
 	// 返回
-	private ImageButton returnImgBtn;
+	private TextView returnImgBtn;
 	// 拍照
 	private ImageView photoImgView;
 
@@ -450,7 +450,7 @@ public class DetailLineActivity extends Activity implements
 	
 	private void buildAllviews() {
 		//绑定返回按钮
-		returnImgBtn =	(ImageButton) findViewById(R.id.return_btn);
+		returnImgBtn =	(TextView) findViewById(R.id.return_btn);
 		returnImgBtn.setOnClickListener(this);
 		
 		rootView = (FrameLayout)findViewById(R.id.framelayout);
